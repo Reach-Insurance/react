@@ -7,6 +7,5 @@ It's a community owned insurance platform, where every member is both an insurer
 ## Source of funds
 Every member pays a monthly subscription fee to the Dapp for the insurance security the same way they would do to a traditional insurance company. They can also pay for their dependants such as children. The more monthly fee a member pays, the higher their funding limit. 
 
-
-
-
+## Entities
+![entities](https://user-images.githubusercontent.com/47475700/158845877-bed7a73d-1f17-4195-87df-08ae03134e14.png)
