@@ -54,10 +54,10 @@ jobs:
         run: unzip release.zip
 
       - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: 'Reach-Insurance'
+          app-name: 'Reach-Insurence-Dev'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6DF20997A33D4C75850D374258CB3331 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9F21782E4CF74A6D8FCE2A9CC6F1D744 }}
           package: .
