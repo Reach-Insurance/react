@@ -24,9 +24,8 @@ jobs:
       - name: npm install, build, and test
         run: |
           cd reach-insurance
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm install -g serve
+          serve -s build
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
