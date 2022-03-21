@@ -9,3 +9,77 @@ Every member pays a monthly subscription fee to the Dapp for the insurance secur
 
 ## Entities
 ![entities](https://user-images.githubusercontent.com/47475700/158845877-bed7a73d-1f17-4195-87df-08ae03134e14.png)
+
+## Participants
+
+### Community Member
+This is a general member of the community that will be using the Dapp. Upon registration an account will be created for the member. The member will have to make a monthy contribution to continue being a member. Once a payment is missed the member's account will be suspended. 
+
+### Functionality
+
+#### Registration
+* Register New Members
+  * Complete a form
+* Email account should be verified
+* Contact Details should be varified
+* Blockchain account should be created
+* The first contribution should be collected
+
+#### Submit a Claim
+A member creates a claim. They do this by filling in a form:
+* Description of the claim
+* Documents to support the claim
+#### Respond to a Claim
+* Approve a Claim
+* Reject a Claim
+
+#### Cancel Mmembership
+A member can request the cancel their membership. Once they do this, their account will be freezed and achieved.
+
+### Data Models
+
+#### Member Data - Frontend
+|Field|Data Type|Description|
+|-----|---------|-----------|
+|Account|Hash|Public Key of members blockchain account|
+|Names|String|Full names of the member|
+|Email|String|Email address of the member|
+|Address|String|Physical Address of the member|
+|Contacts|String|Contact number of the member|
+
+#### Member Data - Blockchain
+|Field|Data Type|Description|
+|-----|---------|-----------|
+|Montly contributions|Int|The number of contributions made by the member|
+|Balance|Currency|Balance of the member's account|
+|Claims|Object|The claims that the member has created|
+
+#### Claim Data
+|Field|Data Type|Description|
+|-----|---------|-----------|
+|ClaimId|Guid|The Id used to identify the claim|
+|Description|String|A detailed description of the claim|
+|Amount|Currency|The amount that is due if the claim is accepted|
+|Accepted|Bool|True is the claim is accepted, default is false|
+|Documents|Url|A link to the supporting documents of the claim, IPFS|
+|Approvals|Array|A list of the approvals|
+
+#### Approval
+|Field|Data Type|Description|
+|-----|---------|-----------|
+|Approver|Hash|The address of the member that approved or rejected the claim|
+|Response|Bool|True or False, for Approve or Reject|
+
+### Accounts
+
+#### Treasury Account
+This is the main account into which all funds are collected. The funds in this account will be used to fund the claims. 
+
+This can be an abstract accout. Abstract in the sense that it's a sum of all the accounts. It will be defined in the smart contract the the funds in each accout can only be sent to pay a claim or if that respective account has a claim that has been approaved and needs to withdraw the funds received for the claim.
+
+#### User Account
+This account is created for each member. Funds that are paid into this account cannot be sent or withdrawn.
+
+Funds can only be sent when:
+* There is payout for a claim.
+* Funds are used to pay another members claim.
