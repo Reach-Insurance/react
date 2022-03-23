@@ -32,9 +32,13 @@ A member creates a claim. They do this by filling in a form:
 #### Respond to a Claim
 * Approve a Claim
 * Reject a Claim
+* Cannot be the member that created the claim
 
 #### Cancel Mmembership
 A member can request the cancel their membership. Once they do this, their account will be freezed and achieved.
+
+### Claim
+Claim Should Coexist
 
 ### Data Models
 
@@ -46,6 +50,7 @@ A member can request the cancel their membership. Once they do this, their accou
 |Email|String|Email address of the member|
 |Address|String|Physical Address of the member|
 |Contacts|String|Contact number of the member|
+|AccountActive|Bool|Used to depermine whether or not the account is active|
 
 #### Member Data - Blockchain
 |Field|Data Type|Description|
@@ -57,12 +62,13 @@ A member can request the cancel their membership. Once they do this, their accou
 #### Claim Data
 |Field|Data Type|Description|
 |-----|---------|-----------|
+|OwnerAddress|Hash|The address of the person that created the claim|
 |ClaimId|Guid|The Id used to identify the claim|
 |Description|String|A detailed description of the claim|
 |Amount|Currency|The amount that is due if the claim is accepted|
 |Accepted|Bool|True is the claim is accepted, default is false|
 |Documents|Url|A link to the supporting documents of the claim, IPFS|
-|Approvals|Array|A list of the approvals|
+|Approvals|Array[Approval]|A list of the approvals|
 
 #### Approval
 |Field|Data Type|Description|
@@ -83,3 +89,9 @@ This account is created for each member. Funds that are paid into this account c
 Funds can only be sent when:
 * There is payout for a claim.
 * Funds are used to pay another members claim.
+
+### Packages
+Allow members to pay what they are comfortable with paying
+
+### Delay intrest rate
+What is the intrest that a member needs to pay if they miss a payment. When you miss a payment your account is not active till you pay a certain fee with intrest, that needs to be calculated.
