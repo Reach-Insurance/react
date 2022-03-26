@@ -9,7 +9,7 @@ function App() {
         <h1>REACH INSURANCE</h1>
         <br/>
         <p>
-          gain eternity...
+          Gain Eternity...
         </p>
       </header>
     </div>
