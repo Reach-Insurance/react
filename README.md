@@ -1,97 +1,70 @@
-# Insurance Dapp
-This is an Insurance Decentralized Application (Dapp) developed in reach. 
+# Getting Started with Create React App
 
-## Idea
-It's a community owned insurance platform, where every member is both an insurer and a policy holder (client) at the same time. When a member faces any disaster such as loss/damage of property, loss of a relative, sickness, or any other situation that calls for emmergency help, they can submit a claim for funding to the decentralized application which is communally owned. All that is required for the member to be funded is approval of atleast 5 members of the same community, who then act as the witnesses of the reported incidence. Upon receiving the claim, the Dapp notifies every member of the community, prompting anyone of them to voluntarilly approve the claim in case they are aware of it and hence they can act as witnesses. If the Dapp receives atleast 5 approvals, then the requested amount of money will be taken off the treasury account and transfered to the account of the claimant. However, the amount that can be given to the claimant cannot exceed their funding limit. The funding limit depends on how much monthly fee the member pays.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Source of funds
-Every member pays a monthly subscription fee to the Dapp for the insurance security the same way they would do to a traditional insurance company. They can also pay for their dependants such as children. The more monthly fee a member pays, the higher their funding limit. At the time of joining, one must pay a non refundable membership fee which is considered to be the initial capital that the member invests, every member is also an investor here. The other spource of income will be interest gained from loaning. When the community grows enough and float accumulates, members will also be able to borrow the money and return it with a fair interest. 
+## Available Scripts
 
-## Entities
-![entities](https://user-images.githubusercontent.com/47475700/158845877-bed7a73d-1f17-4195-87df-08ae03134e14.png)
+In the project directory, you can run:
 
-## Participants
+### `npm start`
 
-### Community Member
-This is a general member of the community that will be using the Dapp. Upon registration an account will be created for the member. The member will have to make a monthy contribution to continue being a member. Once a payment is missed the member's account will be suspended. 
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### Functionality
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-#### Registration
-* Register New Members
-  * Complete a form
-* Email account should be verified
-* Contact Details should be varified
-* Blockchain account should be created
-* The first contribution should be collected
+### `npm test`
 
-#### Submit a Claim
-A member creates a claim. They do this by filling in a form:
-* Description of the claim
-* Documents to support the claim
-#### Respond to a Claim
-* Approve a Claim
-* Reject a Claim
-* Cannot be the member that created the claim
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-#### Cancel Mmembership
-A member can request the cancel their membership. Once they do this, their account will be freezed and achieved.
+### `npm run build`
 
-### Claim
-Claim Should Coexist
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-### Data Models
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-#### Member Data - Frontend
-|Field|Data Type|Description|
-|-----|---------|-----------|
-|Account|Hash|Public Key of members blockchain account|
-|Names|String|Full names of the member|
-|Email|String|Email address of the member|
-|Address|String|Physical Address of the member|
-|Contacts|String|Contact number of the member|
-|AccountActive|Bool|Used to depermine whether or not the account is active|
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-#### Member Data - Blockchain
-|Field|Data Type|Description|
-|-----|---------|-----------|
-|Montly contributions|Int|The number of contributions made by the member|
-|Balance|Currency|Balance of the member's account|
-|Claims|Object|The claims that the member has created|
+### `npm run eject`
 
-#### Claim Data
-|Field|Data Type|Description|
-|-----|---------|-----------|
-|OwnerAddress|Hash|The address of the person that created the claim|
-|ClaimId|Guid|The Id used to identify the claim|
-|Description|String|A detailed description of the claim|
-|Amount|Currency|The amount that is due if the claim is accepted|
-|Accepted|Bool|True is the claim is accepted, default is false|
-|Documents|Url|A link to the supporting documents of the claim, IPFS|
-|Approvals|Array[Approval]|A list of the approvals|
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-#### Approval
-|Field|Data Type|Description|
-|-----|---------|-----------|
-|Approver|Hash|The address of the member that approved or rejected the claim|
-|Response|Bool|True or False, for Approve or Reject|
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-### Accounts
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-#### Treasury Account
-This is the main account into which all funds are collected. The funds in this account will be used to fund the claims. 
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-This can be an abstract accout. Abstract in the sense that it's a sum of all the accounts. It will be defined in the smart contract the the funds in each accout can only be sent to pay a claim or if that respective account has a claim that has been approaved and needs to withdraw the funds received for the claim.
+## Learn More
 
-#### User Account
-This account is created for each member. Funds that are paid into this account cannot be sent or withdrawn.
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-Funds can only be sent when:
-* There is payout for a claim.
-* Funds are used to pay another members claim.
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Packages
-Allow members to pay what they are comfortable with paying
+### Code Splitting
 
-### Delay intrest rate
-What is the intrest that a member needs to pay if they miss a payment. When you miss a payment your account is not active till you pay a certain fee with intrest, that needs to be calculated.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
