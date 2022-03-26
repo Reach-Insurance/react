@@ -1,8 +1,0 @@
-{
-    "appService.zipIgnorePattern": [
-        "node_modules{,/**}",
-        ".vscode{,/**}"
-    ],
-    "appService.defaultWebAppToDeploy": "/subscriptions/274102f5-4e01-4c38-a008-e1a141436657/resourceGroups/Reach-Insurence-Dev_group/providers/Microsoft.Web/sites/Reach-Insurence-Dev",
-    "appService.deploySubpath": "."
-}
