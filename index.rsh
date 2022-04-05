@@ -13,6 +13,24 @@ export const main = Reach.App(() => {
         moveMaturedPayments: Fun([], Null),
         contractNotStoppedByInsurer: Bool,
         stopContract: Fun([], Null),
+        saveNewMemberDetails: Fun([Object({
+            fullName: Bytes, phone: Bytes, email: Bytes, chosenInsurancePackage: Bytes
+        })], Null),
+        saveNewClaim: Fun([Object({
+            ownerAddr: Address,
+            amountRequested: UInt,
+            description: Bytes,
+            supportDocuments: Bytes
+            //amountSet = amountRequested ,
+            //accepted: Bool = false,
+            //approvalsCount = 0,
+        })], Null),
+        notifyMembersAboutNewClaim: Fun([{
+            ownerAddr: Address,
+            amountRequested: UInt,
+            description: Bytes,
+            supportDocuments: Bytes
+        }], Null)
     });
     const CommunityMember = API('CommunityMember', {
         registerMembership: Fun([Object({ fullName: Bytes, phone: Bytes, email: Bytes, chosenInsurancePackage: Bytes })], Bool),
@@ -70,14 +88,11 @@ export const main = Reach.App(() => {
                 const who = this;
                 require(balance(who) >= mandatoryEntryFee, `Entry fee cannot be less than ${mandatoryEntryFee}`);
 
-                //TODO: all the logic for saving the new member's details
+                Insurer.interact.saveNewMemberDetails(newMemberDetails);
 
                 sendResponse(true);
                 who.pay(mandatoryEntryFee)
                 transfer(mandatoryEntryFee).to(Insurer);
-
-                //Insurer.interact.seeBid(who, bid);
-
                 return [true];
             })
         ).api(CommunityMember.payMonthlyFee,
@@ -91,6 +106,14 @@ export const main = Reach.App(() => {
                 transfer(mfee).to(Insurer);
                 return [true];
             })
+        ).api(CommunityMember.createClaim,
+            ((claimInfo, sendResponse) => {
+                const who = this;
+                sendResponse(true);
+                claimInfo.claimant = who;
+                Insurer.interact.saveNewClaim(claimInfo);
+                return [true];
+            })
         ).api(CommunityMember.respondToClaim,
             ((opinion, sendResponse) => {
                 const who = this;
@@ -102,17 +125,9 @@ export const main = Reach.App(() => {
                 claimant.interact.seeResponse(who, opinion);
                 return [true];
             })
-        ).api(CommunityMember.createClaim,
-            ((claimInfo, sendResponse) => {
-                const who = this;
-                sendResponse(true);
-
-                //TODO: logic for making a claim
-                return [true];
-            })
         );
-
     commit();
+
     exit();
 });
 
