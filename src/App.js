@@ -134,7 +134,7 @@ function App() {
 
               <div className='flex justify-center items-center mt-6'>
                 <button onClick={Signup}
-                  className={` bg-blue-500 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark`}
+                  className={`bg-blue-500 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark`}
                 >
                   Register now
                 </button>

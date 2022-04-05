@@ -2,15 +2,20 @@
 
 export const main = Reach.App(() => {
     const Insurer = Participant('Insurer', {
+        setInitialDeploymentState: Fun([], Object({
+            mandatoryEntryFee: Bytes
+        })),
         communityGroupName: Bytes,
         createDatabase: Fun([], Null),
         approveNewMembership: Fun([Address], Null),
         createAddressForNewUSer: Fun([], Address),
         createInvoices: Fun([], Null),
         moveMaturedPayments: Fun([], Null),
+        contractNotStoppedByInsurer: Bool,
+        stopContract: Fun([], Null),
     });
-    const CommunityMember = ParticipantClass('CommunityMember', {
-        registerMembership: Fun([{ name: Bytes, email: Bytes }], Bool),
+    const CommunityMember = API('CommunityMember', {
+        registerMembership: Fun([Object({ fullName: Bytes, phone: Bytes, email: Bytes, chosenInsurancePackage: Bytes })], Bool),
         registerDependant: Fun([Address], Bool),
         cancelMembership: Fun([Address], Bool),
         payEntryFee: Fun([Address, UInt], Bool),
@@ -18,101 +23,101 @@ export const main = Reach.App(() => {
         changePackage: Fun([Bytes], Bool),
         getAccountStatement: Fun([Address], Map),
         createClaim: Fun([Address, UInt], Bool),
-        respondToClaim: Fun([Address, Bool], Null),
+        respondToClaim: Fun([Object({
+            claimant: Address, accepted: Bool, setAmount: UInt
+        })], Bool),
         inheritAccount: Fun([], Null),
         approveInheritance: Fun([], Null),
         approveExit: Fun([], Null),
+        seeResponse: Fun([Address, Object({
+            claimant: Address, accepted: Bool, setAmount: UInt
+        })], Null),
     });
-    const Dependant = ParticipantClass('Dependant', {
+    const Dependant = API('Dependant', {
         getAccountStatement: Fun([], Null),
         payMonthlyFee: Fun([], Null),
         createClaim: Fun([], Null),
         inheritAccount: Fun([], Null),
         approveInheritance: Fun([], Null),
     });
-    const ImSvcProvider = ParticipantClass('ImSvcProvider', {
+    const ImSvcProvider = API('ImSvcProvider', {
         registerMembership: Fun([], Null),
         cancelMembership: Fun([], Null),
         payEntryFee: Fun([], Null),
         createClaim: Fun([], Null),
         respondToClaim: Fun([], Null),
+        seeFeedback: Fun([Bytes], Null),
     });
     init();
 
     Insurer.only(() => {
-        const { nftId, minBid, lenInBlocks } = declassify(interact.getSale());
+        const { mandatoryEntryFee } = declassify(interact.setInitialDeploymentState());
+        //get feedback
+        interact.seeFeedback(`You have set entry fee to: ${mandatoryEntryFee}`);
+        interact.contractNotStoppedByInsurer = true;
     });
-    Insurer.publish(nftId, minBid, lenInBlocks);
-    const amt = 1;
+    Insurer.publish(mandatoryEntryFee);
     commit();
 
-    Insurer.pay([[amt, nftId]]);
-    Insurer.interact.auctionReady();
+    const [
+        returned1
+    ] = parallelReduce([true])
+        .invariant(balance() == 0)
+        .while(Insurer.interact.contractNotStoppedByInsurer)
+        .api(CommunityMember.registerMembership,
+            ((newMemberDetails, sendResponse) => {
+                //the registering member must have enough credit on their account to pay the entry fee.
+                const who = this;
+                require(balance(who) >= mandatoryEntryFee, `Entry fee cannot be less than ${mandatoryEntryFee}`);
 
-    assert(balance(nftId) == amt, "balance of NFT is wrong");
-    const end = lastConsensusTime() + lenInBlocks;
+                //TODO: all the logic for saving the new member's details
 
+                sendResponse(true);
+                who.pay(mandatoryEntryFee)
+                transfer(mandatoryEntryFee).to(Insurer);
 
-    fork().case(CommunityMember, (() => ({
+                //Insurer.interact.seeBid(who, bid);
 
-        msg: 19,
-        when: declassify(interact.keepGoing())
-    })),
-        ((v) => v),
-        (v) => {
-            require(v == 19);
-            transfer(wager + 19).to(this);
-            commit();
-            exit();
-        }
+                return [true];
+            })
+        ).api(CommunityMember.payMonthlyFee,
+            ((mfee, sendResponse) => {
+                //the member must have enough credit on their account to pay the monthly fee.
+                const who = this;
+                require(balance(who) >= mfee, `You don't have enough credit on your account.`);
+                who.pay(mfee);
+                sendResponse(true);
 
-    ).case(Dependant, (() => ({
+                transfer(mfee).to(Insurer);
+                return [true];
+            })
+        ).api(CommunityMember.respondToClaim,
+            ((opinion, sendResponse) => {
+                const who = this;
+                sendResponse(true);
 
-        when: declassify(interact.keepGoing()),
-        _local: interact.secretVal
-    })),
-        ((_) => wager),
-        (_, _secV) => {
-            commit();
-            Bob.only(() => interact.showSecret(_secV))
-            Alice.only(() => interact.showOpponent(Bob));
-            race(Alice, Bob).publish();
-            transfer(2 * wager).to(this);
-            commit();
-            exit();
-        }
+                //TODO: if this claimant has raised 5 approvals, then
+                //TODO: determine the final amount agreed, and 
+                //transfer(agreedClaimAmount).to(opinion.claimant);
+                claimant.interact.seeResponse(who, opinion);
+                return [true];
+            })
+        ).api(CommunityMember.createClaim,
+            ((claimInfo, sendResponse) => {
+                const who = this;
+                sendResponse(true);
 
-    ).case(ImSvcProvider, (() => ({
-
-        when: declassify(interact.keepGoing()),
-        _local: interact.secretVal
-    })),
-        ((_) => wager),
-        (_, _secV) => {
-            commit();
-            Bob.only(() => interact.showSecret(_secV))
-            Alice.only(() => interact.showOpponent(Bob));
-            race(Alice, Bob).publish();
-            transfer(2 * wager).to(this);
-            commit();
-            exit();
-        }
-
-    ).timeout(deadline, () => {
-
-        race(...CommunityMember).publish();
-        race(...Dependant).publish();
-        race(...ImSvcProvider).publish();
-
-        commit();
-        exit();
-
-    });
+                //TODO: logic for making a claim
+                return [true];
+            })
+        );
 
     commit();
     exit();
 });
 
+//invariants info: https://en.wikipedia.org/wiki/Loop_invariant
 
+//TODO: use IPFS: https://www.freecodecamp.org/news/technical-guide-to-ipfs-decentralized-storage-of-web3/
 
 
