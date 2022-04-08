@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
+import loadingGif1 from './images/ajax-loader.gif';
 import * as backend from './reach-build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib';
 const reach = loadStdlib(process.env);
@@ -10,28 +11,32 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function App() {
+  const [communityGroupName, setCommunityGroupName] = useState("Test group insurance");
+  const [mandatoryEntryFee, setMandatoryEntryFee] = useState(0);
+  const insurerContract = useRef(null);
+
   const mnemonicRef = useRef(<></>);
   const [addressStr, setAddressStr] = useState("");
   const [mnemonicStr, setMnemonicStr] = useState("");
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [activePage, setActivePage] = useState("LOGIN");
   const [insrPackage, setInsrPackage] = useState("");
   const [deployed, setDeployed] = useState(false);
   const [isSavingContractInfo, setIsSavingContractInfo] = useState(false);
-  const [gotoSignup, setGotoSignup] = useState(false);
-  const [gotoDeployerPage, setGotoDeployerPage] = useState(false);
-  const [gotoDashboard, setGotoDashboard] = useState(false);
-  const [gotoErrorPage, setGotoErrorPage] = useState(false);
-
+  const [contractInfoSaved, setContractInfoSaved] = useState(false);
+  const [errMessage, setErrMessage] = useState("Err occured.");
+  const [errCode, setErrCode] = useState("GOTO_LOGIN");
+  const [deployerModeOn, setDeployerModeOn] = useState(false);
 
 
   useEffect(() => {
     try {
       //fetch the contract info
       const { data: infoArr, error } = await supabaseClient.from("smartcontracts").select("info").eq('name', "insurancedapp");
-      //if info was found, 
       if (err) { throw err; }
+      //if info was found, 
       if (infoArr.length > 0) {
         setDeployed(true);
       }
@@ -43,39 +48,32 @@ function App() {
   function Login() {
     const algoAccount = reach.newAccountFromMnemonic(mnemonicStr);
     if (!deployed) {
-      setIsSavingContractInfo(true);
-      const insurerAccount = algoAccount;
-      const insurerContract = insurerAccount.contract(backend);
-      //save the contract info into supabase
-      supabaseClient.from("smartcontracts").insert([{
-        name: "insurancedapp", info: JSON.stringify(insurerContract.getInfo())
-      }]).then(({ data, err }) => {
-        setIsSavingContractInfo(false);
-        if (err) {
-          console.log(`Error while saving the contract info to supabase ${err}`);
-          console.log(`Saved contract info to supabase: ${JSON.stringify(data)}`);
-        }
-      });
-      setGotoSignup(false);
-      setGotoDeployerPage(true);
+      const wantToDeployContract = confirm("The insurer contract is not yet deployed. Are you the insurer ? Deploy it.");
+      if (wantToDeployContract) {
+        setActivePage("DEPLOYER");
+      } else {
+        setErrMessage("Wait for the insurer to deploy the contract, or contact them for help");
+        setErrCode("GOTO_LOGIN");
+        setActivePage("ERROR");
+      }
+    } else if (deployerModeOn) {
+      setActivePage("DEPLOYER");
     } else {
-      setGotoDeployerPage(false);
       let isRegisteredMember = false;
       const memberAddr = reach.formatAddress(algoAccount);
       const { data: memberDataArr, error } = await supabaseClient.from("members").select("*").eq('memberAddr', memberAddr);
       if (error) {
-        setGotoSignup(false);
-        setGotoDashboard(false);
-        setGotoErrorPage(true);
+        setErrMessage(JSON.stringify(error));
+        setErrCode("GOTO_LOGIN");
+        setActivePage("ERROR");
       }
       if (memberDataArr.length > 0) {
         isRegisteredMember = true;
       }
       if (isRegisteredMember) {
-        setGotoSignup(false);
-        setGotoDashboard(true);
+        setActivePage("DASHBOARD");
       } else {
-        setGotoSignup(true);
+        setActivePage("SIGNUP");
       }
     }
   }
@@ -122,12 +120,46 @@ function App() {
     }
   });
 
+  const deployContract = useCallback(() => {
+    //deploy the contract
+    setIsSavingContractInfo(true);
+    const insurerAccount = algoAccount;
+    insurerContract.current = insurerAccount.contract(backend);
+    //save the contract info into supabase
+    supabaseClient.from("smartcontracts").insert([{
+      name: "insurancedapp", info: JSON.stringify(insurerContract.current.getInfo())
+    }]).then(({ data, err }) => {
+      setIsSavingContractInfo(false);
+      if (err) {
+        console.log(`Error while saving the contract info to supabase ${err}`);
+        console.log(`Saved contract info to supabase: ${JSON.stringify(data)}`);
+      }
+    });
+
+    // Set deployed contract Init state
+    backend.Insurer.interact.communityGroupName = communityGroupName;
+    backend.Insurer.interact.mandatoryEntryFee = mandatoryEntryFee;
+    backend.Insurer.interact.contractIsRunning = true;
+  }, []);
+
+  const stopContract = useCallback(() => {
+    //TODO: delete info record from supabase
+    backend.Insurer.interact.contractIsRunning = false;
+    setContractInfoSaved(false);
+  }, []);
+
   return (
     <>
-      {gotoLogin ?
+      {(activePage === "LOGIN") ?
         <div className='h-screen flex bg-blue-100'>
           <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-2 px-16 shadow'>
-            <h1 className='text-4xl text-blue-700  text-primary mt-2 mb-2 text-center'> Insurance Dapp </h1>
+            <h1 className='text-4xl text-blue-700  text-primary mt-2 mb-2 text-center'> Insurance Dapp
+              <span>
+                <button onClick={setDeployerModeOn.bind(this, (!deployerModeOn))} className="pl-4 text-bold">
+                  [{deployerModeOn && "d"}]
+                </button>
+              </span>
+            </h1>
             <hr />
 
             <h1 className='text-xl font-medium text-primary mt-6 mb-6 text-center'>
@@ -161,7 +193,7 @@ function App() {
             </form>
           </div>
         </div>
-        : gotoSignup ?
+        : (activePage === "SIGNUP") ?
           <div className='h-screen flex bg-blue-100'>
             <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-2 px-16 shadow'>
               <h1 className='text-4xl text-blue-700  text-primary mt-2 mb-2 text-center'> Insurance Dapp </h1>
@@ -234,21 +266,81 @@ function App() {
               </form>
             </div>
           </div >
-          : gotoDashboard ?
+          : (activePage === "DASHBOARD") ?
             <div>
               Dashboard
             </div>
-            : gotoDeployerPage ?
-              <div>
-                Deployer
-              </div>
-              : gotoErrorPage ?
+            : (activePage === "DEPLOYER") ?
+              <div className='h-screen flex bg-blue-100'>
+                <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-2 px-16 shadow'>
+                  <h1 className='text-4xl text-blue-700  text-primary mt-2 mb-2 text-center'> Insurance Dapp </h1>
+                  <hr />
+                  <small> Keep your mnemonic secret: ( {mnemonicStr} ) </small>
+                  <hr />
+
+                  <h1 className='text-xl font-medium text-primary mt-6 mb-6 text-center'>
+                    Register for insurance services
+                  </h1>
+
+                  <form >
+                    <div>
+                      <label htmlFor='fullname'> Insurer name </label>
+                      <input
+                        type="text"
+                        value={communityGroupName}
+                        onChange={e => setCommunityGroupName(e.target.value)}
+                        className={`w-full py px-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor='phone'> Mandatory entry fee </label>
+                      <input
+                        type="number"
+                        value={mandatoryEntryFee}
+                        onChange={e => setMandatoryEntryFee(Number(e.target.value))}
+                        className={`w-full py px-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                      />
+                    </div>
+
+                    <div className='flex justify-center items-center mt-6'>
+                      <button onClick={deployContract}
+                        className={`bg-blue-500 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark ${(isSavingContractInfo || contractInfoSaved) ? "opacity-50 cursor-not-allowed" : ""}`}
+                      >
+                        {contractInfoSaved ? "Deployed" : isSavingContractInfo ? "Deploying ..." : "Deploy contract now"}
+                      </button>
+                      {
+                        isSavingContractInfo && <span>
+                          <img src={loadingGif1} width="50px" />
+                        </span>
+                      }
+                      {contractInfoSaved &&
+                        <button onClick={stopContract}
+                          className={`bg-blue-500 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark`}
+                        > Stop contract </button>
+                      }
+                    </div>
+                  </form>
+                </div>
+              </div >
+              : (activePage === "ERROR") ?
                 <div>
-                  Error !
+                  <h1> Error ! </h1>
+                  <p> {errMessage} </p>
+                  <br />
+                  <hr />
+                  {
+                    errCode === "GOTO_LOGIN" ?
+                      <button onClick={setActivePage.bind(this, "LOGIN")}>Go back to login </button>
+                      : errCode === "GOTO_SIGNUP" ?
+                        <button onClick={setActivePage.bind(this, "SIGNUP")}>Go back to login </button>
+                        :
+                        <button onClick={setActivePage.bind(this, "LOGIN")}>Go back to login </button>
+                  }
                 </div>
                 :
                 <div>
-                  !!! Unexpected Error !!!
+                  <h1> Oops!!, Unexpected Error.  </h1>
                 </div>
       }
     </>

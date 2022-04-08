@@ -2,16 +2,15 @@
 
 export const main = Reach.App(() => {
     const Insurer = Participant('Insurer', {
-        setInitialDeploymentState: Fun([], Object({
-            mandatoryEntryFee: UInt
-        })),
+        mandatoryEntryFee: UInt,
         communityGroupName: Bytes(60),
+        contractIsRunning: Bool,
+
         createDatabase: Fun([], Null),
         approveNewMembership: Fun([Address], Null),
         createAddressForNewUSer: Fun([], Address),
         createInvoices: Fun([], Null),
         moveMaturedPayments: Fun([], Null),
-        contractNotStoppedByInsurer: Bool,
         stopContract: Fun([], Null),
         saveNewMemberDetails: Fun([Object({
             fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: Bytes(60)
@@ -69,7 +68,7 @@ export const main = Reach.App(() => {
     init();
 
     Insurer.only(() => {
-        const { mandatoryEntryFee } = declassify(interact.setInitialDeploymentState());
+        const mandatoryEntryFee = declassify(interact.mandatoryEntryFee);
         interact.seeFeedback();
     });
     Insurer.publish(mandatoryEntryFee);
@@ -80,7 +79,7 @@ export const main = Reach.App(() => {
         returned1
     ] = parallelReduce([true])
         .invariant(invariantCondition)
-        .while(Insurer.interact.contractNotStoppedByInsurer)
+        .while(Insurer.interact.contractIsRunning)
         .api(CommunityMember.registerMembership,
             ((newMemberDetails, sendResponse) => {
                 //the registering member must have enough credit on their account to pay the entry fee.
