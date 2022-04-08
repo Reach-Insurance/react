@@ -3,17 +3,22 @@ import './App.css';
 import loadingGif1 from './images/ajax-loader.gif';
 import * as backend from './reach-build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib';
-const reach = loadStdlib(process.env);
 import { createClient } from "@supabase/supabase-js";
+import useConfirm from "./hooks/useConfirm";
 import { v4 } from 'uuid';
+
+const reach = loadStdlib(process.env);
 const SUPABASE_URL = "https://byolfysahovehogqdena.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5b2xmeXNhaG92ZWhvZ3FkZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDg3NTcwMTYsImV4cCI6MTk2NDMzMzAxNn0.Q5h8nwP-qy1o5oDa0UCAgj1m7vTXOlhPyoZRC-0CNnk";
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function App() {
+  const { confirm } = useConfirm();
+
   const [communityGroupName, setCommunityGroupName] = useState("Test group insurance");
   const [mandatoryEntryFee, setMandatoryEntryFee] = useState(0);
   const insurerContract = useRef(null);
+  const algoAccount = useRef(null);
 
   const mnemonicRef = useRef(<></>);
   const [addressStr, setAddressStr] = useState("");
@@ -32,49 +37,60 @@ function App() {
 
 
   useEffect(() => {
-    try {
-      //fetch the contract info
-      const { data: infoArr, error } = await supabaseClient.from("smartcontracts").select("info").eq('name', "insurancedapp");
-      if (err) { throw err; }
-      //if info was found, 
-      if (infoArr.length > 0) {
-        setDeployed(true);
+    async function readFromDb() {
+      try {
+        //fetch the contract info
+        const { data: infoArr, error } = await supabaseClient.from("smartcontracts").select("info").eq('name', "insurancedapp");
+        if (error) { throw error; }
+        //if info was found, 
+        if (infoArr.length > 0) {
+          setDeployed(true);
+        }
+      } catch (er) {
+        console.log("Oops! Failed to fetch the contract info/address", er);
       }
-    } catch (er) {
-      console.log("Oops! Failed to fetch the contract info/address", er);
     }
+
+    readFromDb();
   }, []);
 
   function Login() {
-    const algoAccount = reach.newAccountFromMnemonic(mnemonicStr);
+    algoAccount.current = reach.newAccountFromMnemonic(mnemonicStr);
     if (!deployed) {
-      const wantToDeployContract = confirm("The insurer contract is not yet deployed. Are you the insurer ? Deploy it.");
-      if (wantToDeployContract) {
-        setActivePage("DEPLOYER");
-      } else {
-        setErrMessage("Wait for the insurer to deploy the contract, or contact them for help");
-        setErrCode("GOTO_LOGIN");
-        setActivePage("ERROR");
+      const showConfirmPopup = async () => {
+        const wantToDeployContract = await confirm('The insurer contract is not yet deployed. Are you the insurer ? Deploy it.');
+        if (wantToDeployContract) {
+          setActivePage("DEPLOYER");
+        } else {
+          setErrMessage("Wait for the insurer to deploy the contract, or contact them for help");
+          setErrCode("GOTO_LOGIN");
+          setActivePage("ERROR");
+        }
       }
+      showConfirmPopup();
     } else if (deployerModeOn) {
       setActivePage("DEPLOYER");
     } else {
-      let isRegisteredMember = false;
-      const memberAddr = reach.formatAddress(algoAccount);
-      const { data: memberDataArr, error } = await supabaseClient.from("members").select("*").eq('memberAddr', memberAddr);
-      if (error) {
-        setErrMessage(JSON.stringify(error));
-        setErrCode("GOTO_LOGIN");
-        setActivePage("ERROR");
+
+      async function accessDb() {
+        let isRegisteredMember = false;
+        const memberAddr = reach.formatAddress(algoAccount.current);
+        const { data: memberDataArr, error } = await supabaseClient.from("members").select("*").eq('memberAddr', memberAddr);
+        if (error) {
+          setErrMessage(JSON.stringify(error));
+          setErrCode("GOTO_LOGIN");
+          setActivePage("ERROR");
+        }
+        if (memberDataArr.length > 0) {
+          isRegisteredMember = true;
+        }
+        if (isRegisteredMember) {
+          setActivePage("DASHBOARD");
+        } else {
+          setActivePage("SIGNUP");
+        }
       }
-      if (memberDataArr.length > 0) {
-        isRegisteredMember = true;
-      }
-      if (isRegisteredMember) {
-        setActivePage("DASHBOARD");
-      } else {
-        setActivePage("SIGNUP");
-      }
+      accessDb();
     }
   }
 
@@ -82,8 +98,8 @@ function App() {
     alert(`NOTE: a new algo account is being created for you, 
     please dont forget to copy your new mnemonic and keep it secret.`);
     //create new algo account
-    const algoAccount = reach.newTestAccount();
-    const newMnemonic = reach.unsafeGetMnemonic(algoAccount);
+    algoAccount.current = reach.newTestAccount();
+    const newMnemonic = reach.unsafeGetMnemonic(algoAccount.current);
     setMnemonicStr(newMnemonic);
     Login();
   }
@@ -110,20 +126,23 @@ function App() {
   }
 
   backend.Insurer.saveNewMemberDetails = useCallback(({ fullName, phone, email, chosenInsurancePackage }) => {
-    const { error } = await supabaseClient.from("members").insert([{
-      fullName, phone, email, chosenInsurancePackage
-    }]);
-    if (error) {
-      console.log(error);
-    } else {
-      alert("Details save successfully");
+    async function accessDb() {
+      const { error } = await supabaseClient.from("members").insert([{
+        fullName, phone, email, chosenInsurancePackage
+      }]);
+      if (error) {
+        console.log(error);
+      } else {
+        alert("Details save successfully");
+      }
     }
+    accessDb();
   });
 
   const deployContract = useCallback(() => {
+    const insurerAccount = algoAccount.current;
     //deploy the contract
     setIsSavingContractInfo(true);
-    const insurerAccount = algoAccount;
     insurerContract.current = insurerAccount.contract(backend);
     //save the contract info into supabase
     supabaseClient.from("smartcontracts").insert([{
