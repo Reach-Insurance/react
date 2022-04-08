@@ -3,9 +3,9 @@
 export const main = Reach.App(() => {
     const Insurer = Participant('Insurer', {
         setInitialDeploymentState: Fun([], Object({
-            mandatoryEntryFee: Bytes
+            mandatoryEntryFee: UInt
         })),
-        communityGroupName: Bytes,
+        communityGroupName: Bytes(60),
         createDatabase: Fun([], Null),
         approveNewMembership: Fun([Address], Null),
         createAddressForNewUSer: Fun([], Address),
@@ -14,32 +14,32 @@ export const main = Reach.App(() => {
         contractNotStoppedByInsurer: Bool,
         stopContract: Fun([], Null),
         saveNewMemberDetails: Fun([Object({
-            fullName: Bytes, phone: Bytes, email: Bytes, chosenInsurancePackage: Bytes
+            fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: Bytes(60)
         })], Null),
         saveNewClaim: Fun([Object({
             ownerAddr: Address,
             amountRequested: UInt,
-            description: Bytes,
-            supportDocuments: Bytes
+            description: Bytes(600),
+            supportDocuments: Bytes(100)
             //amountSet = amountRequested ,
             //accepted: Bool = false,
             //approvalsCount = 0,
         })], Null),
-        notifyMembersAboutNewClaim: Fun([{
+        notifyMembersAboutNewClaim: Fun([Object({
             ownerAddr: Address,
             amountRequested: UInt,
-            description: Bytes,
-            supportDocuments: Bytes
-        }], Null)
+            description: Bytes(600),
+            supportDocuments: Bytes(100)
+        })], Null),
+        seeFeedback: Fun([], Null)
     });
     const CommunityMember = API('CommunityMember', {
-        registerMembership: Fun([Object({ fullName: Bytes, phone: Bytes, email: Bytes, chosenInsurancePackage: Bytes })], Bool),
+        registerMembership: Fun([Object({ fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: Bytes(60) })], Bool),
         registerDependant: Fun([Address], Bool),
         cancelMembership: Fun([Address], Bool),
         payEntryFee: Fun([Address, UInt], Bool),
         payMonthlyFee: Fun([Address, UInt], Bool),
-        changePackage: Fun([Bytes], Bool),
-        getAccountStatement: Fun([Address], Map),
+        changePackage: Fun([Bytes(60)], Bool),
         createClaim: Fun([Address, UInt], Bool),
         respondToClaim: Fun([Object({
             claimant: Address, accepted: Bool, setAmount: UInt
@@ -49,14 +49,14 @@ export const main = Reach.App(() => {
         approveExit: Fun([], Null),
         seeResponse: Fun([Address, Object({
             claimant: Address, accepted: Bool, setAmount: UInt
-        })], Null),
+        })], Null)
     });
     const Dependant = API('Dependant', {
         getAccountStatement: Fun([], Null),
         payMonthlyFee: Fun([], Null),
         createClaim: Fun([], Null),
         inheritAccount: Fun([], Null),
-        approveInheritance: Fun([], Null),
+        approveInheritance: Fun([], Null)
     });
     const ImSvcProvider = API('ImSvcProvider', {
         registerMembership: Fun([], Null),
@@ -64,23 +64,22 @@ export const main = Reach.App(() => {
         payEntryFee: Fun([], Null),
         createClaim: Fun([], Null),
         respondToClaim: Fun([], Null),
-        seeFeedback: Fun([Bytes], Null),
+        seeFeedback: Fun([], Null)
     });
     init();
 
     Insurer.only(() => {
         const { mandatoryEntryFee } = declassify(interact.setInitialDeploymentState());
-        //get feedback
-        interact.seeFeedback(`You have set entry fee to: ${mandatoryEntryFee}`);
-        interact.contractNotStoppedByInsurer = true;
+        interact.seeFeedback();
     });
     Insurer.publish(mandatoryEntryFee);
-    commit();
+    const invariantCondition = true;
+    //commit();
 
     const [
         returned1
     ] = parallelReduce([true])
-        .invariant(balance() == 0)
+        .invariant(invariantCondition)
         .while(Insurer.interact.contractNotStoppedByInsurer)
         .api(CommunityMember.registerMembership,
             ((newMemberDetails, sendResponse) => {
