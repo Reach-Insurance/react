@@ -2,44 +2,43 @@
 
 export const main = Reach.App(() => {
     const Insurer = Participant('Insurer', {
-        setInitialDeploymentState: Fun([], Object({
-            mandatoryEntryFee: Bytes
-        })),
-        communityGroupName: Bytes,
+        mandatoryEntryFee: UInt,
+        communityGroupName: Bytes(60),
+        contractIsRunning: Bool,
+
         createDatabase: Fun([], Null),
         approveNewMembership: Fun([Address], Null),
         createAddressForNewUSer: Fun([], Address),
         createInvoices: Fun([], Null),
         moveMaturedPayments: Fun([], Null),
-        contractNotStoppedByInsurer: Bool,
         stopContract: Fun([], Null),
         saveNewMemberDetails: Fun([Object({
-            fullName: Bytes, phone: Bytes, email: Bytes, chosenInsurancePackage: Bytes
+            fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: Bytes(60)
         })], Null),
         saveNewClaim: Fun([Object({
             ownerAddr: Address,
             amountRequested: UInt,
-            description: Bytes,
-            supportDocuments: Bytes
+            description: Bytes(600),
+            supportDocuments: Bytes(100)
             //amountSet = amountRequested ,
             //accepted: Bool = false,
             //approvalsCount = 0,
         })], Null),
-        notifyMembersAboutNewClaim: Fun([{
+        notifyMembersAboutNewClaim: Fun([Object({
             ownerAddr: Address,
             amountRequested: UInt,
-            description: Bytes,
-            supportDocuments: Bytes
-        }], Null)
+            description: Bytes(600),
+            supportDocuments: Bytes(100)
+        })], Null),
+        seeFeedback: Fun([], Null)
     });
     const CommunityMember = API('CommunityMember', {
-        registerMembership: Fun([Object({ fullName: Bytes, phone: Bytes, email: Bytes, chosenInsurancePackage: Bytes })], Bool),
+        registerMembership: Fun([Object({ fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: Bytes(60) })], Bool),
         registerDependant: Fun([Address], Bool),
         cancelMembership: Fun([Address], Bool),
         payEntryFee: Fun([Address, UInt], Bool),
         payMonthlyFee: Fun([Address, UInt], Bool),
-        changePackage: Fun([Bytes], Bool),
-        getAccountStatement: Fun([Address], Map),
+        changePackage: Fun([Bytes(60)], Bool),
         createClaim: Fun([Address, UInt], Bool),
         respondToClaim: Fun([Object({
             claimant: Address, accepted: Bool, setAmount: UInt
@@ -49,14 +48,14 @@ export const main = Reach.App(() => {
         approveExit: Fun([], Null),
         seeResponse: Fun([Address, Object({
             claimant: Address, accepted: Bool, setAmount: UInt
-        })], Null),
+        })], Null)
     });
     const Dependant = API('Dependant', {
         getAccountStatement: Fun([], Null),
         payMonthlyFee: Fun([], Null),
         createClaim: Fun([], Null),
         inheritAccount: Fun([], Null),
-        approveInheritance: Fun([], Null),
+        approveInheritance: Fun([], Null)
     });
     const ImSvcProvider = API('ImSvcProvider', {
         registerMembership: Fun([], Null),
@@ -64,25 +63,60 @@ export const main = Reach.App(() => {
         payEntryFee: Fun([], Null),
         createClaim: Fun([], Null),
         respondToClaim: Fun([], Null),
-        seeFeedback: Fun([Bytes], Null),
+        seeFeedback: Fun([], Null)
     });
     init();
 
     Insurer.only(() => {
-        const { mandatoryEntryFee } = declassify(interact.setInitialDeploymentState());
-        //get feedback
-        interact.seeFeedback(`You have set entry fee to: ${mandatoryEntryFee}`);
-        interact.contractNotStoppedByInsurer = true;
+        const mandatoryEntryFee = declassify(interact.mandatoryEntryFee);
+        const contractIsRunning = declassify(interact.contractIsRunning);
+        interact.seeFeedback();
     });
-    Insurer.publish(mandatoryEntryFee);
+    Insurer.publish(mandatoryEntryFee, contractIsRunning);
+    const invariantCondition = true;
     commit();
+    Insurer.publish();
+
+    //keep a list of all members' Addresses,
+    //more info about the members is kept away (in the db).
+    const registeredMembers = new Set();
+
+    //claim shape
+    const insuranceClaims = new Map(Address, Object({
+        amountRequested: UInt, amountSet: UInt, accepted: Bool, approvalsCount: UInt, sumOfSetAmounts: UInt
+    }));
+
+    //details of members with open claims are kept close, 
+    //other members are kept away from here (in the db)
+    const claimOwners = new Map(Address, Object({
+        fullName: Bytes(60),
+        physicalAddress: Bytes(100),
+        insrPackageId: UInt,
+        dateJoined: "String",
+        amountDue: UInt,
+        matureBalance: UInt
+    }));
+
+    //a constant list of insurance packages, in a map.
+    const insurancePackages = new Map(UInt, Object({ packageTitle: Bytes(100), monthlyFee: UInt, fundingLimit: UInt }));
+    insurancePackages[1] = { packageTitle: "package1 - 1000 - 120000", monthlyFee: 1000, fundingLimit: 120000 };
+    insurancePackages[2] = { packageTitle: "package2 - 5000 - 600,000", monthlyFee: 5000, fundingLimit: 600000 };
+    insurancePackages[3] = { packageTitle: "package3 - 10000 - 1,200,000", monthlyFee: 10000, fundingLimit: 1200000 };
+    insurancePackages[4] = { packageTitle: "package4 - 50000 - 6,000,000", monthlyFee: 50000, fundingLimit: 6000000 };
+    insurancePackages[5] = { packageTitle: "package5 - 100000 - 12,000,000", monthlyFee: 100000, fundingLimit: 12000000 };
+    insurancePackages[6] = { packageTitle: "package6 - 500000 - 60,000,000", monthlyFee: 500000, fundingLimit: 60000000 };
 
     const [
-        returned1
-    ] = parallelReduce([true])
-        .invariant(balance() == 0)
-        .while(Insurer.interact.contractNotStoppedByInsurer)
+        openClaims,
+        membersWithClaims,
+        membersCount,
+        claimsCount
+    ] = parallelReduce([insuranceClaims, claimOwners, allMembersCount, openClaimsCount])
+        .invariant(invariantCondition)
+        .while(contractIsRunning)
         .api(CommunityMember.registerMembership,
+            (_) => { const _ = true; },
+            (_) => 0,
             ((newMemberDetails, sendResponse) => {
                 //the registering member must have enough credit on their account to pay the entry fee.
                 const who = this;
@@ -93,9 +127,15 @@ export const main = Reach.App(() => {
                 sendResponse(true);
                 who.pay(mandatoryEntryFee)
                 transfer(mandatoryEntryFee).to(Insurer);
-                return [true];
+
+                //add member's address to the list of addresses
+                registeredMembers.insert(who);
+
+                return [openClaims, membersWithClaims, membersCount + 1, claimsCount];
             })
         ).api(CommunityMember.payMonthlyFee,
+            (_) => { const _ = true; },
+            (mfee) => mfee,
             ((mfee, sendResponse) => {
                 //the member must have enough credit on their account to pay the monthly fee.
                 const who = this;
@@ -104,28 +144,77 @@ export const main = Reach.App(() => {
                 sendResponse(true);
 
                 transfer(mfee).to(Insurer);
-                return [true];
+                return [openClaims, membersWithClaims, membersCount, claimsCount];
             })
         ).api(CommunityMember.createClaim,
+            (_) => { const _ = true; },
+            (_) => 0,
             ((claimInfo, sendResponse) => {
                 const who = this;
                 sendResponse(true);
                 claimInfo.claimant = who;
                 Insurer.interact.saveNewClaim(claimInfo);
-                return [true];
+
+                //TODO: read all the details of this member fro the db
+
+                //TODO: add the details to the map of current claim owners
+
+                //TODO: get the package this member subscribe for
+
+
+                //TODO: read the funding limit of this member's package
+                const fundLimit = 600000;
+
+                //claim amount can not exceed the limit
+                const claimAmount = claimInfo.amountRequested >= fundLimit ? claimInfo.amountRequested : fundLimit;
+                openClaims[who] = { amountRequested: claimInfo.amountRequested, amountSet: claimAmount, accepted: false, approvalsCount: 0 };
+
+                return [openClaims, membersWithClaims, membersCount, claimsCount + 1];
             })
         ).api(CommunityMember.respondToClaim,
+            (_) => { const _ = true; },
+            (_) => 0,
             ((opinion, sendResponse) => {
                 const who = this;
+                const forWho = opinion.claimant;
                 sendResponse(true);
 
-                //TODO: if this claimant has raised 5 approvals, then
-                //TODO: determine the final amount agreed, and 
-                //transfer(agreedClaimAmount).to(opinion.claimant);
-                claimant.interact.seeResponse(who, opinion);
-                return [true];
+                //get the claim of this claimant
+
+                if (opinion.accepted) {
+                    openClaims[forWho].approvalsCount = openClaims[forWho].approvalsCount + 1;
+                    openClaims[forWho].sumOfSetAmounts += opinion.setAmount;
+                    //TODO: if this claimant has raised 5 approvals, then
+                    if (openClaims[forWho].approvalsCount >= 5) {
+                        //TODO: determine the final amount agreed, and 
+                        //TODO: transfer(agreedClaimAmount).to(opinion.claimant);
+                        //TODO: eliminate the member from the list of claim owners (membersWithClaims)
+                        //TODO: eliminate the claim from the list of open claims (openClaims)
+                    }
+                }
+                //claimant.interact.seeResponse(who, opinion);
+                return [openClaims, membersWithClaims, membersCount, claimsCount];
+            })
+        ).api(CommunityMember.stopContract,
+            () => { const _ = true; },
+            () => 0,
+            ((sendResponse) => {
+                //this must be done by the deployer of the contract only.
+                const who = this;
+                require(who == Insurer, `You are not allowed to take this action.`);
+                sendResponse(true);
+                //FUTURE IMPROVEMENT: ensure that the deployer/Insurer does not have authority over the platform.
+                //ensure that he first get permission from members to stop the contract.
+                //ensure there are clearly agreed rules for non participation on this matter.
+
+                return [openClaims, membersWithClaims, membersCount, claimsCount];
             })
         );
+
+    //cleanup: send all pending funds to the insurer (if any)
+    transfer(balance()).to(Insurer);
+
+    //terminate the concensus step
     commit();
 
     exit();
