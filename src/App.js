@@ -6,7 +6,6 @@ import { loadStdlib } from '@reach-sh/stdlib';
 import { createClient } from "@supabase/supabase-js";
 import useConfirm from "./hooks/useConfirm";
 import { v4 } from 'uuid';
-
 const reach = loadStdlib(process.env);
 const SUPABASE_URL = "https://byolfysahovehogqdena.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5b2xmeXNhaG92ZWhvZ3FkZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDg3NTcwMTYsImV4cCI6MTk2NDMzMzAxNn0.Q5h8nwP-qy1o5oDa0UCAgj1m7vTXOlhPyoZRC-0CNnk";
@@ -58,6 +57,7 @@ function App() {
     algoAccount.current = reach.newAccountFromMnemonic(mnemonicStr);
     if (!deployed) {
       const showConfirmPopup = async () => {
+        //https://devrecipes.net/custom-confirm-dialog-with-react-hooks-and-the-context-api/
         const wantToDeployContract = await confirm('The insurer contract is not yet deployed. Are you the insurer ? Deploy it.');
         if (wantToDeployContract) {
           setActivePage("DEPLOYER");

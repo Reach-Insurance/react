@@ -11,7 +11,6 @@ export const main = Reach.App(() => {
         createAddressForNewUSer: Fun([], Address),
         createInvoices: Fun([], Null),
         moveMaturedPayments: Fun([], Null),
-        stopContract: Fun([], Null),
         saveNewMemberDetails: Fun([Object({
             fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: Bytes(60)
         })], Null),
@@ -40,6 +39,7 @@ export const main = Reach.App(() => {
         payMonthlyFee: Fun([Address, UInt], Bool),
         changePackage: Fun([Bytes(60)], Bool),
         createClaim: Fun([Address, UInt], Bool),
+        stopContract: Fun([], Null),
         respondToClaim: Fun([Object({
             claimant: Address, accepted: Bool, setAmount: UInt
         })], Bool),
@@ -75,43 +75,54 @@ export const main = Reach.App(() => {
     Insurer.publish(mandatoryEntryFee, contractIsRunning);
     const invariantCondition = true;
     commit();
-    Insurer.publish();
 
     //keep a list of all members' Addresses,
     //more info about the members is kept away (in the db).
     const registeredMembers = new Set();
 
     //claim shape
-    const insuranceClaims = new Map(Address, Object({
+    const insuranceClaims = new Map(Object({
         amountRequested: UInt, amountSet: UInt, accepted: Bool, approvalsCount: UInt, sumOfSetAmounts: UInt
     }));
 
     //details of members with open claims are kept close, 
     //other members are kept away from here (in the db)
-    const claimOwners = new Map(Address, Object({
+    const claimOwners = new Map(Object({
         fullName: Bytes(60),
         physicalAddress: Bytes(100),
         insrPackageId: UInt,
-        dateJoined: "String",
+        dateJoined: Bytes(30),
         amountDue: UInt,
         matureBalance: UInt
     }));
 
+    Insurer.publish();
+
     //a constant list of insurance packages, in a map.
-    const insurancePackages = new Map(UInt, Object({ packageTitle: Bytes(100), monthlyFee: UInt, fundingLimit: UInt }));
-    insurancePackages[1] = { packageTitle: "package1 - 1000 - 120000", monthlyFee: 1000, fundingLimit: 120000 };
-    insurancePackages[2] = { packageTitle: "package2 - 5000 - 600,000", monthlyFee: 5000, fundingLimit: 600000 };
-    insurancePackages[3] = { packageTitle: "package3 - 10000 - 1,200,000", monthlyFee: 10000, fundingLimit: 1200000 };
-    insurancePackages[4] = { packageTitle: "package4 - 50000 - 6,000,000", monthlyFee: 50000, fundingLimit: 6000000 };
-    insurancePackages[5] = { packageTitle: "package5 - 100000 - 12,000,000", monthlyFee: 100000, fundingLimit: 12000000 };
-    insurancePackages[6] = { packageTitle: "package6 - 500000 - 60,000,000", monthlyFee: 500000, fundingLimit: 60000000 };
+    const insurancePackages = new Map(UInt, Object({ monthlyFee: UInt, fundingLimit: UInt }));
+    insurancePackages[1] = { monthlyFee: 1000, fundingLimit: 120000 };
+    insurancePackages[2] = { monthlyFee: 5000, fundingLimit: 600000 };
+    insurancePackages[3] = { monthlyFee: 10000, fundingLimit: 1200000 };
+    insurancePackages[4] = { monthlyFee: 50000, fundingLimit: 6000000 };
+    insurancePackages[5] = { monthlyFee: 100000, fundingLimit: 12000000 };
+    insurancePackages[6] = { monthlyFee: 500000, fundingLimit: 60000000 };
 
     const [
         openClaims,
         membersWithClaims,
         membersCount,
         claimsCount
-    ] = parallelReduce([insuranceClaims, claimOwners, allMembersCount, openClaimsCount])
+    ] = parallelReduce([insuranceClaims, claimOwners, 0, 0])
+        .define(() => {
+            const getApprovalsCountFromMap = (someObject) => { return someObject.approvalsCount; };
+
+            //this function can be passed to mayBe(...) function to 
+            //get the value from a mayBe which is returned by a Map of objects
+            //Ex.   maybe(myMapOfObjects[forWho], 0, readFromMap(objectKey) )
+            //will return the value of the specified object key if the map contains 
+            // an object at its "forWho" key
+            const readFromMap = (key) => { return (objectInMapInstance) => { return objectInMapInstance[key]; }; };
+        })
         .invariant(invariantCondition)
         .while(contractIsRunning)
         .api(CommunityMember.registerMembership,
@@ -184,8 +195,7 @@ export const main = Reach.App(() => {
                 if (opinion.accepted) {
                     openClaims[forWho].approvalsCount = openClaims[forWho].approvalsCount + 1;
                     openClaims[forWho].sumOfSetAmounts += opinion.setAmount;
-                    //TODO: if this claimant has raised 5 approvals, then
-                    if (openClaims[forWho].approvalsCount >= 5) {
+                    if (maybe(openClaims[forWho], 0, readFromMap("approvalsCount")) >= 5) {
                         //TODO: determine the final amount agreed, and 
                         //TODO: transfer(agreedClaimAmount).to(opinion.claimant);
                         //TODO: eliminate the member from the list of claim owners (membersWithClaims)
@@ -219,6 +229,9 @@ export const main = Reach.App(() => {
 
     exit();
 });
+
+//follow example here:
+// https://github.com/reach-sh/reach-lang/blob/master/examples/rsvp/index.rsh
 
 //invariants info: https://en.wikipedia.org/wiki/Loop_invariant
 
