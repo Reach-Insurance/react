@@ -38,7 +38,7 @@ export const main = Reach.App(() => {
         payEntryFee: Fun([Address, UInt], Bool),
         payMonthlyFee: Fun([Address, UInt], Bool),
         changePackage: Fun([Bytes(60)], Bool),
-        createClaim: Fun([Address, UInt], Bool),
+        createClaim: Fun([Object({ amountRequested: UInt, amountSet: UInt, accepted: Bool, approvalsCount: UInt, sumOfSetAmounts: UInt })], Bool),
         stopContract: Fun([], Null),
         respondToClaim: Fun([Object({
             claimant: Address, accepted: Bool, setAmount: UInt
@@ -97,9 +97,6 @@ export const main = Reach.App(() => {
         matureBalance: UInt
     }));
 
-    claimOwners[Insurer] = { insrPackageId: 0, amountDue: 0, matureBalance: 0 };
-    insuranceClaims[Insurer] = { amountRequested: 0, amountSet: 0, accepted: false, approvalsCount: 0, sumOfSetAmounts: 0 };
-
     //a constant list of insurance packages, in a map.
     const insurancePackages = new Map(UInt, Object({ monthlyFee: UInt, fundingLimit: UInt }));
     insurancePackages[1] = { monthlyFee: 1000, fundingLimit: 120000 };
@@ -114,7 +111,7 @@ export const main = Reach.App(() => {
         membersWithClaims,
         membersCount,
         claimsCount
-    ] = parallelReduce([insuranceClaims, claimOwners, 0, 0])
+    ] = parallelReduce([insuranceClaims[Insurer], claimOwners[Insurer], 0, 0])
         .define(() => {
             const getApprovalsCountFromMap = (someObject) => { return someObject.approvalsCount; };
 
@@ -147,8 +144,6 @@ export const main = Reach.App(() => {
                 return [openClaims, membersWithClaims, membersCount + 1, claimsCount];
             })
         ).api(CommunityMember.payMonthlyFee,
-            (_) => { const _ = true; },
-            (mfee) => mfee,
             ((mfee, sendResponse) => {
                 //the member must have enough credit on their account to pay the monthly fee.
                 const who = this;
