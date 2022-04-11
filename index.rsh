@@ -75,6 +75,7 @@ export const main = Reach.App(() => {
     Insurer.publish(mandatoryEntryFee, contractIsRunning);
     const invariantCondition = true;
     commit();
+    Insurer.publish();
 
     //keep a list of all members' Addresses,
     //more info about the members is kept away (in the db).
@@ -95,8 +96,6 @@ export const main = Reach.App(() => {
         amountDue: UInt,
         matureBalance: UInt
     }));
-
-    Insurer.publish();
 
     //a constant list of insurance packages, in a map.
     const insurancePackages = new Map(UInt, Object({ monthlyFee: UInt, fundingLimit: UInt }));
