@@ -89,13 +89,16 @@ export const main = Reach.App(() => {
     //details of members with open claims are kept close, 
     //other members are kept away from here (in the db)
     const claimOwners = new Map(Object({
-        fullName: Bytes(60),
-        physicalAddress: Bytes(100),
+        //fullName: Bytes(60),
+        //physicalAddress: Bytes(100),
         insrPackageId: UInt,
-        dateJoined: Bytes(30),
+        //dateJoined: Bytes(30),
         amountDue: UInt,
         matureBalance: UInt
     }));
+
+    claimOwners[Insurer] = { insrPackageId: 0, amountDue: 0, matureBalance: 0 };
+    insuranceClaims[Insurer] = { amountRequested: 0, amountSet: 0, accepted: false, approvalsCount: 0, sumOfSetAmounts: 0 };
 
     //a constant list of insurance packages, in a map.
     const insurancePackages = new Map(UInt, Object({ monthlyFee: UInt, fundingLimit: UInt }));
