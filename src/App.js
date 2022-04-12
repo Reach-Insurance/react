@@ -6,7 +6,8 @@ import { loadStdlib } from '@reach-sh/stdlib';
 import { createClient } from "@supabase/supabase-js";
 import useConfirm from "./hooks/useConfirm";
 import { v4 } from 'uuid';
-const reach = loadStdlib(process.env);
+//const reach = loadStdlib(process.env);
+const reach = loadStdlib("ALGO");
 const SUPABASE_URL = "https://byolfysahovehogqdena.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5b2xmeXNhaG92ZWhvZ3FkZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDg3NTcwMTYsImV4cCI6MTk2NDMzMzAxNn0.Q5h8nwP-qy1o5oDa0UCAgj1m7vTXOlhPyoZRC-0CNnk";
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -19,7 +20,9 @@ function App() {
   const insurerContract = useRef(null);
   const contractInfo = useState({});
   const algoAccount = useRef(null);
-
+  const account = useRef();
+  const balance = useRef();
+  const fundAmount = useRef(1000);
   const mnemonicRef = useRef(<></>);
   const [addressStr, setAddressStr] = useState("");
   const [mnemonicStr, setMnemonicStr] = useState("");
@@ -106,11 +109,29 @@ function App() {
     please dont forget to copy your new mnemonic and keep it secret.`);
     //create new algo account
     console.log("Creating a new algorand account");
-    algoAccount.current = reach.newTestAccount();
-    const newMnemonic = reach.unsafeGetMnemonic(algoAccount.current);
-    setMnemonicStr(newMnemonic);
-    console.log("go to Login");
-    Login();
+    //algoAccount.current = reach.newTestAccount();
+    const getAccount = async () => {
+      account.current = await reach.createAccount();
+      console.log("Account created:=> ", account.current);
+      //const newMnemonic = reach.unsafeGetMnemonic(algoAccount.current);
+      //setMnemonicStr(newMnemonic);
+      console.log("going to Login");
+      Login();
+    }
+    const getBalance = async () => {
+      console.log("getting balance ...");
+      let rawBalance = await reach.balanceOf(account.current);
+      balance.current = reach.formatCurrency(rawBalance, 4);
+      console.log(balance.current);
+    }
+    const fundWallet = async () => {
+      console.log("funding the wallet ...");
+      await reach.fundFromFaucet(account.current, reach.parseCurrency(fundAmount.current));
+      console.log("...OK");
+    }
+    getAccount();
+    fundWallet();
+    getBalance();
   }
 
   function Signup() {
