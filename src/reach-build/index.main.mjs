@@ -1,8 +1,8 @@
-// Automatically generated with Reach 0.1.9 (2fb7c59c)
+// Automatically generated with Reach 0.1.9 (1f9218bd)
 /* eslint-disable */
 export const _version = '0.1.9';
-export const _versionHash = '0.1.9 (2fb7c59c)';
-export const _backendVersion = 10;
+export const _versionHash = '0.1.9 (1f9218bd)';
+export const _backendVersion = 11;
 
 export function getExports(s) {
   const stdlib = s.reachStdlib;
@@ -18,601 +18,1656 @@ export function _getViews(s, viewlib) {
   const stdlib = s.reachStdlib;
   const ctc0 = stdlib.T_Address;
   const ctc1 = stdlib.T_UInt;
-  const ctc2 = stdlib.T_Digest;
+  const ctc2 = stdlib.T_Bool;
+  const ctc3 = stdlib.T_Null;
+  const ctc4 = stdlib.T_Data({
+    None: ctc3,
+    Some: ctc3
+    });
+  const ctc5 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc1,
+    amountSet: ctc1,
+    approvalsCount: ctc1,
+    sumOfSetAmounts: ctc1
+    });
+  const ctc6 = stdlib.T_Data({
+    None: ctc3,
+    Some: ctc5
+    });
+  const ctc7 = stdlib.T_Object({
+    amountDue: ctc1,
+    insrPackageId: ctc1,
+    matureBalance: ctc1
+    });
+  const ctc8 = stdlib.T_Data({
+    None: ctc3,
+    Some: ctc7
+    });
+  const ctc9 = stdlib.T_Object({
+    fundingLimit: ctc1,
+    monthlyFee: ctc1
+    });
+  const ctc10 = stdlib.T_Data({
+    None: ctc3,
+    Some: ctc9
+    });
+  const map0_ctc = ctc4;
+  
+  const map1_ctc = ctc6;
+  
+  const map2_ctc = ctc8;
+  
+  const map3_ctc = ctc10;
+  
   
   return {
     infos: {
       },
     views: {
-      1: [ctc0, ctc1, ctc1, ctc1],
-      5: [ctc0, ctc1, ctc1, ctc0, ctc1, ctc1],
-      7: [ctc0, ctc1, ctc1, ctc0, ctc1, ctc2, ctc1],
-      9: [ctc0, ctc1, ctc1, ctc0, ctc1, ctc2, ctc1, ctc1]
+      1: [ctc0, ctc1, ctc2],
+      4: [ctc0, ctc1, ctc2, ctc1]
       }
     };
   
   };
 export function _getMaps(s) {
   const stdlib = s.reachStdlib;
-  const ctc0 = stdlib.T_Tuple([]);
+  const ctc0 = stdlib.T_Null;
+  const ctc1 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc0
+    });
+  const ctc2 = stdlib.T_Bool;
+  const ctc3 = stdlib.T_UInt;
+  const ctc4 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc5 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc4
+    });
+  const ctc6 = stdlib.T_Object({
+    amountDue: ctc3,
+    insrPackageId: ctc3,
+    matureBalance: ctc3
+    });
+  const ctc7 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc6
+    });
+  const ctc8 = stdlib.T_Object({
+    fundingLimit: ctc3,
+    monthlyFee: ctc3
+    });
+  const ctc9 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc8
+    });
+  const ctc10 = stdlib.T_Tuple([ctc1, ctc5, ctc7, ctc9]);
   return {
-    mapDataTy: ctc0
+    mapDataTy: ctc10
     };
   };
-export async function Alice(ctcTop, interact) {
+export async function CommunityMember_createClaim(ctcTop, interact) {
   if (typeof(ctcTop) !== 'object' || ctcTop._initialize === undefined) {
-    return Promise.reject(new Error(`The backend for Alice expects to receive a contract as its first argument.`));}
+    return Promise.reject(new Error(`The backend for CommunityMember_createClaim expects to receive a contract as its first argument.`));}
   if (typeof(interact) !== 'object') {
-    return Promise.reject(new Error(`The backend for Alice expects to receive an interact object as its second argument.`));}
+    return Promise.reject(new Error(`The backend for CommunityMember_createClaim expects to receive an interact object as its second argument.`));}
   const ctc = ctcTop._initialize();
   const stdlib = ctc.stdlib;
-  const ctc0 = stdlib.T_UInt;
-  const ctc1 = stdlib.T_Tuple([ctc0, ctc0]);
-  const ctc2 = stdlib.T_Digest;
-  const ctc3 = stdlib.T_Null;
-  const ctc4 = stdlib.T_Address;
+  const ctc0 = stdlib.T_Null;
+  const ctc1 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc0
+    });
+  const ctc2 = stdlib.T_Bool;
+  const ctc3 = stdlib.T_UInt;
+  const ctc4 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc5 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc4
+    });
+  const ctc6 = stdlib.T_Object({
+    amountDue: ctc3,
+    insrPackageId: ctc3,
+    matureBalance: ctc3
+    });
+  const ctc7 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc6
+    });
+  const ctc8 = stdlib.T_Object({
+    fundingLimit: ctc3,
+    monthlyFee: ctc3
+    });
+  const ctc9 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc8
+    });
+  const ctc10 = stdlib.T_Address;
+  const ctc11 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    claimant: ctc10,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc12 = stdlib.T_Tuple([ctc11]);
+  const ctc13 = stdlib.T_Object({
+    mfee: ctc3,
+    who: ctc10
+    });
+  const ctc14 = stdlib.T_Tuple([ctc13]);
+  const ctc15 = stdlib.T_Bytes(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 60));
+  const ctc16 = stdlib.T_Bytes(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 20));
+  const ctc17 = stdlib.T_Object({
+    chosenInsurancePackage: ctc15,
+    email: ctc15,
+    fullName: ctc15,
+    phone: ctc16
+    });
+  const ctc18 = stdlib.T_Tuple([ctc17]);
+  const ctc19 = stdlib.T_Object({
+    accepted: ctc2,
+    claimant: ctc10,
+    setAmount: ctc3
+    });
+  const ctc20 = stdlib.T_Tuple([ctc19]);
+  const ctc21 = stdlib.T_Tuple([]);
+  const ctc22 = stdlib.T_Data({
+    CommunityMember_createClaim0_53: ctc12,
+    CommunityMember_payMonthlyFee0_53: ctc14,
+    CommunityMember_registerMembership0_53: ctc18,
+    CommunityMember_respondToClaim0_53: ctc20,
+    CommunityMember_stopContract0_53: ctc21
+    });
+  
+  const map0_ctc = ctc1;
+  const map0 = stdlib.newMap({
+    ctc: ctc,
+    idx: 0,
+    isAPI: true,
+    ty: map0_ctc
+    });
+  
+  const map1_ctc = ctc5;
+  const map1 = stdlib.newMap({
+    ctc: ctc,
+    idx: 1,
+    isAPI: true,
+    ty: map1_ctc
+    });
+  
+  const map2_ctc = ctc7;
+  const map2 = stdlib.newMap({
+    ctc: ctc,
+    idx: 2,
+    isAPI: true,
+    ty: map2_ctc
+    });
+  
+  const map3_ctc = ctc9;
+  const map3 = stdlib.newMap({
+    ctc: ctc,
+    idx: 3,
+    isAPI: true,
+    ty: map3_ctc
+    });
   
   
-  const v300 = stdlib.protect(ctc0, interact.deadline, 'for Alice\'s interact field deadline');
-  const v301 = stdlib.protect(ctc0, interact.wager, 'for Alice\'s interact field wager');
+  const [v335, v336, v337, v359] = await ctc.getState(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 4), [ctc10, ctc3, ctc2, ctc3]);
+  const v380 = stdlib.protect(ctc12, await interact.in(), {
+    at: './index.rsh:1:23:application',
+    fs: ['at ./index.rsh:135:17:application call to [unknown function] (defined at: ./index.rsh:135:17:function exp)', 'at ./index.rsh:94:23:application call to "runCommunityMember_createClaim0_53" (defined at: ./index.rsh:134:14:function exp)', 'at ./index.rsh:94:23:application call to [unknown function] (defined at: ./index.rsh:94:23:function exp)'],
+    msg: 'in',
+    who: 'CommunityMember_createClaim'
+    });
+  const v385 = ['CommunityMember_createClaim0_53', v380];
   
   const txn1 = await (ctc.sendrecv({
-    args: [v301, v300],
-    evt_cnt: 2,
-    funcNum: 0,
-    lct: stdlib.checkedBigNumberify('./index.rsh:49:11:dot', stdlib.UInt_max, 0),
+    args: [v335, v336, v337, v359, v385],
+    evt_cnt: 1,
+    funcNum: 3,
+    lct: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 0),
     onlyIf: true,
-    out_tys: [ctc0, ctc0],
-    pay: [v301, []],
+    out_tys: [ctc22],
+    pay: [stdlib.checkedBigNumberify('./index.rsh:136:20:decimal', stdlib.UInt_max, 0), []],
     sim_p: (async (txn1) => {
       const sim_r = { txns: [], mapRefs: [], maps: [] };
       let sim_txn_ctr = stdlib.UInt_max;
       const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
       
+      stdlib.simMapDupe(sim_r, 0, map0);
+      stdlib.simMapDupe(sim_r, 1, map1);
+      stdlib.simMapDupe(sim_r, 2, map2);
+      stdlib.simMapDupe(sim_r, 3, map3);
       
-      const {data: [v305, v306], secs: v308, time: v307, didSend: v56, from: v304 } = txn1;
+      const {data: [v415], secs: v417, time: v416, didSend: v212, from: v414 } = txn1;
       
-      sim_r.txns.push({
-        amt: v305,
-        kind: 'to',
-        tok: undefined /* Nothing */
-        });
-      const v317 = stdlib.add(v307, v306);
+      switch (v415[0]) {
+        case 'CommunityMember_createClaim0_53': {
+          const v418 = v415[1];
+          sim_r.txns.push({
+            kind: 'api',
+            who: "CommunityMember_createClaim"
+            });
+          ;
+          const v435 = v418[stdlib.checkedBigNumberify('./index.rsh:134:14:spread', stdlib.UInt_max, 0)];
+          const v436 = true;
+          const v437 = await txn1.getOutput('CommunityMember_createClaim', 'v436', ctc2, v436);
+          
+          const v443 = v435.amountRequested;
+          const v444 = stdlib.ge(v443, stdlib.checkedBigNumberify('./index.rsh:149:35:decimal', stdlib.UInt_max, 600000));
+          const v446 = v444 ? v443 : stdlib.checkedBigNumberify('./index.rsh:149:35:decimal', stdlib.UInt_max, 600000);
+          const v449 = {
+            accepted: false,
+            amountRequested: v443,
+            amountSet: v446,
+            approvalsCount: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 0),
+            sumOfSetAmounts: v443
+            };
+          await stdlib.simMapSet(sim_r, 1, v414, v449);
+          const v1561 = v359;
+          if (v337) {
+            sim_r.isHalt = false;
+            }
+          else {
+            sim_r.txns.push({
+              amt: v359,
+              kind: 'from',
+              to: v335,
+              tok: undefined /* Nothing */
+              });
+            sim_r.txns.push({
+              kind: 'halt',
+              tok: undefined /* Nothing */
+              })
+            sim_r.isHalt = true;
+            }
+          break;
+          }
+        case 'CommunityMember_payMonthlyFee0_53': {
+          const v507 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_registerMembership0_53': {
+          const v596 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_respondToClaim0_53': {
+          const v685 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_stopContract0_53': {
+          const v774 = v415[1];
+          
+          break;
+          }
+        }
+      return sim_r;
+      }),
+    soloSend: false,
+    timeoutAt: undefined /* mto */,
+    tys: [ctc10, ctc3, ctc2, ctc3, ctc22],
+    waitIfNotPresent: false
+    }));
+  const {data: [v415], secs: v417, time: v416, didSend: v212, from: v414 } = txn1;
+  switch (v415[0]) {
+    case 'CommunityMember_createClaim0_53': {
+      const v418 = v415[1];
+      undefined /* setApiDetails */;
+      ;
+      const v435 = v418[stdlib.checkedBigNumberify('./index.rsh:134:14:spread', stdlib.UInt_max, 0)];
+      const v436 = true;
+      const v437 = await txn1.getOutput('CommunityMember_createClaim', 'v436', ctc2, v436);
+      if (v212) {
+        stdlib.protect(ctc0, await interact.out(v418, v437), {
+          at: './index.rsh:134:15:application',
+          fs: ['at ./index.rsh:134:15:application call to [unknown function] (defined at: ./index.rsh:134:15:function exp)', 'at ./index.rsh:139:29:application call to "sendResponse" (defined at: ./index.rsh:137:13:function exp)', 'at ./index.rsh:137:13:application call to [unknown function] (defined at: ./index.rsh:137:13:function exp)'],
+          msg: 'out',
+          who: 'CommunityMember_createClaim'
+          });
+        }
+      else {
+        }
+      
+      const v443 = v435.amountRequested;
+      const v444 = stdlib.ge(v443, stdlib.checkedBigNumberify('./index.rsh:149:35:decimal', stdlib.UInt_max, 600000));
+      const v446 = v444 ? v443 : stdlib.checkedBigNumberify('./index.rsh:149:35:decimal', stdlib.UInt_max, 600000);
+      const v449 = {
+        accepted: false,
+        amountRequested: v443,
+        amountSet: v446,
+        approvalsCount: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 0),
+        sumOfSetAmounts: v443
+        };
+      await stdlib.mapSet(map1, v414, v449);
+      const v1561 = v359;
+      if (v337) {
+        return;
+        }
+      else {
+        ;
+        return;
+        }
+      break;
+      }
+    case 'CommunityMember_payMonthlyFee0_53': {
+      const v507 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_registerMembership0_53': {
+      const v596 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_respondToClaim0_53': {
+      const v685 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_stopContract0_53': {
+      const v774 = v415[1];
+      return;
+      break;
+      }
+    }
+  
+  
+  };
+export async function CommunityMember_payMonthlyFee(ctcTop, interact) {
+  if (typeof(ctcTop) !== 'object' || ctcTop._initialize === undefined) {
+    return Promise.reject(new Error(`The backend for CommunityMember_payMonthlyFee expects to receive a contract as its first argument.`));}
+  if (typeof(interact) !== 'object') {
+    return Promise.reject(new Error(`The backend for CommunityMember_payMonthlyFee expects to receive an interact object as its second argument.`));}
+  const ctc = ctcTop._initialize();
+  const stdlib = ctc.stdlib;
+  const ctc0 = stdlib.T_Null;
+  const ctc1 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc0
+    });
+  const ctc2 = stdlib.T_Bool;
+  const ctc3 = stdlib.T_UInt;
+  const ctc4 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc5 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc4
+    });
+  const ctc6 = stdlib.T_Object({
+    amountDue: ctc3,
+    insrPackageId: ctc3,
+    matureBalance: ctc3
+    });
+  const ctc7 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc6
+    });
+  const ctc8 = stdlib.T_Object({
+    fundingLimit: ctc3,
+    monthlyFee: ctc3
+    });
+  const ctc9 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc8
+    });
+  const ctc10 = stdlib.T_Address;
+  const ctc11 = stdlib.T_Object({
+    mfee: ctc3,
+    who: ctc10
+    });
+  const ctc12 = stdlib.T_Tuple([ctc11]);
+  const ctc13 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    claimant: ctc10,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc14 = stdlib.T_Tuple([ctc13]);
+  const ctc15 = stdlib.T_Bytes(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 60));
+  const ctc16 = stdlib.T_Bytes(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 20));
+  const ctc17 = stdlib.T_Object({
+    chosenInsurancePackage: ctc15,
+    email: ctc15,
+    fullName: ctc15,
+    phone: ctc16
+    });
+  const ctc18 = stdlib.T_Tuple([ctc17]);
+  const ctc19 = stdlib.T_Object({
+    accepted: ctc2,
+    claimant: ctc10,
+    setAmount: ctc3
+    });
+  const ctc20 = stdlib.T_Tuple([ctc19]);
+  const ctc21 = stdlib.T_Tuple([]);
+  const ctc22 = stdlib.T_Data({
+    CommunityMember_createClaim0_53: ctc14,
+    CommunityMember_payMonthlyFee0_53: ctc12,
+    CommunityMember_registerMembership0_53: ctc18,
+    CommunityMember_respondToClaim0_53: ctc20,
+    CommunityMember_stopContract0_53: ctc21
+    });
+  
+  const map0_ctc = ctc1;
+  const map0 = stdlib.newMap({
+    ctc: ctc,
+    idx: 0,
+    isAPI: true,
+    ty: map0_ctc
+    });
+  
+  const map1_ctc = ctc5;
+  const map1 = stdlib.newMap({
+    ctc: ctc,
+    idx: 1,
+    isAPI: true,
+    ty: map1_ctc
+    });
+  
+  const map2_ctc = ctc7;
+  const map2 = stdlib.newMap({
+    ctc: ctc,
+    idx: 2,
+    isAPI: true,
+    ty: map2_ctc
+    });
+  
+  const map3_ctc = ctc9;
+  const map3 = stdlib.newMap({
+    ctc: ctc,
+    idx: 3,
+    isAPI: true,
+    ty: map3_ctc
+    });
+  
+  
+  const [v335, v336, v337, v359] = await ctc.getState(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 4), [ctc10, ctc3, ctc2, ctc3]);
+  const v371 = stdlib.protect(ctc12, await interact.in(), {
+    at: './index.rsh:1:23:application',
+    fs: ['at ./index.rsh:122:17:application call to [unknown function] (defined at: ./index.rsh:122:17:function exp)', 'at ./index.rsh:94:23:application call to "runCommunityMember_payMonthlyFee0_53" (defined at: ./index.rsh:121:14:function exp)', 'at ./index.rsh:94:23:application call to [unknown function] (defined at: ./index.rsh:94:23:function exp)'],
+    msg: 'in',
+    who: 'CommunityMember_payMonthlyFee'
+    });
+  const v372 = v371[stdlib.checkedBigNumberify('./index.rsh:121:14:spread', stdlib.UInt_max, 0)];
+  const v376 = ['CommunityMember_payMonthlyFee0_53', v371];
+  
+  const v408 = v372.mfee;
+  
+  const txn1 = await (ctc.sendrecv({
+    args: [v335, v336, v337, v359, v376],
+    evt_cnt: 1,
+    funcNum: 3,
+    lct: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 0),
+    onlyIf: true,
+    out_tys: [ctc22],
+    pay: [v408, []],
+    sim_p: (async (txn1) => {
+      const sim_r = { txns: [], mapRefs: [], maps: [] };
+      let sim_txn_ctr = stdlib.UInt_max;
+      const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
+      
+      stdlib.simMapDupe(sim_r, 0, map0);
+      stdlib.simMapDupe(sim_r, 1, map1);
+      stdlib.simMapDupe(sim_r, 2, map2);
+      stdlib.simMapDupe(sim_r, 3, map3);
+      
+      const {data: [v415], secs: v417, time: v416, didSend: v212, from: v414 } = txn1;
+      
+      switch (v415[0]) {
+        case 'CommunityMember_createClaim0_53': {
+          const v418 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_payMonthlyFee0_53': {
+          const v507 = v415[1];
+          sim_r.txns.push({
+            kind: 'api',
+            who: "CommunityMember_payMonthlyFee"
+            });
+          const v514 = v507[stdlib.checkedBigNumberify('./index.rsh:121:14:spread', stdlib.UInt_max, 0)];
+          const v515 = v514.mfee;
+          const v522 = stdlib.add(v359, v515);
+          sim_r.txns.push({
+            amt: v515,
+            kind: 'to',
+            tok: undefined /* Nothing */
+            });
+          const v543 = true;
+          const v544 = await txn1.getOutput('CommunityMember_payMonthlyFee', 'v543', ctc2, v543);
+          
+          const v553 = stdlib.sub(v522, v515);
+          sim_r.txns.push({
+            amt: v515,
+            kind: 'from',
+            to: v335,
+            tok: undefined /* Nothing */
+            });
+          const v1573 = v553;
+          if (v337) {
+            sim_r.isHalt = false;
+            }
+          else {
+            sim_r.txns.push({
+              amt: v553,
+              kind: 'from',
+              to: v335,
+              tok: undefined /* Nothing */
+              });
+            sim_r.txns.push({
+              kind: 'halt',
+              tok: undefined /* Nothing */
+              })
+            sim_r.isHalt = true;
+            }
+          break;
+          }
+        case 'CommunityMember_registerMembership0_53': {
+          const v596 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_respondToClaim0_53': {
+          const v685 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_stopContract0_53': {
+          const v774 = v415[1];
+          
+          break;
+          }
+        }
+      return sim_r;
+      }),
+    soloSend: false,
+    timeoutAt: undefined /* mto */,
+    tys: [ctc10, ctc3, ctc2, ctc3, ctc22],
+    waitIfNotPresent: false
+    }));
+  const {data: [v415], secs: v417, time: v416, didSend: v212, from: v414 } = txn1;
+  switch (v415[0]) {
+    case 'CommunityMember_createClaim0_53': {
+      const v418 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_payMonthlyFee0_53': {
+      const v507 = v415[1];
+      undefined /* setApiDetails */;
+      const v514 = v507[stdlib.checkedBigNumberify('./index.rsh:121:14:spread', stdlib.UInt_max, 0)];
+      const v515 = v514.mfee;
+      const v522 = stdlib.add(v359, v515);
+      ;
+      const v543 = true;
+      const v544 = await txn1.getOutput('CommunityMember_payMonthlyFee', 'v543', ctc2, v543);
+      if (v212) {
+        stdlib.protect(ctc0, await interact.out(v507, v544), {
+          at: './index.rsh:121:15:application',
+          fs: ['at ./index.rsh:121:15:application call to [unknown function] (defined at: ./index.rsh:121:15:function exp)', 'at ./index.rsh:125:29:application call to "sendResponse" (defined at: ./index.rsh:124:13:function exp)', 'at ./index.rsh:124:13:application call to [unknown function] (defined at: ./index.rsh:124:13:function exp)'],
+          msg: 'out',
+          who: 'CommunityMember_payMonthlyFee'
+          });
+        }
+      else {
+        }
+      
+      const v553 = stdlib.sub(v522, v515);
+      ;
+      const v1573 = v553;
+      if (v337) {
+        return;
+        }
+      else {
+        ;
+        return;
+        }
+      break;
+      }
+    case 'CommunityMember_registerMembership0_53': {
+      const v596 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_respondToClaim0_53': {
+      const v685 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_stopContract0_53': {
+      const v774 = v415[1];
+      return;
+      break;
+      }
+    }
+  
+  
+  };
+export async function CommunityMember_registerMembership(ctcTop, interact) {
+  if (typeof(ctcTop) !== 'object' || ctcTop._initialize === undefined) {
+    return Promise.reject(new Error(`The backend for CommunityMember_registerMembership expects to receive a contract as its first argument.`));}
+  if (typeof(interact) !== 'object') {
+    return Promise.reject(new Error(`The backend for CommunityMember_registerMembership expects to receive an interact object as its second argument.`));}
+  const ctc = ctcTop._initialize();
+  const stdlib = ctc.stdlib;
+  const ctc0 = stdlib.T_Null;
+  const ctc1 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc0
+    });
+  const ctc2 = stdlib.T_Bool;
+  const ctc3 = stdlib.T_UInt;
+  const ctc4 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc5 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc4
+    });
+  const ctc6 = stdlib.T_Object({
+    amountDue: ctc3,
+    insrPackageId: ctc3,
+    matureBalance: ctc3
+    });
+  const ctc7 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc6
+    });
+  const ctc8 = stdlib.T_Object({
+    fundingLimit: ctc3,
+    monthlyFee: ctc3
+    });
+  const ctc9 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc8
+    });
+  const ctc10 = stdlib.T_Address;
+  const ctc11 = stdlib.T_Bytes(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 60));
+  const ctc12 = stdlib.T_Bytes(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 20));
+  const ctc13 = stdlib.T_Object({
+    chosenInsurancePackage: ctc11,
+    email: ctc11,
+    fullName: ctc11,
+    phone: ctc12
+    });
+  const ctc14 = stdlib.T_Tuple([ctc13]);
+  const ctc15 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    claimant: ctc10,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc16 = stdlib.T_Tuple([ctc15]);
+  const ctc17 = stdlib.T_Object({
+    mfee: ctc3,
+    who: ctc10
+    });
+  const ctc18 = stdlib.T_Tuple([ctc17]);
+  const ctc19 = stdlib.T_Object({
+    accepted: ctc2,
+    claimant: ctc10,
+    setAmount: ctc3
+    });
+  const ctc20 = stdlib.T_Tuple([ctc19]);
+  const ctc21 = stdlib.T_Tuple([]);
+  const ctc22 = stdlib.T_Data({
+    CommunityMember_createClaim0_53: ctc16,
+    CommunityMember_payMonthlyFee0_53: ctc18,
+    CommunityMember_registerMembership0_53: ctc14,
+    CommunityMember_respondToClaim0_53: ctc20,
+    CommunityMember_stopContract0_53: ctc21
+    });
+  
+  const map0_ctc = ctc1;
+  const map0 = stdlib.newMap({
+    ctc: ctc,
+    idx: 0,
+    isAPI: true,
+    ty: map0_ctc
+    });
+  
+  const map1_ctc = ctc5;
+  const map1 = stdlib.newMap({
+    ctc: ctc,
+    idx: 1,
+    isAPI: true,
+    ty: map1_ctc
+    });
+  
+  const map2_ctc = ctc7;
+  const map2 = stdlib.newMap({
+    ctc: ctc,
+    idx: 2,
+    isAPI: true,
+    ty: map2_ctc
+    });
+  
+  const map3_ctc = ctc9;
+  const map3 = stdlib.newMap({
+    ctc: ctc,
+    idx: 3,
+    isAPI: true,
+    ty: map3_ctc
+    });
+  
+  
+  const [v335, v336, v337, v359] = await ctc.getState(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 4), [ctc10, ctc3, ctc2, ctc3]);
+  const v362 = stdlib.protect(ctc14, await interact.in(), {
+    at: './index.rsh:1:23:application',
+    fs: ['at ./index.rsh:106:17:application call to [unknown function] (defined at: ./index.rsh:106:17:function exp)', 'at ./index.rsh:94:23:application call to "runCommunityMember_registerMembership0_53" (defined at: ./index.rsh:105:13:function exp)', 'at ./index.rsh:94:23:application call to [unknown function] (defined at: ./index.rsh:94:23:function exp)'],
+    msg: 'in',
+    who: 'CommunityMember_registerMembership'
+    });
+  const v367 = ['CommunityMember_registerMembership0_53', v362];
+  
+  const txn1 = await (ctc.sendrecv({
+    args: [v335, v336, v337, v359, v367],
+    evt_cnt: 1,
+    funcNum: 3,
+    lct: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 0),
+    onlyIf: true,
+    out_tys: [ctc22],
+    pay: [v336, []],
+    sim_p: (async (txn1) => {
+      const sim_r = { txns: [], mapRefs: [], maps: [] };
+      let sim_txn_ctr = stdlib.UInt_max;
+      const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
+      
+      stdlib.simMapDupe(sim_r, 0, map0);
+      stdlib.simMapDupe(sim_r, 1, map1);
+      stdlib.simMapDupe(sim_r, 2, map2);
+      stdlib.simMapDupe(sim_r, 3, map3);
+      
+      const {data: [v415], secs: v417, time: v416, didSend: v212, from: v414 } = txn1;
+      
+      switch (v415[0]) {
+        case 'CommunityMember_createClaim0_53': {
+          const v418 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_payMonthlyFee0_53': {
+          const v507 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_registerMembership0_53': {
+          const v596 = v415[1];
+          sim_r.txns.push({
+            kind: 'api',
+            who: "CommunityMember_registerMembership"
+            });
+          const v611 = stdlib.add(v359, v336);
+          sim_r.txns.push({
+            amt: v336,
+            kind: 'to',
+            tok: undefined /* Nothing */
+            });
+          const v647 = true;
+          const v648 = await txn1.getOutput('CommunityMember_registerMembership', 'v647', ctc2, v647);
+          
+          const v656 = stdlib.sub(v611, v336);
+          sim_r.txns.push({
+            amt: v336,
+            kind: 'from',
+            to: v335,
+            tok: undefined /* Nothing */
+            });
+          await stdlib.simMapSet(sim_r, 0, v414, null);
+          const v1585 = v656;
+          if (v337) {
+            sim_r.isHalt = false;
+            }
+          else {
+            sim_r.txns.push({
+              amt: v656,
+              kind: 'from',
+              to: v335,
+              tok: undefined /* Nothing */
+              });
+            sim_r.txns.push({
+              kind: 'halt',
+              tok: undefined /* Nothing */
+              })
+            sim_r.isHalt = true;
+            }
+          break;
+          }
+        case 'CommunityMember_respondToClaim0_53': {
+          const v685 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_stopContract0_53': {
+          const v774 = v415[1];
+          
+          break;
+          }
+        }
+      return sim_r;
+      }),
+    soloSend: false,
+    timeoutAt: undefined /* mto */,
+    tys: [ctc10, ctc3, ctc2, ctc3, ctc22],
+    waitIfNotPresent: false
+    }));
+  const {data: [v415], secs: v417, time: v416, didSend: v212, from: v414 } = txn1;
+  switch (v415[0]) {
+    case 'CommunityMember_createClaim0_53': {
+      const v418 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_payMonthlyFee0_53': {
+      const v507 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_registerMembership0_53': {
+      const v596 = v415[1];
+      undefined /* setApiDetails */;
+      const v611 = stdlib.add(v359, v336);
+      ;
+      const v647 = true;
+      const v648 = await txn1.getOutput('CommunityMember_registerMembership', 'v647', ctc2, v647);
+      if (v212) {
+        stdlib.protect(ctc0, await interact.out(v596, v648), {
+          at: './index.rsh:105:14:application',
+          fs: ['at ./index.rsh:105:14:application call to [unknown function] (defined at: ./index.rsh:105:14:function exp)', 'at ./index.rsh:113:29:application call to "sendResponse" (defined at: ./index.rsh:108:13:function exp)', 'at ./index.rsh:108:13:application call to [unknown function] (defined at: ./index.rsh:108:13:function exp)'],
+          msg: 'out',
+          who: 'CommunityMember_registerMembership'
+          });
+        }
+      else {
+        }
+      
+      const v656 = stdlib.sub(v611, v336);
+      ;
+      await stdlib.mapSet(map0, v414, null);
+      const v1585 = v656;
+      if (v337) {
+        return;
+        }
+      else {
+        ;
+        return;
+        }
+      break;
+      }
+    case 'CommunityMember_respondToClaim0_53': {
+      const v685 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_stopContract0_53': {
+      const v774 = v415[1];
+      return;
+      break;
+      }
+    }
+  
+  
+  };
+export async function CommunityMember_respondToClaim(ctcTop, interact) {
+  if (typeof(ctcTop) !== 'object' || ctcTop._initialize === undefined) {
+    return Promise.reject(new Error(`The backend for CommunityMember_respondToClaim expects to receive a contract as its first argument.`));}
+  if (typeof(interact) !== 'object') {
+    return Promise.reject(new Error(`The backend for CommunityMember_respondToClaim expects to receive an interact object as its second argument.`));}
+  const ctc = ctcTop._initialize();
+  const stdlib = ctc.stdlib;
+  const ctc0 = stdlib.T_Null;
+  const ctc1 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc0
+    });
+  const ctc2 = stdlib.T_Bool;
+  const ctc3 = stdlib.T_UInt;
+  const ctc4 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc5 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc4
+    });
+  const ctc6 = stdlib.T_Object({
+    amountDue: ctc3,
+    insrPackageId: ctc3,
+    matureBalance: ctc3
+    });
+  const ctc7 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc6
+    });
+  const ctc8 = stdlib.T_Object({
+    fundingLimit: ctc3,
+    monthlyFee: ctc3
+    });
+  const ctc9 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc8
+    });
+  const ctc10 = stdlib.T_Address;
+  const ctc11 = stdlib.T_Object({
+    accepted: ctc2,
+    claimant: ctc10,
+    setAmount: ctc3
+    });
+  const ctc12 = stdlib.T_Tuple([ctc11]);
+  const ctc13 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    claimant: ctc10,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc14 = stdlib.T_Tuple([ctc13]);
+  const ctc15 = stdlib.T_Object({
+    mfee: ctc3,
+    who: ctc10
+    });
+  const ctc16 = stdlib.T_Tuple([ctc15]);
+  const ctc17 = stdlib.T_Bytes(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 60));
+  const ctc18 = stdlib.T_Bytes(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 20));
+  const ctc19 = stdlib.T_Object({
+    chosenInsurancePackage: ctc17,
+    email: ctc17,
+    fullName: ctc17,
+    phone: ctc18
+    });
+  const ctc20 = stdlib.T_Tuple([ctc19]);
+  const ctc21 = stdlib.T_Tuple([]);
+  const ctc22 = stdlib.T_Data({
+    CommunityMember_createClaim0_53: ctc14,
+    CommunityMember_payMonthlyFee0_53: ctc16,
+    CommunityMember_registerMembership0_53: ctc20,
+    CommunityMember_respondToClaim0_53: ctc12,
+    CommunityMember_stopContract0_53: ctc21
+    });
+  
+  const map0_ctc = ctc1;
+  const map0 = stdlib.newMap({
+    ctc: ctc,
+    idx: 0,
+    isAPI: true,
+    ty: map0_ctc
+    });
+  
+  const map1_ctc = ctc5;
+  const map1 = stdlib.newMap({
+    ctc: ctc,
+    idx: 1,
+    isAPI: true,
+    ty: map1_ctc
+    });
+  
+  const map2_ctc = ctc7;
+  const map2 = stdlib.newMap({
+    ctc: ctc,
+    idx: 2,
+    isAPI: true,
+    ty: map2_ctc
+    });
+  
+  const map3_ctc = ctc9;
+  const map3 = stdlib.newMap({
+    ctc: ctc,
+    idx: 3,
+    isAPI: true,
+    ty: map3_ctc
+    });
+  
+  
+  const [v335, v336, v337, v359] = await ctc.getState(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 4), [ctc10, ctc3, ctc2, ctc3]);
+  const v389 = stdlib.protect(ctc12, await interact.in(), {
+    at: './index.rsh:1:23:application',
+    fs: ['at ./index.rsh:158:17:application call to [unknown function] (defined at: ./index.rsh:158:17:function exp)', 'at ./index.rsh:94:23:application call to "runCommunityMember_respondToClaim0_53" (defined at: ./index.rsh:157:14:function exp)', 'at ./index.rsh:94:23:application call to [unknown function] (defined at: ./index.rsh:94:23:function exp)'],
+    msg: 'in',
+    who: 'CommunityMember_respondToClaim'
+    });
+  const v394 = ['CommunityMember_respondToClaim0_53', v389];
+  
+  const txn1 = await (ctc.sendrecv({
+    args: [v335, v336, v337, v359, v394],
+    evt_cnt: 1,
+    funcNum: 3,
+    lct: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 0),
+    onlyIf: true,
+    out_tys: [ctc22],
+    pay: [stdlib.checkedBigNumberify('./index.rsh:159:20:decimal', stdlib.UInt_max, 0), []],
+    sim_p: (async (txn1) => {
+      const sim_r = { txns: [], mapRefs: [], maps: [] };
+      let sim_txn_ctr = stdlib.UInt_max;
+      const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
+      
+      stdlib.simMapDupe(sim_r, 0, map0);
+      stdlib.simMapDupe(sim_r, 1, map1);
+      stdlib.simMapDupe(sim_r, 2, map2);
+      stdlib.simMapDupe(sim_r, 3, map3);
+      
+      const {data: [v415], secs: v417, time: v416, didSend: v212, from: v414 } = txn1;
+      
+      switch (v415[0]) {
+        case 'CommunityMember_createClaim0_53': {
+          const v418 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_payMonthlyFee0_53': {
+          const v507 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_registerMembership0_53': {
+          const v596 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_respondToClaim0_53': {
+          const v685 = v415[1];
+          sim_r.txns.push({
+            kind: 'api',
+            who: "CommunityMember_respondToClaim"
+            });
+          ;
+          const v752 = true;
+          const v753 = await txn1.getOutput('CommunityMember_respondToClaim', 'v752', ctc2, v752);
+          
+          const v1597 = v359;
+          if (v337) {
+            sim_r.isHalt = false;
+            }
+          else {
+            sim_r.txns.push({
+              amt: v359,
+              kind: 'from',
+              to: v335,
+              tok: undefined /* Nothing */
+              });
+            sim_r.txns.push({
+              kind: 'halt',
+              tok: undefined /* Nothing */
+              })
+            sim_r.isHalt = true;
+            }
+          break;
+          }
+        case 'CommunityMember_stopContract0_53': {
+          const v774 = v415[1];
+          
+          break;
+          }
+        }
+      return sim_r;
+      }),
+    soloSend: false,
+    timeoutAt: undefined /* mto */,
+    tys: [ctc10, ctc3, ctc2, ctc3, ctc22],
+    waitIfNotPresent: false
+    }));
+  const {data: [v415], secs: v417, time: v416, didSend: v212, from: v414 } = txn1;
+  switch (v415[0]) {
+    case 'CommunityMember_createClaim0_53': {
+      const v418 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_payMonthlyFee0_53': {
+      const v507 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_registerMembership0_53': {
+      const v596 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_respondToClaim0_53': {
+      const v685 = v415[1];
+      undefined /* setApiDetails */;
+      ;
+      const v752 = true;
+      const v753 = await txn1.getOutput('CommunityMember_respondToClaim', 'v752', ctc2, v752);
+      if (v212) {
+        stdlib.protect(ctc0, await interact.out(v685, v753), {
+          at: './index.rsh:157:15:application',
+          fs: ['at ./index.rsh:157:15:application call to [unknown function] (defined at: ./index.rsh:157:15:function exp)', 'at ./index.rsh:163:29:application call to "sendResponse" (defined at: ./index.rsh:160:13:function exp)', 'at ./index.rsh:160:13:application call to [unknown function] (defined at: ./index.rsh:160:13:function exp)'],
+          msg: 'out',
+          who: 'CommunityMember_respondToClaim'
+          });
+        }
+      else {
+        }
+      
+      const v1597 = v359;
+      if (v337) {
+        return;
+        }
+      else {
+        ;
+        return;
+        }
+      break;
+      }
+    case 'CommunityMember_stopContract0_53': {
+      const v774 = v415[1];
+      return;
+      break;
+      }
+    }
+  
+  
+  };
+export async function CommunityMember_stopContract(ctcTop, interact) {
+  if (typeof(ctcTop) !== 'object' || ctcTop._initialize === undefined) {
+    return Promise.reject(new Error(`The backend for CommunityMember_stopContract expects to receive a contract as its first argument.`));}
+  if (typeof(interact) !== 'object') {
+    return Promise.reject(new Error(`The backend for CommunityMember_stopContract expects to receive an interact object as its second argument.`));}
+  const ctc = ctcTop._initialize();
+  const stdlib = ctc.stdlib;
+  const ctc0 = stdlib.T_Null;
+  const ctc1 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc0
+    });
+  const ctc2 = stdlib.T_Bool;
+  const ctc3 = stdlib.T_UInt;
+  const ctc4 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc5 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc4
+    });
+  const ctc6 = stdlib.T_Object({
+    amountDue: ctc3,
+    insrPackageId: ctc3,
+    matureBalance: ctc3
+    });
+  const ctc7 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc6
+    });
+  const ctc8 = stdlib.T_Object({
+    fundingLimit: ctc3,
+    monthlyFee: ctc3
+    });
+  const ctc9 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc8
+    });
+  const ctc10 = stdlib.T_Address;
+  const ctc11 = stdlib.T_Tuple([]);
+  const ctc12 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    claimant: ctc10,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc13 = stdlib.T_Tuple([ctc12]);
+  const ctc14 = stdlib.T_Object({
+    mfee: ctc3,
+    who: ctc10
+    });
+  const ctc15 = stdlib.T_Tuple([ctc14]);
+  const ctc16 = stdlib.T_Bytes(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 60));
+  const ctc17 = stdlib.T_Bytes(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 20));
+  const ctc18 = stdlib.T_Object({
+    chosenInsurancePackage: ctc16,
+    email: ctc16,
+    fullName: ctc16,
+    phone: ctc17
+    });
+  const ctc19 = stdlib.T_Tuple([ctc18]);
+  const ctc20 = stdlib.T_Object({
+    accepted: ctc2,
+    claimant: ctc10,
+    setAmount: ctc3
+    });
+  const ctc21 = stdlib.T_Tuple([ctc20]);
+  const ctc22 = stdlib.T_Data({
+    CommunityMember_createClaim0_53: ctc13,
+    CommunityMember_payMonthlyFee0_53: ctc15,
+    CommunityMember_registerMembership0_53: ctc19,
+    CommunityMember_respondToClaim0_53: ctc21,
+    CommunityMember_stopContract0_53: ctc11
+    });
+  
+  const map0_ctc = ctc1;
+  const map0 = stdlib.newMap({
+    ctc: ctc,
+    idx: 0,
+    isAPI: true,
+    ty: map0_ctc
+    });
+  
+  const map1_ctc = ctc5;
+  const map1 = stdlib.newMap({
+    ctc: ctc,
+    idx: 1,
+    isAPI: true,
+    ty: map1_ctc
+    });
+  
+  const map2_ctc = ctc7;
+  const map2 = stdlib.newMap({
+    ctc: ctc,
+    idx: 2,
+    isAPI: true,
+    ty: map2_ctc
+    });
+  
+  const map3_ctc = ctc9;
+  const map3 = stdlib.newMap({
+    ctc: ctc,
+    idx: 3,
+    isAPI: true,
+    ty: map3_ctc
+    });
+  
+  
+  const [v335, v336, v337, v359] = await ctc.getState(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 4), [ctc10, ctc3, ctc2, ctc3]);
+  const v398 = stdlib.protect(ctc11, await interact.in(), {
+    at: './index.rsh:1:23:application',
+    fs: ['at ./index.rsh:181:16:application call to [unknown function] (defined at: ./index.rsh:181:16:function exp)', 'at ./index.rsh:94:23:application call to "runCommunityMember_stopContract0_53" (defined at: ./index.rsh:180:14:function exp)', 'at ./index.rsh:94:23:application call to [unknown function] (defined at: ./index.rsh:94:23:function exp)'],
+    msg: 'in',
+    who: 'CommunityMember_stopContract'
+    });
+  const v402 = ['CommunityMember_stopContract0_53', v398];
+  
+  const txn1 = await (ctc.sendrecv({
+    args: [v335, v336, v337, v359, v402],
+    evt_cnt: 1,
+    funcNum: 3,
+    lct: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 0),
+    onlyIf: true,
+    out_tys: [ctc22],
+    pay: [stdlib.checkedBigNumberify('./index.rsh:182:19:decimal', stdlib.UInt_max, 0), []],
+    sim_p: (async (txn1) => {
+      const sim_r = { txns: [], mapRefs: [], maps: [] };
+      let sim_txn_ctr = stdlib.UInt_max;
+      const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
+      
+      stdlib.simMapDupe(sim_r, 0, map0);
+      stdlib.simMapDupe(sim_r, 1, map1);
+      stdlib.simMapDupe(sim_r, 2, map2);
+      stdlib.simMapDupe(sim_r, 3, map3);
+      
+      const {data: [v415], secs: v417, time: v416, didSend: v212, from: v414 } = txn1;
+      
+      switch (v415[0]) {
+        case 'CommunityMember_createClaim0_53': {
+          const v418 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_payMonthlyFee0_53': {
+          const v507 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_registerMembership0_53': {
+          const v596 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_respondToClaim0_53': {
+          const v685 = v415[1];
+          
+          break;
+          }
+        case 'CommunityMember_stopContract0_53': {
+          const v774 = v415[1];
+          sim_r.txns.push({
+            kind: 'api',
+            who: "CommunityMember_stopContract"
+            });
+          ;
+          const v856 = true;
+          const v857 = await txn1.getOutput('CommunityMember_stopContract', 'v856', ctc2, v856);
+          
+          const v1609 = v359;
+          if (v337) {
+            sim_r.isHalt = false;
+            }
+          else {
+            sim_r.txns.push({
+              amt: v359,
+              kind: 'from',
+              to: v335,
+              tok: undefined /* Nothing */
+              });
+            sim_r.txns.push({
+              kind: 'halt',
+              tok: undefined /* Nothing */
+              })
+            sim_r.isHalt = true;
+            }
+          break;
+          }
+        }
+      return sim_r;
+      }),
+    soloSend: false,
+    timeoutAt: undefined /* mto */,
+    tys: [ctc10, ctc3, ctc2, ctc3, ctc22],
+    waitIfNotPresent: false
+    }));
+  const {data: [v415], secs: v417, time: v416, didSend: v212, from: v414 } = txn1;
+  switch (v415[0]) {
+    case 'CommunityMember_createClaim0_53': {
+      const v418 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_payMonthlyFee0_53': {
+      const v507 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_registerMembership0_53': {
+      const v596 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_respondToClaim0_53': {
+      const v685 = v415[1];
+      return;
+      break;
+      }
+    case 'CommunityMember_stopContract0_53': {
+      const v774 = v415[1];
+      undefined /* setApiDetails */;
+      ;
+      const v856 = true;
+      const v857 = await txn1.getOutput('CommunityMember_stopContract', 'v856', ctc2, v856);
+      if (v212) {
+        stdlib.protect(ctc0, await interact.out(v774, v857), {
+          at: './index.rsh:180:15:application',
+          fs: ['at ./index.rsh:180:15:application call to [unknown function] (defined at: ./index.rsh:180:15:function exp)', 'at ./index.rsh:187:29:application call to "sendResponse" (defined at: ./index.rsh:183:13:function exp)', 'at ./index.rsh:183:13:application call to [unknown function] (defined at: ./index.rsh:183:13:function exp)'],
+          msg: 'out',
+          who: 'CommunityMember_stopContract'
+          });
+        }
+      else {
+        }
+      
+      const v1609 = v359;
+      if (v337) {
+        return;
+        }
+      else {
+        ;
+        return;
+        }
+      break;
+      }
+    }
+  
+  
+  };
+export async function Insurer(ctcTop, interact) {
+  if (typeof(ctcTop) !== 'object' || ctcTop._initialize === undefined) {
+    return Promise.reject(new Error(`The backend for Insurer expects to receive a contract as its first argument.`));}
+  if (typeof(interact) !== 'object') {
+    return Promise.reject(new Error(`The backend for Insurer expects to receive an interact object as its second argument.`));}
+  const ctc = ctcTop._initialize();
+  const stdlib = ctc.stdlib;
+  const ctc0 = stdlib.T_Null;
+  const ctc1 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc0
+    });
+  const ctc2 = stdlib.T_Bool;
+  const ctc3 = stdlib.T_UInt;
+  const ctc4 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc5 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc4
+    });
+  const ctc6 = stdlib.T_Object({
+    amountDue: ctc3,
+    insrPackageId: ctc3,
+    matureBalance: ctc3
+    });
+  const ctc7 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc6
+    });
+  const ctc8 = stdlib.T_Object({
+    fundingLimit: ctc3,
+    monthlyFee: ctc3
+    });
+  const ctc9 = stdlib.T_Data({
+    None: ctc0,
+    Some: ctc8
+    });
+  const ctc10 = stdlib.T_Address;
+  const ctc11 = stdlib.T_Object({
+    accepted: ctc2,
+    amountRequested: ctc3,
+    amountSet: ctc3,
+    approvalsCount: ctc3,
+    claimant: ctc10,
+    sumOfSetAmounts: ctc3
+    });
+  const ctc12 = stdlib.T_Tuple([ctc11]);
+  const ctc13 = stdlib.T_Object({
+    mfee: ctc3,
+    who: ctc10
+    });
+  const ctc14 = stdlib.T_Tuple([ctc13]);
+  const ctc15 = stdlib.T_Bytes(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 60));
+  const ctc16 = stdlib.T_Bytes(stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 20));
+  const ctc17 = stdlib.T_Object({
+    chosenInsurancePackage: ctc15,
+    email: ctc15,
+    fullName: ctc15,
+    phone: ctc16
+    });
+  const ctc18 = stdlib.T_Tuple([ctc17]);
+  const ctc19 = stdlib.T_Object({
+    accepted: ctc2,
+    claimant: ctc10,
+    setAmount: ctc3
+    });
+  const ctc20 = stdlib.T_Tuple([ctc19]);
+  const ctc21 = stdlib.T_Tuple([]);
+  const ctc22 = stdlib.T_Data({
+    CommunityMember_createClaim0_53: ctc12,
+    CommunityMember_payMonthlyFee0_53: ctc14,
+    CommunityMember_registerMembership0_53: ctc18,
+    CommunityMember_respondToClaim0_53: ctc20,
+    CommunityMember_stopContract0_53: ctc21
+    });
+  
+  const map0_ctc = ctc1;
+  const map0 = stdlib.newMap({
+    ctc: ctc,
+    idx: 0,
+    isAPI: false,
+    ty: map0_ctc
+    });
+  
+  const map1_ctc = ctc5;
+  const map1 = stdlib.newMap({
+    ctc: ctc,
+    idx: 1,
+    isAPI: false,
+    ty: map1_ctc
+    });
+  
+  const map2_ctc = ctc7;
+  const map2 = stdlib.newMap({
+    ctc: ctc,
+    idx: 2,
+    isAPI: false,
+    ty: map2_ctc
+    });
+  
+  const map3_ctc = ctc9;
+  const map3 = stdlib.newMap({
+    ctc: ctc,
+    idx: 3,
+    isAPI: false,
+    ty: map3_ctc
+    });
+  
+  
+  const v331 = stdlib.protect(ctc2, interact.contractIsRunning, 'for Insurer\'s interact field contractIsRunning');
+  const v332 = stdlib.protect(ctc3, interact.mandatoryEntryFee, 'for Insurer\'s interact field mandatoryEntryFee');
+  
+  stdlib.protect(ctc0, await interact.seeFeedback(), {
+    at: './index.rsh:53:29:application',
+    fs: ['at ./index.rsh:50:17:application call to [unknown function] (defined at: ./index.rsh:50:21:function exp)'],
+    msg: 'seeFeedback',
+    who: 'Insurer'
+    });
+  
+  const txn1 = await (ctc.sendrecv({
+    args: [v332, v331],
+    evt_cnt: 2,
+    funcNum: 0,
+    lct: stdlib.checkedBigNumberify('./index.rsh:55:13:dot', stdlib.UInt_max, 0),
+    onlyIf: true,
+    out_tys: [ctc3, ctc2],
+    pay: [stdlib.checkedBigNumberify('./index.rsh:55:13:decimal', stdlib.UInt_max, 0), []],
+    sim_p: (async (txn1) => {
+      const sim_r = { txns: [], mapRefs: [], maps: [] };
+      let sim_txn_ctr = stdlib.UInt_max;
+      const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
+      
+      stdlib.simMapDupe(sim_r, 0, map0);
+      stdlib.simMapDupe(sim_r, 1, map1);
+      stdlib.simMapDupe(sim_r, 2, map2);
+      stdlib.simMapDupe(sim_r, 3, map3);
+      
+      const {data: [v336, v337], secs: v339, time: v338, didSend: v30, from: v335 } = txn1;
+      
+      ;
       sim_r.isHalt = false;
       
       return sim_r;
       }),
     soloSend: true,
     timeoutAt: undefined /* mto */,
-    tys: [ctc0, ctc0],
+    tys: [ctc3, ctc2],
     waitIfNotPresent: false
     }));
-  const {data: [v305, v306], secs: v308, time: v307, didSend: v56, from: v304 } = txn1;
+  const {data: [v336, v337], secs: v339, time: v338, didSend: v30, from: v335 } = txn1;
   ;
-  const v317 = stdlib.add(v307, v306);
-  const txn2 = await (ctc.recv({
-    didSend: false,
-    evt_cnt: 0,
-    funcNum: 1,
-    out_tys: [],
-    timeoutAt: ['time', v317],
-    waitIfNotPresent: false
-    }));
-  if (txn2.didTimeout) {
-    const txn3 = await (ctc.sendrecv({
-      args: [v304, v305, v306, v317],
-      evt_cnt: 0,
-      funcNum: 2,
-      lct: v307,
-      onlyIf: true,
-      out_tys: [],
-      pay: [stdlib.checkedBigNumberify('reach standard library:189:11:decimal', stdlib.UInt_max, 0), []],
-      sim_p: (async (txn3) => {
-        const sim_r = { txns: [], mapRefs: [], maps: [] };
-        let sim_txn_ctr = stdlib.UInt_max;
-        const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
-        
-        
-        const {data: [], secs: v471, time: v470, didSend: v253, from: v469 } = txn3;
-        
-        ;
-        sim_r.txns.push({
-          amt: v305,
-          kind: 'from',
-          to: v304,
-          tok: undefined /* Nothing */
-          });
-        sim_r.txns.push({
-          kind: 'halt',
-          tok: undefined /* Nothing */
-          })
-        sim_r.isHalt = true;
-        
-        return sim_r;
-        }),
-      soloSend: false,
-      timeoutAt: undefined /* mto */,
-      tys: [ctc4, ctc0, ctc0, ctc0],
-      waitIfNotPresent: false
-      }));
-    const {data: [], secs: v471, time: v470, didSend: v253, from: v469 } = txn3;
-    ;
-    ;
-    stdlib.protect(ctc3, await interact.informTimeout(), {
-      at: './index.rsh:41:35:application',
-      fs: ['at ./index.rsh:40:13:application call to [unknown function] (defined at: ./index.rsh:40:31:function exp)', 'at reach standard library:192:8:application call to "after" (defined at: ./index.rsh:39:30:function exp)', 'at ./index.rsh:57:55:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-      msg: 'informTimeout',
-      who: 'Alice'
-      });
-    
-    return;
-    
-    }
-  else {
-    const {data: [], secs: v323, time: v322, didSend: v65, from: v321 } = txn2;
-    const v325 = stdlib.add(v305, v305);
-    ;
-    let v326 = stdlib.checkedBigNumberify('./index.rsh:makeEnum', stdlib.UInt_max, 1);
-    let v327 = v322;
-    let v334 = v325;
-    
-    while (await (async () => {
-      const v342 = stdlib.eq(v326, stdlib.checkedBigNumberify('./index.rsh:makeEnum', stdlib.UInt_max, 1));
-      
-      return v342;})()) {
-      const v349 = stdlib.add(v327, v306);
-      const v353 = stdlib.protect(ctc0, await interact.getHand(), {
-        at: './index.rsh:65:48:application',
-        fs: ['at ./index.rsh:64:19:application call to [unknown function] (defined at: ./index.rsh:64:23:function exp)'],
-        msg: 'getHand',
-        who: 'Alice'
-        });
-      const v354 = stdlib.protect(ctc0, await interact.random(), {
-        at: 'reach standard library:53:31:application',
-        fs: ['at ./index.rsh:66:62:application call to "makeCommitment" (defined at: reach standard library:52:8:function exp)', 'at ./index.rsh:64:19:application call to [unknown function] (defined at: ./index.rsh:64:23:function exp)'],
-        msg: 'random',
-        who: 'Alice'
-        });
-      const v355 = stdlib.digest(ctc1, [v354, v353]);
-      
-      const txn3 = await (ctc.sendrecv({
-        args: [v304, v305, v306, v321, v334, v349, v355],
-        evt_cnt: 1,
-        funcNum: 4,
-        lct: v327,
-        onlyIf: true,
-        out_tys: [ctc2],
-        pay: [stdlib.checkedBigNumberify('./index.rsh:69:15:decimal', stdlib.UInt_max, 0), []],
-        sim_p: (async (txn3) => {
-          const sim_r = { txns: [], mapRefs: [], maps: [] };
-          let sim_txn_ctr = stdlib.UInt_max;
-          const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
-          
-          
-          const {data: [v358], secs: v360, time: v359, didSend: v91, from: v357 } = txn3;
-          
-          ;
-          const v361 = stdlib.addressEq(v304, v357);
-          ;
-          const v368 = stdlib.add(v359, v306);
-          sim_r.isHalt = false;
-          
-          return sim_r;
-          }),
-        soloSend: true,
-        timeoutAt: ['time', v349],
-        tys: [ctc4, ctc0, ctc0, ctc4, ctc0, ctc0, ctc2],
-        waitIfNotPresent: false
-        }));
-      if (txn3.didTimeout) {
-        const txn4 = await (ctc.sendrecv({
-          args: [v304, v305, v306, v321, v334, v349],
-          evt_cnt: 0,
-          funcNum: 5,
-          lct: v327,
-          onlyIf: true,
-          out_tys: [],
-          pay: [stdlib.checkedBigNumberify('reach standard library:189:11:decimal', stdlib.UInt_max, 0), []],
-          sim_p: (async (txn4) => {
-            const sim_r = { txns: [], mapRefs: [], maps: [] };
-            let sim_txn_ctr = stdlib.UInt_max;
-            const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
-            
-            
-            const {data: [], secs: v437, time: v436, didSend: v206, from: v435 } = txn4;
-            
-            ;
-            const v438 = stdlib.addressEq(v304, v435);
-            const v439 = stdlib.addressEq(v321, v435);
-            const v440 = v438 ? true : v439;
-            ;
-            sim_r.txns.push({
-              amt: v334,
-              kind: 'from',
-              to: v321,
-              tok: undefined /* Nothing */
-              });
-            sim_r.txns.push({
-              kind: 'halt',
-              tok: undefined /* Nothing */
-              })
-            sim_r.isHalt = true;
-            
-            return sim_r;
-            }),
-          soloSend: false,
-          timeoutAt: undefined /* mto */,
-          tys: [ctc4, ctc0, ctc0, ctc4, ctc0, ctc0],
-          waitIfNotPresent: false
-          }));
-        const {data: [], secs: v437, time: v436, didSend: v206, from: v435 } = txn4;
-        ;
-        const v438 = stdlib.addressEq(v304, v435);
-        const v439 = stdlib.addressEq(v321, v435);
-        const v440 = v438 ? true : v439;
-        stdlib.assert(v440, {
-          at: 'reach standard library:189:11:dot',
-          fs: ['at ./index.rsh:70:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-          msg: 'sender correct',
-          who: 'Alice'
-          });
-        ;
-        stdlib.protect(ctc3, await interact.informTimeout(), {
-          at: './index.rsh:41:35:application',
-          fs: ['at ./index.rsh:40:13:application call to [unknown function] (defined at: ./index.rsh:40:31:function exp)', 'at reach standard library:192:8:application call to "after" (defined at: ./index.rsh:39:30:function exp)', 'at ./index.rsh:70:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-          msg: 'informTimeout',
-          who: 'Alice'
-          });
-        
-        return;
-        
-        }
-      else {
-        const {data: [v358], secs: v360, time: v359, didSend: v91, from: v357 } = txn3;
-        ;
-        const v361 = stdlib.addressEq(v304, v357);
-        stdlib.assert(v361, {
-          at: './index.rsh:69:15:dot',
-          fs: [],
-          msg: 'sender correct',
-          who: 'Alice'
-          });
-        const v368 = stdlib.add(v359, v306);
-        const txn4 = await (ctc.recv({
-          didSend: false,
-          evt_cnt: 1,
-          funcNum: 6,
-          out_tys: [ctc0],
-          timeoutAt: ['time', v368],
-          waitIfNotPresent: false
-          }));
-        if (txn4.didTimeout) {
-          const txn5 = await (ctc.sendrecv({
-            args: [v304, v305, v306, v321, v334, v358, v368],
-            evt_cnt: 0,
-            funcNum: 7,
-            lct: v359,
-            onlyIf: true,
-            out_tys: [],
-            pay: [stdlib.checkedBigNumberify('reach standard library:189:11:decimal', stdlib.UInt_max, 0), []],
-            sim_p: (async (txn5) => {
-              const sim_r = { txns: [], mapRefs: [], maps: [] };
-              let sim_txn_ctr = stdlib.UInt_max;
-              const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
-              
-              
-              const {data: [], secs: v419, time: v418, didSend: v172, from: v417 } = txn5;
-              
-              ;
-              const v420 = stdlib.addressEq(v304, v417);
-              const v421 = stdlib.addressEq(v321, v417);
-              const v422 = v420 ? true : v421;
-              ;
-              sim_r.txns.push({
-                amt: v334,
-                kind: 'from',
-                to: v304,
-                tok: undefined /* Nothing */
-                });
-              sim_r.txns.push({
-                kind: 'halt',
-                tok: undefined /* Nothing */
-                })
-              sim_r.isHalt = true;
-              
-              return sim_r;
-              }),
-            soloSend: false,
-            timeoutAt: undefined /* mto */,
-            tys: [ctc4, ctc0, ctc0, ctc4, ctc0, ctc2, ctc0],
-            waitIfNotPresent: false
-            }));
-          const {data: [], secs: v419, time: v418, didSend: v172, from: v417 } = txn5;
-          ;
-          const v420 = stdlib.addressEq(v304, v417);
-          const v421 = stdlib.addressEq(v321, v417);
-          const v422 = v420 ? true : v421;
-          stdlib.assert(v422, {
-            at: 'reach standard library:189:11:dot',
-            fs: ['at ./index.rsh:78:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-            msg: 'sender correct',
-            who: 'Alice'
-            });
-          ;
-          stdlib.protect(ctc3, await interact.informTimeout(), {
-            at: './index.rsh:41:35:application',
-            fs: ['at ./index.rsh:40:13:application call to [unknown function] (defined at: ./index.rsh:40:31:function exp)', 'at reach standard library:192:8:application call to "after" (defined at: ./index.rsh:39:30:function exp)', 'at ./index.rsh:78:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-            msg: 'informTimeout',
-            who: 'Alice'
-            });
-          
-          return;
-          
-          }
-        else {
-          const {data: [v374], secs: v376, time: v375, didSend: v101, from: v373 } = txn4;
-          ;
-          const v377 = stdlib.addressEq(v321, v373);
-          stdlib.assert(v377, {
-            at: './index.rsh:77:13:dot',
-            fs: [],
-            msg: 'sender correct',
-            who: 'Alice'
-            });
-          const v384 = stdlib.add(v375, v306);
-          const txn5 = await (ctc.sendrecv({
-            args: [v304, v305, v306, v321, v334, v358, v374, v384, v354, v353],
-            evt_cnt: 2,
-            funcNum: 8,
-            lct: v375,
-            onlyIf: true,
-            out_tys: [ctc0, ctc0],
-            pay: [stdlib.checkedBigNumberify('./index.rsh:85:15:decimal', stdlib.UInt_max, 0), []],
-            sim_p: (async (txn5) => {
-              const sim_r = { txns: [], mapRefs: [], maps: [] };
-              let sim_txn_ctr = stdlib.UInt_max;
-              const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
-              
-              
-              const {data: [v389, v390], secs: v392, time: v391, didSend: v111, from: v388 } = txn5;
-              
-              ;
-              const v393 = stdlib.addressEq(v304, v388);
-              ;
-              const v394 = stdlib.digest(ctc1, [v389, v390]);
-              const v395 = stdlib.digestEq(v358, v394);
-              ;
-              const v396 = stdlib.sub(stdlib.checkedBigNumberify('./index.rsh:7:20:decimal', stdlib.UInt_max, 4), v374);
-              const v397 = stdlib.add(v390, v396);
-              const v398 = stdlib.mod(v397, stdlib.checkedBigNumberify('./index.rsh:7:36:decimal', stdlib.UInt_max, 3));
-              const cv326 = v398;
-              const cv327 = v391;
-              const cv334 = v334;
-              
-              await (async () => {
-                const v326 = cv326;
-                const v327 = cv327;
-                const v334 = cv334;
-                
-                if (await (async () => {
-                  const v342 = stdlib.eq(v326, stdlib.checkedBigNumberify('./index.rsh:makeEnum', stdlib.UInt_max, 1));
-                  
-                  return v342;})()) {
-                  const v349 = stdlib.add(v327, v306);
-                  sim_r.isHalt = false;
-                  }
-                else {
-                  const v453 = stdlib.eq(v326, stdlib.checkedBigNumberify('./index.rsh:makeEnum', stdlib.UInt_max, 2));
-                  const v456 = stdlib.mul(stdlib.checkedBigNumberify('./index.rsh:94:14:decimal', stdlib.UInt_max, 2), v305);
-                  const v458 = v453 ? v304 : v321;
-                  sim_r.txns.push({
-                    amt: v456,
-                    kind: 'from',
-                    to: v458,
-                    tok: undefined /* Nothing */
-                    });
-                  sim_r.txns.push({
-                    kind: 'halt',
-                    tok: undefined /* Nothing */
-                    })
-                  sim_r.isHalt = true;
-                  }})();
-              return sim_r;
-              }),
-            soloSend: true,
-            timeoutAt: ['time', v384],
-            tys: [ctc4, ctc0, ctc0, ctc4, ctc0, ctc2, ctc0, ctc0, ctc0, ctc0],
-            waitIfNotPresent: false
-            }));
-          if (txn5.didTimeout) {
-            const txn6 = await (ctc.sendrecv({
-              args: [v304, v305, v306, v321, v334, v358, v374, v384],
-              evt_cnt: 0,
-              funcNum: 9,
-              lct: v375,
-              onlyIf: true,
-              out_tys: [],
-              pay: [stdlib.checkedBigNumberify('reach standard library:189:11:decimal', stdlib.UInt_max, 0), []],
-              sim_p: (async (txn6) => {
-                const sim_r = { txns: [], mapRefs: [], maps: [] };
-                let sim_txn_ctr = stdlib.UInt_max;
-                const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
-                
-                
-                const {data: [], secs: v401, time: v400, didSend: v138, from: v399 } = txn6;
-                
-                ;
-                const v402 = stdlib.addressEq(v304, v399);
-                const v403 = stdlib.addressEq(v321, v399);
-                const v404 = v402 ? true : v403;
-                ;
-                sim_r.txns.push({
-                  amt: v334,
-                  kind: 'from',
-                  to: v321,
-                  tok: undefined /* Nothing */
-                  });
-                sim_r.txns.push({
-                  kind: 'halt',
-                  tok: undefined /* Nothing */
-                  })
-                sim_r.isHalt = true;
-                
-                return sim_r;
-                }),
-              soloSend: false,
-              timeoutAt: undefined /* mto */,
-              tys: [ctc4, ctc0, ctc0, ctc4, ctc0, ctc2, ctc0, ctc0],
-              waitIfNotPresent: false
-              }));
-            const {data: [], secs: v401, time: v400, didSend: v138, from: v399 } = txn6;
-            ;
-            const v402 = stdlib.addressEq(v304, v399);
-            const v403 = stdlib.addressEq(v321, v399);
-            const v404 = v402 ? true : v403;
-            stdlib.assert(v404, {
-              at: 'reach standard library:189:11:dot',
-              fs: ['at ./index.rsh:86:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-              msg: 'sender correct',
-              who: 'Alice'
-              });
-            ;
-            stdlib.protect(ctc3, await interact.informTimeout(), {
-              at: './index.rsh:41:35:application',
-              fs: ['at ./index.rsh:40:13:application call to [unknown function] (defined at: ./index.rsh:40:31:function exp)', 'at reach standard library:192:8:application call to "after" (defined at: ./index.rsh:39:30:function exp)', 'at ./index.rsh:86:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-              msg: 'informTimeout',
-              who: 'Alice'
-              });
-            
-            return;
-            
-            }
-          else {
-            const {data: [v389, v390], secs: v392, time: v391, didSend: v111, from: v388 } = txn5;
-            ;
-            const v393 = stdlib.addressEq(v304, v388);
-            stdlib.assert(v393, {
-              at: './index.rsh:85:15:dot',
-              fs: [],
-              msg: 'sender correct',
-              who: 'Alice'
-              });
-            const v394 = stdlib.digest(ctc1, [v389, v390]);
-            const v395 = stdlib.digestEq(v358, v394);
-            stdlib.assert(v395, {
-              at: 'reach standard library:58:17:application',
-              fs: ['at ./index.rsh:87:24:application call to "checkCommitment" (defined at: reach standard library:57:8:function exp)'],
-              msg: null,
-              who: 'Alice'
-              });
-            const v396 = stdlib.sub(stdlib.checkedBigNumberify('./index.rsh:7:20:decimal', stdlib.UInt_max, 4), v374);
-            const v397 = stdlib.add(v390, v396);
-            const v398 = stdlib.mod(v397, stdlib.checkedBigNumberify('./index.rsh:7:36:decimal', stdlib.UInt_max, 3));
-            const cv326 = v398;
-            const cv327 = v391;
-            const cv334 = v334;
-            
-            v326 = cv326;
-            v327 = cv327;
-            v334 = cv334;
-            
-            continue;}
-          
-          }
-        
-        }
-      
-      }
-    const v453 = stdlib.eq(v326, stdlib.checkedBigNumberify('./index.rsh:makeEnum', stdlib.UInt_max, 2));
-    const v456 = stdlib.mul(stdlib.checkedBigNumberify('./index.rsh:94:14:decimal', stdlib.UInt_max, 2), v305);
-    const v458 = v453 ? v304 : v321;
-    ;
-    stdlib.protect(ctc3, await interact.seeOutcome(v326), {
-      at: './index.rsh:98:28:application',
-      fs: ['at ./index.rsh:97:9:application call to [unknown function] (defined at: ./index.rsh:97:27:function exp)'],
-      msg: 'seeOutcome',
-      who: 'Alice'
-      });
-    
-    return;
-    }
-  
-  
-  
-  };
-export async function Bob(ctcTop, interact) {
-  if (typeof(ctcTop) !== 'object' || ctcTop._initialize === undefined) {
-    return Promise.reject(new Error(`The backend for Bob expects to receive a contract as its first argument.`));}
-  if (typeof(interact) !== 'object') {
-    return Promise.reject(new Error(`The backend for Bob expects to receive an interact object as its second argument.`));}
-  const ctc = ctcTop._initialize();
-  const stdlib = ctc.stdlib;
-  const ctc0 = stdlib.T_UInt;
-  const ctc1 = stdlib.T_Null;
-  const ctc2 = stdlib.T_Digest;
-  const ctc3 = stdlib.T_Tuple([ctc0, ctc0]);
-  const ctc4 = stdlib.T_Address;
-  
-  
-  const txn1 = await (ctc.recv({
-    didSend: false,
-    evt_cnt: 2,
-    funcNum: 0,
-    out_tys: [ctc0, ctc0],
-    timeoutAt: undefined /* mto */,
-    waitIfNotPresent: false
-    }));
-  const {data: [v305, v306], secs: v308, time: v307, didSend: v56, from: v304 } = txn1;
-  ;
-  const v317 = stdlib.add(v307, v306);
-  stdlib.protect(ctc1, await interact.acceptWager(v305), {
-    at: './index.rsh:54:29:application',
-    fs: ['at ./index.rsh:53:13:application call to [unknown function] (defined at: ./index.rsh:53:17:function exp)'],
-    msg: 'acceptWager',
-    who: 'Bob'
-    });
-  
   const txn2 = await (ctc.sendrecv({
-    args: [v304, v305, v306, v317],
+    args: [v335, v336, v337],
     evt_cnt: 0,
     funcNum: 1,
-    lct: v307,
+    lct: v338,
     onlyIf: true,
     out_tys: [],
-    pay: [v305, []],
+    pay: [stdlib.checkedBigNumberify('./index.rsh:58:13:decimal', stdlib.UInt_max, 0), []],
     sim_p: (async (txn2) => {
       const sim_r = { txns: [], mapRefs: [], maps: [] };
       let sim_txn_ctr = stdlib.UInt_max;
       const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
       
+      stdlib.simMapDupe(sim_r, 0, map0);
+      stdlib.simMapDupe(sim_r, 1, map1);
+      stdlib.simMapDupe(sim_r, 2, map2);
+      stdlib.simMapDupe(sim_r, 3, map3);
       
-      const {data: [], secs: v323, time: v322, didSend: v65, from: v321 } = txn2;
+      const {data: [], secs: v342, time: v341, didSend: v35, from: v340 } = txn2;
       
-      const v325 = stdlib.add(v305, v305);
-      sim_r.txns.push({
-        amt: v305,
-        kind: 'to',
-        tok: undefined /* Nothing */
-        });
-      const v326 = stdlib.checkedBigNumberify('./index.rsh:makeEnum', stdlib.UInt_max, 1);
-      const v327 = v322;
-      const v334 = v325;
+      ;
+      const v343 = stdlib.addressEq(v335, v340);
+      ;
+      const v344 = {
+        fundingLimit: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 120000),
+        monthlyFee: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 1000)
+        };
+      await stdlib.simMapSet(sim_r, 3, stdlib.checkedBigNumberify('./index.rsh:82:23:decimal', stdlib.UInt_max, 1), v344);
+      const v345 = {
+        fundingLimit: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 600000),
+        monthlyFee: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 5000)
+        };
+      await stdlib.simMapSet(sim_r, 3, stdlib.checkedBigNumberify('./index.rsh:83:23:decimal', stdlib.UInt_max, 2), v345);
+      const v346 = {
+        fundingLimit: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 1200000),
+        monthlyFee: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 10000)
+        };
+      await stdlib.simMapSet(sim_r, 3, stdlib.checkedBigNumberify('./index.rsh:84:23:decimal', stdlib.UInt_max, 3), v346);
+      const v347 = {
+        fundingLimit: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 6000000),
+        monthlyFee: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 50000)
+        };
+      await stdlib.simMapSet(sim_r, 3, stdlib.checkedBigNumberify('./index.rsh:85:23:decimal', stdlib.UInt_max, 4), v347);
+      const v348 = {
+        fundingLimit: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 12000000),
+        monthlyFee: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 100000)
+        };
+      await stdlib.simMapSet(sim_r, 3, stdlib.checkedBigNumberify('./index.rsh:86:23:decimal', stdlib.UInt_max, 5), v348);
+      const v349 = {
+        fundingLimit: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 60000000),
+        monthlyFee: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 500000)
+        };
+      await stdlib.simMapSet(sim_r, 3, stdlib.checkedBigNumberify('./index.rsh:87:23:decimal', stdlib.UInt_max, 6), v349);
+      const v352 = v341;
+      const v359 = stdlib.checkedBigNumberify('./index.rsh:48:11:after expr stmt semicolon', stdlib.UInt_max, 0);
       
       if (await (async () => {
-        const v342 = stdlib.eq(v326, stdlib.checkedBigNumberify('./index.rsh:makeEnum', stdlib.UInt_max, 1));
         
-        return v342;})()) {
-        const v349 = stdlib.add(v327, v306);
+        return v337;})()) {
         sim_r.isHalt = false;
         }
       else {
-        const v453 = stdlib.eq(v326, stdlib.checkedBigNumberify('./index.rsh:makeEnum', stdlib.UInt_max, 2));
-        const v456 = stdlib.mul(stdlib.checkedBigNumberify('./index.rsh:94:14:decimal', stdlib.UInt_max, 2), v305);
-        const v458 = v453 ? v304 : v321;
         sim_r.txns.push({
-          amt: v456,
+          amt: v359,
           kind: 'from',
-          to: v458,
+          to: v335,
           tok: undefined /* Nothing */
           });
         sim_r.txns.push({
@@ -624,405 +1679,203 @@ export async function Bob(ctcTop, interact) {
       return sim_r;
       }),
     soloSend: true,
-    timeoutAt: ['time', v317],
-    tys: [ctc4, ctc0, ctc0, ctc0],
+    timeoutAt: undefined /* mto */,
+    tys: [ctc10, ctc3, ctc2],
     waitIfNotPresent: false
     }));
-  if (txn2.didTimeout) {
-    const txn3 = await (ctc.sendrecv({
-      args: [v304, v305, v306, v317],
-      evt_cnt: 0,
-      funcNum: 2,
-      lct: v307,
-      onlyIf: true,
-      out_tys: [],
-      pay: [stdlib.checkedBigNumberify('reach standard library:189:11:decimal', stdlib.UInt_max, 0), []],
-      sim_p: (async (txn3) => {
-        const sim_r = { txns: [], mapRefs: [], maps: [] };
-        let sim_txn_ctr = stdlib.UInt_max;
-        const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
-        
-        
-        const {data: [], secs: v471, time: v470, didSend: v253, from: v469 } = txn3;
-        
-        ;
-        sim_r.txns.push({
-          amt: v305,
-          kind: 'from',
-          to: v304,
-          tok: undefined /* Nothing */
-          });
-        sim_r.txns.push({
-          kind: 'halt',
-          tok: undefined /* Nothing */
-          })
-        sim_r.isHalt = true;
-        
-        return sim_r;
-        }),
-      soloSend: false,
+  const {data: [], secs: v342, time: v341, didSend: v35, from: v340 } = txn2;
+  ;
+  const v343 = stdlib.addressEq(v335, v340);
+  stdlib.assert(v343, {
+    at: './index.rsh:58:13:dot',
+    fs: [],
+    msg: 'sender correct',
+    who: 'Insurer'
+    });
+  const v344 = {
+    fundingLimit: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 120000),
+    monthlyFee: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 1000)
+    };
+  await stdlib.mapSet(map3, stdlib.checkedBigNumberify('./index.rsh:82:23:decimal', stdlib.UInt_max, 1), v344);
+  const v345 = {
+    fundingLimit: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 600000),
+    monthlyFee: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 5000)
+    };
+  await stdlib.mapSet(map3, stdlib.checkedBigNumberify('./index.rsh:83:23:decimal', stdlib.UInt_max, 2), v345);
+  const v346 = {
+    fundingLimit: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 1200000),
+    monthlyFee: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 10000)
+    };
+  await stdlib.mapSet(map3, stdlib.checkedBigNumberify('./index.rsh:84:23:decimal', stdlib.UInt_max, 3), v346);
+  const v347 = {
+    fundingLimit: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 6000000),
+    monthlyFee: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 50000)
+    };
+  await stdlib.mapSet(map3, stdlib.checkedBigNumberify('./index.rsh:85:23:decimal', stdlib.UInt_max, 4), v347);
+  const v348 = {
+    fundingLimit: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 12000000),
+    monthlyFee: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 100000)
+    };
+  await stdlib.mapSet(map3, stdlib.checkedBigNumberify('./index.rsh:86:23:decimal', stdlib.UInt_max, 5), v348);
+  const v349 = {
+    fundingLimit: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 60000000),
+    monthlyFee: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 500000)
+    };
+  await stdlib.mapSet(map3, stdlib.checkedBigNumberify('./index.rsh:87:23:decimal', stdlib.UInt_max, 6), v349);
+  let v352 = v341;
+  let v359 = stdlib.checkedBigNumberify('./index.rsh:48:11:after expr stmt semicolon', stdlib.UInt_max, 0);
+  
+  while (await (async () => {
+    
+    return v337;})()) {
+    const txn3 = await (ctc.recv({
+      didSend: false,
+      evt_cnt: 1,
+      funcNum: 3,
+      out_tys: [ctc22],
       timeoutAt: undefined /* mto */,
-      tys: [ctc4, ctc0, ctc0, ctc0],
       waitIfNotPresent: false
       }));
-    const {data: [], secs: v471, time: v470, didSend: v253, from: v469 } = txn3;
-    ;
-    ;
-    stdlib.protect(ctc1, await interact.informTimeout(), {
-      at: './index.rsh:41:35:application',
-      fs: ['at ./index.rsh:40:13:application call to [unknown function] (defined at: ./index.rsh:40:31:function exp)', 'at reach standard library:192:8:application call to "after" (defined at: ./index.rsh:39:30:function exp)', 'at ./index.rsh:57:55:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-      msg: 'informTimeout',
-      who: 'Bob'
-      });
-    
-    return;
-    
-    }
-  else {
-    const {data: [], secs: v323, time: v322, didSend: v65, from: v321 } = txn2;
-    const v325 = stdlib.add(v305, v305);
-    ;
-    let v326 = stdlib.checkedBigNumberify('./index.rsh:makeEnum', stdlib.UInt_max, 1);
-    let v327 = v322;
-    let v334 = v325;
-    
-    while (await (async () => {
-      const v342 = stdlib.eq(v326, stdlib.checkedBigNumberify('./index.rsh:makeEnum', stdlib.UInt_max, 1));
-      
-      return v342;})()) {
-      const v349 = stdlib.add(v327, v306);
-      const txn3 = await (ctc.recv({
-        didSend: false,
-        evt_cnt: 1,
-        funcNum: 4,
-        out_tys: [ctc2],
-        timeoutAt: ['time', v349],
-        waitIfNotPresent: false
-        }));
-      if (txn3.didTimeout) {
-        const txn4 = await (ctc.sendrecv({
-          args: [v304, v305, v306, v321, v334, v349],
-          evt_cnt: 0,
-          funcNum: 5,
-          lct: v327,
-          onlyIf: true,
-          out_tys: [],
-          pay: [stdlib.checkedBigNumberify('reach standard library:189:11:decimal', stdlib.UInt_max, 0), []],
-          sim_p: (async (txn4) => {
-            const sim_r = { txns: [], mapRefs: [], maps: [] };
-            let sim_txn_ctr = stdlib.UInt_max;
-            const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
-            
-            
-            const {data: [], secs: v437, time: v436, didSend: v206, from: v435 } = txn4;
-            
-            ;
-            const v438 = stdlib.addressEq(v304, v435);
-            const v439 = stdlib.addressEq(v321, v435);
-            const v440 = v438 ? true : v439;
-            ;
-            sim_r.txns.push({
-              amt: v334,
-              kind: 'from',
-              to: v321,
-              tok: undefined /* Nothing */
-              });
-            sim_r.txns.push({
-              kind: 'halt',
-              tok: undefined /* Nothing */
-              })
-            sim_r.isHalt = true;
-            
-            return sim_r;
-            }),
-          soloSend: false,
-          timeoutAt: undefined /* mto */,
-          tys: [ctc4, ctc0, ctc0, ctc4, ctc0, ctc0],
-          waitIfNotPresent: false
-          }));
-        const {data: [], secs: v437, time: v436, didSend: v206, from: v435 } = txn4;
+    const {data: [v415], secs: v417, time: v416, didSend: v212, from: v414 } = txn3;
+    switch (v415[0]) {
+      case 'CommunityMember_createClaim0_53': {
+        const v418 = v415[1];
+        undefined /* setApiDetails */;
         ;
-        const v438 = stdlib.addressEq(v304, v435);
-        const v439 = stdlib.addressEq(v321, v435);
-        const v440 = v438 ? true : v439;
-        stdlib.assert(v440, {
-          at: 'reach standard library:189:11:dot',
-          fs: ['at ./index.rsh:70:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-          msg: 'sender correct',
-          who: 'Bob'
-          });
-        ;
-        stdlib.protect(ctc1, await interact.informTimeout(), {
-          at: './index.rsh:41:35:application',
-          fs: ['at ./index.rsh:40:13:application call to [unknown function] (defined at: ./index.rsh:40:31:function exp)', 'at reach standard library:192:8:application call to "after" (defined at: ./index.rsh:39:30:function exp)', 'at ./index.rsh:70:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-          msg: 'informTimeout',
-          who: 'Bob'
+        const v435 = v418[stdlib.checkedBigNumberify('./index.rsh:134:14:spread', stdlib.UInt_max, 0)];
+        const v436 = true;
+        await txn3.getOutput('CommunityMember_createClaim', 'v436', ctc2, v436);
+        stdlib.protect(ctc0, await interact.saveNewClaim(v435), {
+          at: './index.rsh:140:46:application',
+          fs: ['at ./index.rsh:140:46:application call to [unknown function] (defined at: ./index.rsh:140:46:function exp)', 'at ./index.rsh:140:46:application call to "liftedInteract" (defined at: ./index.rsh:140:46:application)', 'at ./index.rsh:137:13:application call to [unknown function] (defined at: ./index.rsh:137:13:function exp)'],
+          msg: 'saveNewClaim',
+          who: 'Insurer'
           });
         
-        return;
+        const v443 = v435.amountRequested;
+        const v444 = stdlib.ge(v443, stdlib.checkedBigNumberify('./index.rsh:149:35:decimal', stdlib.UInt_max, 600000));
+        const v446 = v444 ? v443 : stdlib.checkedBigNumberify('./index.rsh:149:35:decimal', stdlib.UInt_max, 600000);
+        const v449 = {
+          accepted: false,
+          amountRequested: v443,
+          amountSet: v446,
+          approvalsCount: stdlib.checkedBigNumberify('<builtin>', stdlib.UInt_max, 0),
+          sumOfSetAmounts: v443
+          };
+        await stdlib.mapSet(map1, v414, v449);
+        const cv352 = v416;
+        const cv359 = v359;
         
+        v352 = cv352;
+        v359 = cv359;
+        
+        continue;
+        break;
         }
-      else {
-        const {data: [v358], secs: v360, time: v359, didSend: v91, from: v357 } = txn3;
+      case 'CommunityMember_payMonthlyFee0_53': {
+        const v507 = v415[1];
+        undefined /* setApiDetails */;
+        const v514 = v507[stdlib.checkedBigNumberify('./index.rsh:121:14:spread', stdlib.UInt_max, 0)];
+        const v515 = v514.mfee;
+        const v522 = stdlib.add(v359, v515);
         ;
-        const v361 = stdlib.addressEq(v304, v357);
-        stdlib.assert(v361, {
-          at: './index.rsh:69:15:dot',
-          fs: [],
-          msg: 'sender correct',
-          who: 'Bob'
-          });
-        const v368 = stdlib.add(v359, v306);
-        const v372 = stdlib.protect(ctc0, await interact.getHand(), {
-          at: './index.rsh:75:56:application',
-          fs: ['at ./index.rsh:74:17:application call to [unknown function] (defined at: ./index.rsh:74:21:function exp)'],
-          msg: 'getHand',
-          who: 'Bob'
-          });
+        const v543 = true;
+        await txn3.getOutput('CommunityMember_payMonthlyFee', 'v543', ctc2, v543);
+        const v553 = stdlib.sub(v522, v515);
+        ;
+        const cv352 = v416;
+        const cv359 = v553;
         
-        const txn4 = await (ctc.sendrecv({
-          args: [v304, v305, v306, v321, v334, v358, v368, v372],
-          evt_cnt: 1,
-          funcNum: 6,
-          lct: v359,
-          onlyIf: true,
-          out_tys: [ctc0],
-          pay: [stdlib.checkedBigNumberify('./index.rsh:77:13:decimal', stdlib.UInt_max, 0), []],
-          sim_p: (async (txn4) => {
-            const sim_r = { txns: [], mapRefs: [], maps: [] };
-            let sim_txn_ctr = stdlib.UInt_max;
-            const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
-            
-            
-            const {data: [v374], secs: v376, time: v375, didSend: v101, from: v373 } = txn4;
-            
-            ;
-            const v377 = stdlib.addressEq(v321, v373);
-            ;
-            const v384 = stdlib.add(v375, v306);
-            sim_r.isHalt = false;
-            
-            return sim_r;
-            }),
-          soloSend: true,
-          timeoutAt: ['time', v368],
-          tys: [ctc4, ctc0, ctc0, ctc4, ctc0, ctc2, ctc0, ctc0],
-          waitIfNotPresent: false
-          }));
-        if (txn4.didTimeout) {
-          const txn5 = await (ctc.sendrecv({
-            args: [v304, v305, v306, v321, v334, v358, v368],
-            evt_cnt: 0,
-            funcNum: 7,
-            lct: v359,
-            onlyIf: true,
-            out_tys: [],
-            pay: [stdlib.checkedBigNumberify('reach standard library:189:11:decimal', stdlib.UInt_max, 0), []],
-            sim_p: (async (txn5) => {
-              const sim_r = { txns: [], mapRefs: [], maps: [] };
-              let sim_txn_ctr = stdlib.UInt_max;
-              const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
-              
-              
-              const {data: [], secs: v419, time: v418, didSend: v172, from: v417 } = txn5;
-              
-              ;
-              const v420 = stdlib.addressEq(v304, v417);
-              const v421 = stdlib.addressEq(v321, v417);
-              const v422 = v420 ? true : v421;
-              ;
-              sim_r.txns.push({
-                amt: v334,
-                kind: 'from',
-                to: v304,
-                tok: undefined /* Nothing */
-                });
-              sim_r.txns.push({
-                kind: 'halt',
-                tok: undefined /* Nothing */
-                })
-              sim_r.isHalt = true;
-              
-              return sim_r;
-              }),
-            soloSend: false,
-            timeoutAt: undefined /* mto */,
-            tys: [ctc4, ctc0, ctc0, ctc4, ctc0, ctc2, ctc0],
-            waitIfNotPresent: false
-            }));
-          const {data: [], secs: v419, time: v418, didSend: v172, from: v417 } = txn5;
-          ;
-          const v420 = stdlib.addressEq(v304, v417);
-          const v421 = stdlib.addressEq(v321, v417);
-          const v422 = v420 ? true : v421;
-          stdlib.assert(v422, {
-            at: 'reach standard library:189:11:dot',
-            fs: ['at ./index.rsh:78:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-            msg: 'sender correct',
-            who: 'Bob'
-            });
-          ;
-          stdlib.protect(ctc1, await interact.informTimeout(), {
-            at: './index.rsh:41:35:application',
-            fs: ['at ./index.rsh:40:13:application call to [unknown function] (defined at: ./index.rsh:40:31:function exp)', 'at reach standard library:192:8:application call to "after" (defined at: ./index.rsh:39:30:function exp)', 'at ./index.rsh:78:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-            msg: 'informTimeout',
-            who: 'Bob'
-            });
-          
-          return;
-          
-          }
-        else {
-          const {data: [v374], secs: v376, time: v375, didSend: v101, from: v373 } = txn4;
-          ;
-          const v377 = stdlib.addressEq(v321, v373);
-          stdlib.assert(v377, {
-            at: './index.rsh:77:13:dot',
-            fs: [],
-            msg: 'sender correct',
-            who: 'Bob'
-            });
-          const v384 = stdlib.add(v375, v306);
-          const txn5 = await (ctc.recv({
-            didSend: false,
-            evt_cnt: 2,
-            funcNum: 8,
-            out_tys: [ctc0, ctc0],
-            timeoutAt: ['time', v384],
-            waitIfNotPresent: false
-            }));
-          if (txn5.didTimeout) {
-            const txn6 = await (ctc.sendrecv({
-              args: [v304, v305, v306, v321, v334, v358, v374, v384],
-              evt_cnt: 0,
-              funcNum: 9,
-              lct: v375,
-              onlyIf: true,
-              out_tys: [],
-              pay: [stdlib.checkedBigNumberify('reach standard library:189:11:decimal', stdlib.UInt_max, 0), []],
-              sim_p: (async (txn6) => {
-                const sim_r = { txns: [], mapRefs: [], maps: [] };
-                let sim_txn_ctr = stdlib.UInt_max;
-                const getSimTokCtr = () => { sim_txn_ctr = sim_txn_ctr.sub(1); return sim_txn_ctr; };
-                
-                
-                const {data: [], secs: v401, time: v400, didSend: v138, from: v399 } = txn6;
-                
-                ;
-                const v402 = stdlib.addressEq(v304, v399);
-                const v403 = stdlib.addressEq(v321, v399);
-                const v404 = v402 ? true : v403;
-                ;
-                sim_r.txns.push({
-                  amt: v334,
-                  kind: 'from',
-                  to: v321,
-                  tok: undefined /* Nothing */
-                  });
-                sim_r.txns.push({
-                  kind: 'halt',
-                  tok: undefined /* Nothing */
-                  })
-                sim_r.isHalt = true;
-                
-                return sim_r;
-                }),
-              soloSend: false,
-              timeoutAt: undefined /* mto */,
-              tys: [ctc4, ctc0, ctc0, ctc4, ctc0, ctc2, ctc0, ctc0],
-              waitIfNotPresent: false
-              }));
-            const {data: [], secs: v401, time: v400, didSend: v138, from: v399 } = txn6;
-            ;
-            const v402 = stdlib.addressEq(v304, v399);
-            const v403 = stdlib.addressEq(v321, v399);
-            const v404 = v402 ? true : v403;
-            stdlib.assert(v404, {
-              at: 'reach standard library:189:11:dot',
-              fs: ['at ./index.rsh:86:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-              msg: 'sender correct',
-              who: 'Bob'
-              });
-            ;
-            stdlib.protect(ctc1, await interact.informTimeout(), {
-              at: './index.rsh:41:35:application',
-              fs: ['at ./index.rsh:40:13:application call to [unknown function] (defined at: ./index.rsh:40:31:function exp)', 'at reach standard library:192:8:application call to "after" (defined at: ./index.rsh:39:30:function exp)', 'at ./index.rsh:86:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-              msg: 'informTimeout',
-              who: 'Bob'
-              });
-            
-            return;
-            
-            }
-          else {
-            const {data: [v389, v390], secs: v392, time: v391, didSend: v111, from: v388 } = txn5;
-            ;
-            const v393 = stdlib.addressEq(v304, v388);
-            stdlib.assert(v393, {
-              at: './index.rsh:85:15:dot',
-              fs: [],
-              msg: 'sender correct',
-              who: 'Bob'
-              });
-            const v394 = stdlib.digest(ctc3, [v389, v390]);
-            const v395 = stdlib.digestEq(v358, v394);
-            stdlib.assert(v395, {
-              at: 'reach standard library:58:17:application',
-              fs: ['at ./index.rsh:87:24:application call to "checkCommitment" (defined at: reach standard library:57:8:function exp)'],
-              msg: null,
-              who: 'Bob'
-              });
-            const v396 = stdlib.sub(stdlib.checkedBigNumberify('./index.rsh:7:20:decimal', stdlib.UInt_max, 4), v374);
-            const v397 = stdlib.add(v390, v396);
-            const v398 = stdlib.mod(v397, stdlib.checkedBigNumberify('./index.rsh:7:36:decimal', stdlib.UInt_max, 3));
-            const cv326 = v398;
-            const cv327 = v391;
-            const cv334 = v334;
-            
-            v326 = cv326;
-            v327 = cv327;
-            v334 = cv334;
-            
-            continue;}
-          
-          }
+        v352 = cv352;
+        v359 = cv359;
         
+        continue;
+        break;
         }
-      
+      case 'CommunityMember_registerMembership0_53': {
+        const v596 = v415[1];
+        undefined /* setApiDetails */;
+        const v611 = stdlib.add(v359, v336);
+        ;
+        const v645 = v596[stdlib.checkedBigNumberify('./index.rsh:105:13:spread', stdlib.UInt_max, 0)];
+        stdlib.protect(ctc0, await interact.saveNewMemberDetails(v645), {
+          at: './index.rsh:112:54:application',
+          fs: ['at ./index.rsh:112:54:application call to [unknown function] (defined at: ./index.rsh:112:54:function exp)', 'at ./index.rsh:112:54:application call to "liftedInteract" (defined at: ./index.rsh:112:54:application)', 'at ./index.rsh:108:13:application call to [unknown function] (defined at: ./index.rsh:108:13:function exp)'],
+          msg: 'saveNewMemberDetails',
+          who: 'Insurer'
+          });
+        
+        const v647 = true;
+        await txn3.getOutput('CommunityMember_registerMembership', 'v647', ctc2, v647);
+        const v656 = stdlib.sub(v611, v336);
+        ;
+        await stdlib.mapSet(map0, v414, null);
+        const cv352 = v416;
+        const cv359 = v656;
+        
+        v352 = cv352;
+        v359 = cv359;
+        
+        continue;
+        break;
+        }
+      case 'CommunityMember_respondToClaim0_53': {
+        const v685 = v415[1];
+        undefined /* setApiDetails */;
+        ;
+        const v752 = true;
+        await txn3.getOutput('CommunityMember_respondToClaim', 'v752', ctc2, v752);
+        const cv352 = v416;
+        const cv359 = v359;
+        
+        v352 = cv352;
+        v359 = cv359;
+        
+        continue;
+        break;
+        }
+      case 'CommunityMember_stopContract0_53': {
+        const v774 = v415[1];
+        undefined /* setApiDetails */;
+        ;
+        const v856 = true;
+        await txn3.getOutput('CommunityMember_stopContract', 'v856', ctc2, v856);
+        const cv352 = v416;
+        const cv359 = v359;
+        
+        v352 = cv352;
+        v359 = cv359;
+        
+        continue;
+        break;
+        }
       }
-    const v453 = stdlib.eq(v326, stdlib.checkedBigNumberify('./index.rsh:makeEnum', stdlib.UInt_max, 2));
-    const v456 = stdlib.mul(stdlib.checkedBigNumberify('./index.rsh:94:14:decimal', stdlib.UInt_max, 2), v305);
-    const v458 = v453 ? v304 : v321;
-    ;
-    stdlib.protect(ctc1, await interact.seeOutcome(v326), {
-      at: './index.rsh:98:28:application',
-      fs: ['at ./index.rsh:97:9:application call to [unknown function] (defined at: ./index.rsh:97:27:function exp)'],
-      msg: 'seeOutcome',
-      who: 'Bob'
-      });
     
-    return;
     }
+  ;
+  return;
+  
   
   
   
   };
 const _ALGO = {
   ABI: {
-    impure: [],
+    impure: [`CommunityMember_createClaim((byte,uint64,uint64,uint64,address,uint64))byte`, `CommunityMember_payMonthlyFee((uint64,address))byte`, `CommunityMember_registerMembership((byte[60],byte[60],byte[60],byte[20]))byte`, `CommunityMember_respondToClaim((byte,address,uint64))byte`, `CommunityMember_stopContract()byte`],
     pure: [],
-    sigs: []
+    sigs: [`CommunityMember_createClaim((byte,uint64,uint64,uint64,address,uint64))byte`, `CommunityMember_payMonthlyFee((uint64,address))byte`, `CommunityMember_registerMembership((byte[60],byte[60],byte[60],byte[20]))byte`, `CommunityMember_respondToClaim((byte,address,uint64))byte`, `CommunityMember_stopContract()byte`]
     },
-  appApproval: `BiAQAAEFUAkgCAcoeAKAAQQDWDAmAwEAAQEAIjUAMRhBBVIqZEkiWzUBIQZbNQI2GgAXSUEAByI1BCM1BgA2GgEXNhoCFzUENhoDNQVJJAxAAn9JIQcMQAFoSSEGDEAA9kkhBAxAAG4hBBJEIQQ0ARJENARJIhJMNAISEUQoZClkUEk1A1cwIDX/gASiBWaOsDIGNAMhC1sPRDQDVwAgMQASNP8xABIRRLEisgE0AyVbsggjshA0/7IHs7EisgEisggjshAyCbIJMgqyB7MxGSQSREIEeEghBDQBEkQ0BEkiEkw0AhIRRChkKWRQSTUDVwAgNf80BSJbNf40BSEGWzX9gAQ1GirQNP4WUDT9FlCwMgY0AyELWwxENP8xABJENANXWCA0/hY0/RZQARJENP80AyEFWzQDIQhbNANXMCA0/SEMNAMhCVsJCCENGDIGNAMlW0IDeUghBzQBEkQ0BEkiEkw0AhIRRChkKWRQSTUDVwAgNf+ABOIbs6mwMgY0AyEJWw9ENP8xABI0A1cwIDEAEhFEsSKyATQDJVuyCCOyEDT/sgezsSKyASKyCCOyEDIJsgkyCrIHszEZJBJEQgOMSYEGDEAAokghBzQBEkQ0BEkiEkw0AhIRRChkKWRQSTUDVwAgNf80AyEFWzX+NAMhCFs1/TQDVzAgNfw0AyVbNfs0A1dYIDX6NAUXNfmABHDt73o0+RZQsDIGNAMhCVsMRDT8MQASRDIGNP0INfg0/zT+FlA0/RZQNPxQNPsWUDT6UDT5FlA0+BZQKEsBVwB/ZylLAVd/CWdIIQQ1ATIGNQIxGSISREIC40gkNAESRDQESSISTDQCEhFEKGRJNQNXMCA1/4AEzJmSXLAyBjQDIQ5bD0Q0A1cAIDEAEjT/MQASEUSxIrIBNAMlW7III7IQNP+yB7OxIrIBIrIII7IQMgmyCTIKsgezMRkkEkRCAnxJIQoMQAD2SSENDEAAmUkhDAxAAJFIJDQBEkQ0BEkiEkw0AhIRRChkSTUDVwAgNf80AyEFWzX+NAMhCFs1/TQDVzAgNfw0AyVbNfs0BTX6gAQ4sCMtNPpQsDIGNAMhDlsMRDT/MQASRDIGNP0INfk0/zT+FlA0/RZQNPxQNPsWUDT6UDT5FlAoSwFXAH9nKUsBV38BZ0ghBzUBMgY1AjEZIhJEQgHWSEgjNAESRDQESSISTDQCEhFEKGQ1A4AEQbFATbAyBjQDIQ9bD0SxIrIBNAMhBVuyCCOyEDQDVwAgsgezsSKyASKyCCOyEDIJsgkyCrIHszEZJBJEQgF/SSMMQABiSCM0ARJENARJIhJMNAISEUQoZEk1AyEFWzX/gASai5F0sDIGNAMhD1sMRDQASSMINQA0/0sBOAgSRCNLATgQEkQyCksBOAcSREg0A1cAIDT/NAMhCFsxACMyBjT/SQhCAJlIIjQBEkQ0BEkiEkw0AhIRRDQFIls1/zQFIQZbNf6ABKzRH8M0/xZQNP4WULA0AEkjCDUAgaCNBksBOAgSRCNLATgQEkQyCksBOAcSREg0AEkjCDUANP9LATgIEkQjSwE4EBJEMgpLATgHEkRIMgY0/gg1/TEANP8WUDT+FlA0/RZQKEsBVwA4Z0gjNQEyBjUCMRkiEkRCAH41/zX+Nf01/DX7Nfo1+TT9IxJBADM0/jT7CDX4NPk0+hZQNPsWUDT8UDT/FlA0+BZQKEsBVwBgZ0gkNQEyBjUCMRkiEkRCADaxIrIBIQo0+guyCCOyEDT8NPk0/SEKEk2yB7OxIrIBIrIII7IQMgmyCTIKsgezMRkkEkRCAAAqNAEWNAIWUGc0BkEACoAEFR98dTQHULA0AEkjCDIEEkQxFhJEI0MxGSISRCI1ASI1AkL/yw==`,
+  appApproval: `BiAPAAEEAwIFCE3YgrThCvejl9QMhtratQ/k0MbFCiDAzyQGJgMBAAEBACI1ADEYQQQ+KmRJIls1ASEGWzUCMRkjEkEACjEAKCEHr2ZCBAo2GgAXSUEAjiI1BCM1BkkhCAxAAE9JIQkMQAAxSSEKDEAAFSEKEkQ2GgE1/yg0/1CBhwGvUEIAeiEJEkQqNf+AAQQ0/1CByAGvUEIAZSEIEkQ2GgE1/4ABAzT/UIGfAa9QQgBOSSELDEAAFSELEkQ2GgE1/yk0/1CBoAGvUEIAMoGlrduJAhJENhoBNf+AAQI0/1BCABw2GgIXNQQ2GgM2GgEXSSMMQAKRSSUMQAF8JRJEJDQBEkQ0BEkiEkw0AhIRRChkSTUDSUpXACA1/yEMWzX+VygBFzX9gSlbNfxJNQU1+4AE6HUB5DT7ULA0+yJVSSEEDEAAjUklDEAAQkkkDEAAHyQSRIAJAAAAAAAAA1gBsCk1BzT/NP40/TIGNPxCAm5IgAkAAAAAAAAC8AGwKTUHNP80/jT9MgY0/EICUUg0/ogC84AJAAAAAAAAAocBsCk1B7EisgE0/rIII7IQNP+yB7MxACgxAIgCvSkiTFZmNP80/jT9MgY0/DT+CDT+CUICDEkjDEAARUg0+1cBKDX6NPoiWzX5NPmIApuACQAAAAAAAAIfAbApNQexIrIBNPmyCCOyEDT/sgezNP80/jT9MgY0/DT5CDT5CUIBwUg0+1cBQTX6gAkAAAAAAAABtAGwKTUHNPojWzX5MQAoMQCIAjUpKDT5FlAhDTT5SSEND00WUCEGr1A0+RZQUDX4SVcAATT4UExXIypQZjT/NP40/TIGNPxCAWYjEkQjNAESRDQESSISTDQCEhFEKGRJNQNXACA1/4AEmouRdLA0/zEAEkQjKCOIAc+AEQEAAAAAAAHUwAAAAAAAAAPoNf5XADw0/lBmIQQoIQSIAauAEQEAAAAAAAknwAAAAAAAABOINf5XADw0/lBmJSgliAGJgBEBAAAAAAAST4AAAAAAAAAnEDX+VwA8NP5QZiQoJIgBZ4ARAQAAAAAAW42AAAAAAAAAw1A1/lcAPDT+UGYhBSghBYgBQ4ARAQAAAAAAtxsAAAAAAAABhqA1/lcAPDT+UGYhDighDogBH4ARAQAAAAADk4cAAAAAAAAHoSA1/lcAPDT+UGY0/zQDIQxbNANXKAEXMgYiQgBXSCI0ARJENARJIhJMNAISEURJNQVJIls1/1cIARc1/oAEf/WC8DT/FlA0/hZRBwhQsIGgjQaIAMcxADT/FlA0/hZRBwhQKEsBVwApZ0gjNQEyBjUCQgBcNf81/jX9Nfw1+zT9QQAeNPs0/BZQKVA0/xZQKEsBVwAxZ0gkNQEyBjUCQgAvsSKyATT/sggjshA0+7IHs0IAADEZIQUSRLEisgEisggjshAyCbIJMgqyB7NCAAUxGSISRCo0ARY0AhZQZzQGQQAKgAQVH3x1NAdQsDQASSMIMgQSRDEWEkQjQzEZIhJEQv/fIjUBIjUCQv/DSTEYYUAABUghB6+JKGKJNABJSiMINQA4BzIKEkQ4ECMSRDgIEkSJ`,
   appClear: `Bg==`,
+  companionInfo: null,
   extraPages: 0,
-  mapDataKeys: 0,
-  mapDataSize: 0,
-  stateKeys: 2,
-  stateSize: 136,
-  unsupported: [],
-  version: 9,
-  warnings: []
+  mapDataKeys: 1,
+  mapDataSize: 77,
+  stateKeys: 1,
+  stateSize: 49,
+  unsupported: [`Cannot use 'UInt' as Map key. Only 'Address' keys are allowed.`],
+  version: 10,
+  warnings: [`Step 1 may use up to 7 accounts, but the limit is 4. Step 1 starts at /app/index.rsh:58:13:dot.`, `This program was compiled with trustworthy maps, but maps are not trustworthy on Algorand, because they are represented with local state. A user can delete their local state at any time, by sending a ClearState transaction. The only way to use local state properly on Algorand is to ensure that a user doing this can only 'hurt' themselves and not the entire system.`]
   };
 const _ETH = {
   ABI: `[
@@ -1039,21 +1892,21 @@ const _ETH = {
             "components": [
               {
                 "internalType": "uint256",
-                "name": "v305",
+                "name": "v336",
                 "type": "uint256"
               },
               {
-                "internalType": "uint256",
-                "name": "v306",
-                "type": "uint256"
+                "internalType": "bool",
+                "name": "v337",
+                "type": "bool"
               }
             ],
-            "internalType": "struct T1",
+            "internalType": "struct T8",
             "name": "msg",
             "type": "tuple"
           }
         ],
-        "internalType": "struct T2",
+        "internalType": "struct T9",
         "name": "_a",
         "type": "tuple"
       }
@@ -1086,22 +1939,22 @@ const _ETH = {
             "components": [
               {
                 "internalType": "uint256",
-                "name": "v305",
+                "name": "v336",
                 "type": "uint256"
               },
               {
-                "internalType": "uint256",
-                "name": "v306",
-                "type": "uint256"
+                "internalType": "bool",
+                "name": "v337",
+                "type": "bool"
               }
             ],
-            "internalType": "struct T1",
+            "internalType": "struct T8",
             "name": "msg",
             "type": "tuple"
           }
         ],
         "indexed": false,
-        "internalType": "struct T2",
+        "internalType": "struct T9",
         "name": "_a",
         "type": "tuple"
       }
@@ -1126,7 +1979,7 @@ const _ETH = {
           }
         ],
         "indexed": false,
-        "internalType": "struct T7",
+        "internalType": "struct T13",
         "name": "_a",
         "type": "tuple"
       }
@@ -1145,199 +1998,496 @@ const _ETH = {
             "type": "uint256"
           },
           {
-            "internalType": "bool",
-            "name": "msg",
-            "type": "bool"
-          }
-        ],
-        "indexed": false,
-        "internalType": "struct T7",
-        "name": "_a",
-        "type": "tuple"
-      }
-    ],
-    "name": "_reach_e2",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
             "components": [
               {
-                "internalType": "uint256",
-                "name": "v358",
-                "type": "uint256"
+                "components": [
+                  {
+                    "internalType": "enum _enum_T26",
+                    "name": "which",
+                    "type": "uint8"
+                  },
+                  {
+                    "components": [
+                      {
+                        "components": [
+                          {
+                            "internalType": "bool",
+                            "name": "_accepted",
+                            "type": "bool"
+                          },
+                          {
+                            "internalType": "uint256",
+                            "name": "_amountRequested",
+                            "type": "uint256"
+                          },
+                          {
+                            "internalType": "uint256",
+                            "name": "_amountSet",
+                            "type": "uint256"
+                          },
+                          {
+                            "internalType": "uint256",
+                            "name": "_approvalsCount",
+                            "type": "uint256"
+                          },
+                          {
+                            "internalType": "address payable",
+                            "name": "_claimant",
+                            "type": "address"
+                          },
+                          {
+                            "internalType": "uint256",
+                            "name": "_sumOfSetAmounts",
+                            "type": "uint256"
+                          }
+                        ],
+                        "internalType": "struct T15",
+                        "name": "elem0",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct T16",
+                    "name": "_CommunityMember_createClaim0_53",
+                    "type": "tuple"
+                  },
+                  {
+                    "components": [
+                      {
+                        "components": [
+                          {
+                            "internalType": "uint256",
+                            "name": "_mfee",
+                            "type": "uint256"
+                          },
+                          {
+                            "internalType": "address payable",
+                            "name": "_who",
+                            "type": "address"
+                          }
+                        ],
+                        "internalType": "struct T17",
+                        "name": "elem0",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct T18",
+                    "name": "_CommunityMember_payMonthlyFee0_53",
+                    "type": "tuple"
+                  },
+                  {
+                    "components": [
+                      {
+                        "components": [
+                          {
+                            "components": [
+                              {
+                                "internalType": "bytes32",
+                                "name": "elem0",
+                                "type": "bytes32"
+                              },
+                              {
+                                "internalType": "bytes28",
+                                "name": "elem1",
+                                "type": "bytes28"
+                              }
+                            ],
+                            "internalType": "struct T19",
+                            "name": "_chosenInsurancePackage",
+                            "type": "tuple"
+                          },
+                          {
+                            "components": [
+                              {
+                                "internalType": "bytes32",
+                                "name": "elem0",
+                                "type": "bytes32"
+                              },
+                              {
+                                "internalType": "bytes28",
+                                "name": "elem1",
+                                "type": "bytes28"
+                              }
+                            ],
+                            "internalType": "struct T19",
+                            "name": "_email",
+                            "type": "tuple"
+                          },
+                          {
+                            "components": [
+                              {
+                                "internalType": "bytes32",
+                                "name": "elem0",
+                                "type": "bytes32"
+                              },
+                              {
+                                "internalType": "bytes28",
+                                "name": "elem1",
+                                "type": "bytes28"
+                              }
+                            ],
+                            "internalType": "struct T19",
+                            "name": "_fullName",
+                            "type": "tuple"
+                          },
+                          {
+                            "components": [
+                              {
+                                "internalType": "bytes20",
+                                "name": "elem0",
+                                "type": "bytes20"
+                              }
+                            ],
+                            "internalType": "struct T20",
+                            "name": "_phone",
+                            "type": "tuple"
+                          }
+                        ],
+                        "internalType": "struct T21",
+                        "name": "elem0",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct T22",
+                    "name": "_CommunityMember_registerMembership0_53",
+                    "type": "tuple"
+                  },
+                  {
+                    "components": [
+                      {
+                        "components": [
+                          {
+                            "internalType": "bool",
+                            "name": "_accepted",
+                            "type": "bool"
+                          },
+                          {
+                            "internalType": "address payable",
+                            "name": "_claimant",
+                            "type": "address"
+                          },
+                          {
+                            "internalType": "uint256",
+                            "name": "_setAmount",
+                            "type": "uint256"
+                          }
+                        ],
+                        "internalType": "struct T23",
+                        "name": "elem0",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct T24",
+                    "name": "_CommunityMember_respondToClaim0_53",
+                    "type": "tuple"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "_CommunityMember_stopContract0_53",
+                    "type": "bool"
+                  }
+                ],
+                "internalType": "struct T26",
+                "name": "v415",
+                "type": "tuple"
               }
             ],
-            "internalType": "struct T10",
+            "internalType": "struct T27",
             "name": "msg",
             "type": "tuple"
           }
         ],
         "indexed": false,
-        "internalType": "struct T11",
+        "internalType": "struct T28",
         "name": "_a",
         "type": "tuple"
       }
     ],
-    "name": "_reach_e4",
+    "name": "_reach_e3",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "msg",
-            "type": "bool"
-          }
-        ],
         "indexed": false,
-        "internalType": "struct T7",
-        "name": "_a",
-        "type": "tuple"
+        "internalType": "bool",
+        "name": "v0",
+        "type": "bool"
       }
     ],
-    "name": "_reach_e5",
+    "name": "_reach_oe_v436",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
-            "components": [
-              {
-                "internalType": "uint256",
-                "name": "v374",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct T13",
-            "name": "msg",
-            "type": "tuple"
-          }
-        ],
         "indexed": false,
-        "internalType": "struct T14",
-        "name": "_a",
-        "type": "tuple"
+        "internalType": "bool",
+        "name": "v0",
+        "type": "bool"
       }
     ],
-    "name": "_reach_e6",
+    "name": "_reach_oe_v543",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "msg",
-            "type": "bool"
-          }
-        ],
         "indexed": false,
-        "internalType": "struct T7",
-        "name": "_a",
-        "type": "tuple"
+        "internalType": "bool",
+        "name": "v0",
+        "type": "bool"
       }
     ],
-    "name": "_reach_e7",
+    "name": "_reach_oe_v647",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
-            "components": [
-              {
-                "internalType": "uint256",
-                "name": "v389",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "v390",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct T15",
-            "name": "msg",
-            "type": "tuple"
-          }
-        ],
         "indexed": false,
-        "internalType": "struct T16",
-        "name": "_a",
-        "type": "tuple"
+        "internalType": "bool",
+        "name": "v0",
+        "type": "bool"
       }
     ],
-    "name": "_reach_e8",
+    "name": "_reach_oe_v752",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "msg",
-            "type": "bool"
-          }
-        ],
         "indexed": false,
-        "internalType": "struct T7",
-        "name": "_a",
-        "type": "tuple"
+        "internalType": "bool",
+        "name": "v0",
+        "type": "bool"
       }
     ],
-    "name": "_reach_e9",
+    "name": "_reach_oe_v856",
     "type": "event"
   },
   {
     "stateMutability": "payable",
     "type": "fallback"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "_accepted",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_amountRequested",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_amountSet",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_approvalsCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address payable",
+            "name": "_claimant",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_sumOfSetAmounts",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct T15",
+        "name": "_a0",
+        "type": "tuple"
+      }
+    ],
+    "name": "CommunityMember_createClaim",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "_mfee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address payable",
+            "name": "_who",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct T17",
+        "name": "_a0",
+        "type": "tuple"
+      }
+    ],
+    "name": "CommunityMember_payMonthlyFee",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "elem0",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes28",
+                "name": "elem1",
+                "type": "bytes28"
+              }
+            ],
+            "internalType": "struct T19",
+            "name": "_chosenInsurancePackage",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "elem0",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes28",
+                "name": "elem1",
+                "type": "bytes28"
+              }
+            ],
+            "internalType": "struct T19",
+            "name": "_email",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "elem0",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes28",
+                "name": "elem1",
+                "type": "bytes28"
+              }
+            ],
+            "internalType": "struct T19",
+            "name": "_fullName",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes20",
+                "name": "elem0",
+                "type": "bytes20"
+              }
+            ],
+            "internalType": "struct T20",
+            "name": "_phone",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct T21",
+        "name": "_a0",
+        "type": "tuple"
+      }
+    ],
+    "name": "CommunityMember_registerMembership",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "_accepted",
+            "type": "bool"
+          },
+          {
+            "internalType": "address payable",
+            "name": "_claimant",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_setAmount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct T23",
+        "name": "_a0",
+        "type": "tuple"
+      }
+    ],
+    "name": "CommunityMember_respondToClaim",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "CommunityMember_stopContract",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
   },
   {
     "inputs": [],
@@ -1386,6 +2536,206 @@ const _ETH = {
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "_reachMap0Ref",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum _enum_T0",
+            "name": "which",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bool",
+            "name": "_None",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "_Some",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct T0",
+        "name": "res",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "_reachMap1Ref",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum _enum_T2",
+            "name": "which",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bool",
+            "name": "_None",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bool",
+                "name": "_accepted",
+                "type": "bool"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_amountRequested",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_amountSet",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_approvalsCount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_sumOfSetAmounts",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct T1",
+            "name": "_Some",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct T2",
+        "name": "res",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "_reachMap2Ref",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum _enum_T4",
+            "name": "which",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bool",
+            "name": "_None",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "_amountDue",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_insrPackageId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_matureBalance",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct T3",
+            "name": "_Some",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct T4",
+        "name": "res",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "addr",
+        "type": "uint256"
+      }
+    ],
+    "name": "_reachMap3Ref",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum _enum_T6",
+            "name": "which",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bool",
+            "name": "_None",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "_fundingLimit",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_monthlyFee",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct T5",
+            "name": "_Some",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct T6",
+        "name": "res",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "uint256",
@@ -1398,7 +2748,7 @@ const _ETH = {
             "type": "bool"
           }
         ],
-        "internalType": "struct T7",
+        "internalType": "struct T13",
         "name": "_a",
         "type": "tuple"
       }
@@ -1418,193 +2768,210 @@ const _ETH = {
             "type": "uint256"
           },
           {
-            "internalType": "bool",
-            "name": "msg",
-            "type": "bool"
-          }
-        ],
-        "internalType": "struct T7",
-        "name": "_a",
-        "type": "tuple"
-      }
-    ],
-    "name": "_reach_m2",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
             "components": [
               {
-                "internalType": "uint256",
-                "name": "v358",
-                "type": "uint256"
+                "components": [
+                  {
+                    "internalType": "enum _enum_T26",
+                    "name": "which",
+                    "type": "uint8"
+                  },
+                  {
+                    "components": [
+                      {
+                        "components": [
+                          {
+                            "internalType": "bool",
+                            "name": "_accepted",
+                            "type": "bool"
+                          },
+                          {
+                            "internalType": "uint256",
+                            "name": "_amountRequested",
+                            "type": "uint256"
+                          },
+                          {
+                            "internalType": "uint256",
+                            "name": "_amountSet",
+                            "type": "uint256"
+                          },
+                          {
+                            "internalType": "uint256",
+                            "name": "_approvalsCount",
+                            "type": "uint256"
+                          },
+                          {
+                            "internalType": "address payable",
+                            "name": "_claimant",
+                            "type": "address"
+                          },
+                          {
+                            "internalType": "uint256",
+                            "name": "_sumOfSetAmounts",
+                            "type": "uint256"
+                          }
+                        ],
+                        "internalType": "struct T15",
+                        "name": "elem0",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct T16",
+                    "name": "_CommunityMember_createClaim0_53",
+                    "type": "tuple"
+                  },
+                  {
+                    "components": [
+                      {
+                        "components": [
+                          {
+                            "internalType": "uint256",
+                            "name": "_mfee",
+                            "type": "uint256"
+                          },
+                          {
+                            "internalType": "address payable",
+                            "name": "_who",
+                            "type": "address"
+                          }
+                        ],
+                        "internalType": "struct T17",
+                        "name": "elem0",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct T18",
+                    "name": "_CommunityMember_payMonthlyFee0_53",
+                    "type": "tuple"
+                  },
+                  {
+                    "components": [
+                      {
+                        "components": [
+                          {
+                            "components": [
+                              {
+                                "internalType": "bytes32",
+                                "name": "elem0",
+                                "type": "bytes32"
+                              },
+                              {
+                                "internalType": "bytes28",
+                                "name": "elem1",
+                                "type": "bytes28"
+                              }
+                            ],
+                            "internalType": "struct T19",
+                            "name": "_chosenInsurancePackage",
+                            "type": "tuple"
+                          },
+                          {
+                            "components": [
+                              {
+                                "internalType": "bytes32",
+                                "name": "elem0",
+                                "type": "bytes32"
+                              },
+                              {
+                                "internalType": "bytes28",
+                                "name": "elem1",
+                                "type": "bytes28"
+                              }
+                            ],
+                            "internalType": "struct T19",
+                            "name": "_email",
+                            "type": "tuple"
+                          },
+                          {
+                            "components": [
+                              {
+                                "internalType": "bytes32",
+                                "name": "elem0",
+                                "type": "bytes32"
+                              },
+                              {
+                                "internalType": "bytes28",
+                                "name": "elem1",
+                                "type": "bytes28"
+                              }
+                            ],
+                            "internalType": "struct T19",
+                            "name": "_fullName",
+                            "type": "tuple"
+                          },
+                          {
+                            "components": [
+                              {
+                                "internalType": "bytes20",
+                                "name": "elem0",
+                                "type": "bytes20"
+                              }
+                            ],
+                            "internalType": "struct T20",
+                            "name": "_phone",
+                            "type": "tuple"
+                          }
+                        ],
+                        "internalType": "struct T21",
+                        "name": "elem0",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct T22",
+                    "name": "_CommunityMember_registerMembership0_53",
+                    "type": "tuple"
+                  },
+                  {
+                    "components": [
+                      {
+                        "components": [
+                          {
+                            "internalType": "bool",
+                            "name": "_accepted",
+                            "type": "bool"
+                          },
+                          {
+                            "internalType": "address payable",
+                            "name": "_claimant",
+                            "type": "address"
+                          },
+                          {
+                            "internalType": "uint256",
+                            "name": "_setAmount",
+                            "type": "uint256"
+                          }
+                        ],
+                        "internalType": "struct T23",
+                        "name": "elem0",
+                        "type": "tuple"
+                      }
+                    ],
+                    "internalType": "struct T24",
+                    "name": "_CommunityMember_respondToClaim0_53",
+                    "type": "tuple"
+                  },
+                  {
+                    "internalType": "bool",
+                    "name": "_CommunityMember_stopContract0_53",
+                    "type": "bool"
+                  }
+                ],
+                "internalType": "struct T26",
+                "name": "v415",
+                "type": "tuple"
               }
             ],
-            "internalType": "struct T10",
+            "internalType": "struct T27",
             "name": "msg",
             "type": "tuple"
           }
         ],
-        "internalType": "struct T11",
+        "internalType": "struct T28",
         "name": "_a",
         "type": "tuple"
       }
     ],
-    "name": "_reach_m4",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "msg",
-            "type": "bool"
-          }
-        ],
-        "internalType": "struct T7",
-        "name": "_a",
-        "type": "tuple"
-      }
-    ],
-    "name": "_reach_m5",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
-            "components": [
-              {
-                "internalType": "uint256",
-                "name": "v374",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct T13",
-            "name": "msg",
-            "type": "tuple"
-          }
-        ],
-        "internalType": "struct T14",
-        "name": "_a",
-        "type": "tuple"
-      }
-    ],
-    "name": "_reach_m6",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "msg",
-            "type": "bool"
-          }
-        ],
-        "internalType": "struct T7",
-        "name": "_a",
-        "type": "tuple"
-      }
-    ],
-    "name": "_reach_m7",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
-            "components": [
-              {
-                "internalType": "uint256",
-                "name": "v389",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "v390",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct T15",
-            "name": "msg",
-            "type": "tuple"
-          }
-        ],
-        "internalType": "struct T16",
-        "name": "_a",
-        "type": "tuple"
-      }
-    ],
-    "name": "_reach_m8",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "msg",
-            "type": "bool"
-          }
-        ],
-        "internalType": "struct T7",
-        "name": "_a",
-        "type": "tuple"
-      }
-    ],
-    "name": "_reach_m9",
+    "name": "_reach_m3",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -1614,8 +2981,8 @@ const _ETH = {
     "type": "receive"
   }
 ]`,
-  Bytecode: `0x608060405260405162001b0d38038062001b0d833981016040819052620000269162000248565b600080805543600355604080516020810190915290815260408051835181526020808501518051828401520151918101919091527f80c0078efe412e5091172e0df54decefb16131f320816d23b64aede2bf8e9e4b9060600160405180910390a16020820151516200009c903414600762000141565b6020808301510151620000b09043620002a8565b81526040805160808082018352600060208084018281528486018381526060808701858152338089528b860180515186525186015184528a5182526001968790554390965588518086019690965292518589015290519084015251828401528451808303909301835260a0909101909352805191926200013792600292909101906200016b565b505050506200030c565b81620001675760405163100960cb60e01b81526004810182905260240160405180910390fd5b5050565b8280546200017990620002cf565b90600052602060002090601f0160209004810192826200019d5760008555620001e8565b82601f10620001b857805160ff1916838001178555620001e8565b82800160010185558215620001e8579182015b82811115620001e8578251825591602001919060010190620001cb565b50620001f6929150620001fa565b5090565b5b80821115620001f65760008155600101620001fb565b604080519081016001600160401b03811182821017156200024257634e487b7160e01b600052604160045260246000fd5b60405290565b600081830360608112156200025c57600080fd5b6200026662000211565b835181526040601f19830112156200027d57600080fd5b6200028762000211565b60208581015182526040909501518582015293810193909352509092915050565b60008219821115620002ca57634e487b7160e01b600052601160045260246000fd5b500190565b600181811c90821680620002e457607f821691505b602082108114156200030657634e487b7160e01b600052602260045260246000fd5b50919050565b6117f1806200031c6000396000f3fe60806040526004361061009a5760003560e01c80638e314769116100615780638e31476914610115578063980b6eac14610128578063a209ad4e1461013b578063ab53f2c61461014e578063bf2c5b2414610171578063de7369981461018457005b80631e93b0f1146100a35780632c10a159146100c75780637eea518c146100da57806383230757146100ed5780638328d4c41461010257005b366100a157005b005b3480156100af57600080fd5b506003545b6040519081526020015b60405180910390f35b6100a16100d53660046113d1565b610197565b6100a16100e83660046113d1565b61032c565b3480156100f957600080fd5b506001546100b4565b6100a16101103660046113f4565b6104a8565b6100a16101233660046113d1565b6106cc565b6100a16101363660046113d1565b610865565b6100a16101493660046113d1565b610b0a565b34801561015a57600080fd5b50610163610d52565b6040516100be929190611406565b6100a161017f3660046113d1565b610def565b6100a16101923660046113d1565b610f84565b6101a760016000541460096110d8565b6101c1813515806101ba57506001548235145b600a6110d8565b6000808055600280546101d390611463565b80601f01602080910402602001604051908101604052809291908181526020018280546101ff90611463565b801561024c5780601f106102215761010080835404028352916020019161024c565b820191906000526020600020905b81548152906001019060200180831161022f57829003601f168201915b505050505080602001905181019061026491906114b4565b905061027781606001514310600b6110d8565b7f79ca1a789d797004bc78dff9632d64e202e102f2d008dcc20c5a645ef7d4a7d1826040516102a6919061152d565b60405180910390a16102bf8160200151341460086110d8565b6102c761128a565b815181516001600160a01b039091169052602080830180518351830152604080850151845190910152825133606090910152818301805160019052514392019190915251610315908061156d565b602082015160400152610327816110fd565b505050565b61033c600160005414600d6110d8565b6103568135158061034f57506001548235145b600e6110d8565b60008080556002805461036890611463565b80601f016020809104026020016040519081016040528092919081815260200182805461039490611463565b80156103e15780601f106103b6576101008083540402835291602001916103e1565b820191906000526020600020905b8154815290600101906020018083116103c457829003601f168201915b50505050508060200190518101906103f991906114b4565b905061040d8160600151431015600f6110d8565b7f82e152e8b1d7e41adffbddbd5b2fe2e130356df9b7ab7d06526a80d7888af3e18260405161043c919061152d565b60405180910390a16104503415600c6110d8565b805160208201516040516001600160a01b039092169181156108fc0291906000818181858888f1935050505015801561048d573d6000803e3d6000fd5b50600080805560018190556104a4906002906112e3565b5050565b6104b860096000541460276110d8565b6104d2813515806104cb57506001548235145b60286110d8565b6000808055600280546104e490611463565b80601f016020809104026020016040519081016040528092919081815260200182805461051090611463565b801561055d5780601f106105325761010080835404028352916020019161055d565b820191906000526020600020905b81548152906001019060200180831161054057829003601f168201915b50505050508060200190518101906105759190611585565b90506105888160e00151431060296110d8565b604080518335815260208085013590820152838201358183015290517f41b6d8e223fb0a5cfe68af9f34b07a5a94b63517841457ccfc53fb18b8e41fde9181900360600190a16105da341560246110d8565b80516105f2906001600160a01b0316331460256110d8565b6040805161063e9161061891602080870135928701359101918252602082015260400190565b6040516020818303038152906040528051906020012060001c8260a001511460266110d8565b61064661128a565b815181516001600160a01b0391821690526020808401518351909101526040808401518351909101526060808401518351921691015260c082015160039061068f906004611631565b61069d90604086013561156d565b6106a79190611648565b60208083018051929092528151439101526080830151905160400152610327816110fd565b6106dc60056000541460176110d8565b6106f6813515806106ef57506001548235145b60186110d8565b60008080556002805461070890611463565b80601f016020809104026020016040519081016040528092919081815260200182805461073490611463565b80156107815780601f1061075657610100808354040283529160200191610781565b820191906000526020600020905b81548152906001019060200180831161076457829003601f168201915b5050505050806020019051810190610799919061166a565b90506107ad8160a0015143101560196110d8565b7f9cdba579557d44a893ea7929682d6795d48dd5c40dc981d852842d4b18914de8826040516107dc919061152d565b60405180910390a16107f0341560156110d8565b8051610824906001600160a01b0316331461081a5760608201516001600160a01b0316331461081d565b60015b60166110d8565b80606001516001600160a01b03166108fc82608001519081150290604051600060405180830381858888f1935050505015801561048d573d6000803e3d6000fd5b610875600760005414601c6110d8565b61088f8135158061088857506001548235145b601d6110d8565b6000808055600280546108a190611463565b80601f01602080910402602001604051908101604052809291908181526020018280546108cd90611463565b801561091a5780601f106108ef5761010080835404028352916020019161091a565b820191906000526020600020905b8154815290600101906020018083116108fd57829003601f168201915b505050505080602001905181019061093291906116fe565b905061094a6040518060200160405280600081525090565b61095b8260c001514310601e6110d8565b6040805184358152602080860135908201527f47a1195f23e4ca8f87a7a744a702eeb3eb5b0d56dae31e23931e0349a611c709910160405180910390a16109a43415601a6110d8565b60608201516109bf906001600160a01b03163314601b6110d8565b60408201516109ce904361156d565b81526040805161010081018252600080825260208201819052918101829052606081018290526080810182905260a0810182905260c0810182905260e081019190915282516001600160a01b0390811682526020808501518184015260408086015181850152606080870151909316928401929092526080808601519084015260a080860151908401528581013560c0840152835160e08401526009600055436001559051610adf9183910160006101008201905060018060a01b038084511683526020840151602084015260408401516040840152806060850151166060840152506080830151608083015260a083015160a083015260c083015160c083015260e083015160e083015292915050565b60405160208183030381529060405260029080519060200190610b03929190611320565b5050505050565b610b1a60056000541460126110d8565b610b3481351580610b2d57506001548235145b60136110d8565b600080805560028054610b4690611463565b80601f0160208091040260200160405190810160405280929190818152602001828054610b7290611463565b8015610bbf5780601f10610b9457610100808354040283529160200191610bbf565b820191906000526020600020905b815481529060010190602001808311610ba257829003601f168201915b5050505050806020019051810190610bd7919061166a565b9050610bef6040518060200160405280600081525090565b610c008260a00151431060146110d8565b6040805184358152602080860135908201527f7d7741a24b17d1850d95beda5136388f520bc575ba9499f2f40fdfa7647ad82f910160405180910390a1610c49341560106110d8565b8151610c61906001600160a01b0316331460116110d8565b6040820151610c70904361156d565b81526040805160e081018252600080825260208201819052918101829052606081018290526080810182905260a0810182905260c081019190915282516001600160a01b039081168083526020808601518185019081526040808801518187019081526060808a015187168189019081526080808c0151818b019081528d88013560a0808d019182528d5160c0808f0191825260076000554360015589519b8c019c909c529851978a0197909752945193880193909352905190971696850196909652945190830152925191810191909152905160e082015261010001610adf565b600060606000546002808054610d6790611463565b80601f0160208091040260200160405190810160405280929190818152602001828054610d9390611463565b8015610de05780601f10610db557610100808354040283529160200191610de0565b820191906000526020600020905b815481529060010190602001808311610dc357829003601f168201915b50505050509050915091509091565b610dff60076000541460216110d8565b610e1981351580610e1257506001548235145b60226110d8565b600080805560028054610e2b90611463565b80601f0160208091040260200160405190810160405280929190818152602001828054610e5790611463565b8015610ea45780601f10610e7957610100808354040283529160200191610ea4565b820191906000526020600020905b815481529060010190602001808311610e8757829003601f168201915b5050505050806020019051810190610ebc91906116fe565b9050610ed08160c0015143101560236110d8565b7fba16100ad25f3c6798bc3b7e9ca316fb231388e6fa4444c0f477e2a4336514e082604051610eff919061152d565b60405180910390a1610f133415601f6110d8565b8051610f47906001600160a01b03163314610f3d5760608201516001600160a01b03163314610f40565b60015b60206110d8565b805160808201516040516001600160a01b039092169181156108fc0291906000818181858888f1935050505015801561048d573d6000803e3d6000fd5b610f94600960005414602c6110d8565b610fae81351580610fa757506001548235145b602d6110d8565b600080805560028054610fc090611463565b80601f0160208091040260200160405190810160405280929190818152602001828054610fec90611463565b80156110395780601f1061100e57610100808354040283529160200191611039565b820191906000526020600020905b81548152906001019060200180831161101c57829003601f168201915b50505050508060200190518101906110519190611585565b90506110658160e00151431015602e6110d8565b7fb764c356a899e639c4043e82fb6274894baac6d84c74f3b3ae78d8f4b22b000382604051611094919061152d565b60405180910390a16110a83415602a6110d8565b8051610824906001600160a01b031633146110d25760608201516001600160a01b031633146110d5565b60015b602b5b816104a45760405163100960cb60e01b81526004810182905260240160405180910390fd5b60408051602081019091526000815260208201515160011415611225578151604001516020808401510151611132919061156d565b81526040805160c081018252600080825260208201819052918101829052606081018290526080810182905260a08101919091528251516001600160a01b039081168083528451602090810151818501908152865160409081015181870190815288516060908101518716818901908152858b01518401516080808b019182528b5160a0808d019182526005600055436001558751998a019a909a529651958801959095529251918601919091525190951690830152925191810191909152905160c082015260e0016040516020818303038152906040526002908051906020019061121f929190611320565b50505050565b60208201515160021461123d57815160600151611241565b8151515b6001600160a01b03166108fc8360000151602001516002611262919061179c565b6040518115909202916000818181858888f1935050505015801561048d573d6000803e3d6000fd5b6040805160c0810182526000918101828152606082018390526080820183905260a082019290925290819081526020016112de60405180606001604052806000815260200160008152602001600081525090565b905290565b5080546112ef90611463565b6000825580601f106112ff575050565b601f01602090049060005260206000209081019061131d91906113a4565b50565b82805461132c90611463565b90600052602060002090601f01602090048101928261134e5760008555611394565b82601f1061136757805160ff1916838001178555611394565b82800160010185558215611394579182015b82811115611394578251825591602001919060010190611379565b506113a09291506113a4565b5090565b5b808211156113a057600081556001016113a5565b6000604082840312156113cb57600080fd5b50919050565b6000604082840312156113e357600080fd5b6113ed83836113b9565b9392505050565b6000606082840312156113cb57600080fd5b82815260006020604081840152835180604085015260005b8181101561143a5785810183015185820160600152820161141e565b8181111561144c576000606083870101525b50601f01601f191692909201606001949350505050565b600181811c9082168061147757607f821691505b602082108114156113cb57634e487b7160e01b600052602260045260246000fd5b80516001600160a01b03811681146114af57600080fd5b919050565b6000608082840312156114c657600080fd5b6040516080810181811067ffffffffffffffff821117156114f757634e487b7160e01b600052604160045260246000fd5b60405261150383611498565b81526020830151602082015260408301516040820152606083015160608201528091505092915050565b8135815260408101602083013580151580821461154957600080fd5b806020850152505092915050565b634e487b7160e01b600052601160045260246000fd5b6000821982111561158057611580611557565b500190565b600061010080838503121561159957600080fd5b6040519081019067ffffffffffffffff821181831017156115ca57634e487b7160e01b600052604160045260246000fd5b816040526115d784611498565b815260208401516020820152604084015160408201526115f960608501611498565b60608201526080840151608082015260a084015160a082015260c084015160c082015260e084015160e0820152809250505092915050565b60008282101561164357611643611557565b500390565b60008261166557634e487b7160e01b600052601260045260246000fd5b500690565b600060c0828403121561167c57600080fd5b60405160c0810181811067ffffffffffffffff821117156116ad57634e487b7160e01b600052604160045260246000fd5b6040526116b983611498565b815260208301516020820152604083015160408201526116db60608401611498565b60608201526080830151608082015260a083015160a08201528091505092915050565b600060e0828403121561171057600080fd5b60405160e0810181811067ffffffffffffffff8211171561174157634e487b7160e01b600052604160045260246000fd5b60405261174d83611498565b8152602083015160208201526040830151604082015261176f60608401611498565b60608201526080830151608082015260a083015160a082015260c083015160c08201528091505092915050565b60008160001904831182151516156117b6576117b6611557565b50029056fea2646970667358221220a81b7fc3cba8e860c017d2c26b4593cd96ec35e72952047879c33ecaebbefa6464736f6c634300080c0033`,
-  BytecodeLen: 6925,
+  Bytecode: `0x60806040526040516200261b3803806200261b83398101604081905262000026916200020f565b60008055436003556040805182518152602080840151805182840152015115158183015290517f091a26643f54c14ebc983b2e12a5bd460b902dc635cdc4f355fedff9bf2b74de9181900360600190a1620000843415600762000108565b6040805160608082018352600060208084018281528486018381523380875288840180515184525184015115158252600194859055439094558651928301939093525194810194909452511515908301529060800160405160208183030381529060405260029080519060200190620000ff92919062000132565b505050620002be565b816200012e5760405163100960cb60e01b81526004810182905260240160405180910390fd5b5050565b828054620001409062000281565b90600052602060002090601f016020900481019282620001645760008555620001af565b82601f106200017f57805160ff1916838001178555620001af565b82800160010185558215620001af579182015b82811115620001af57825182559160200191906001019062000192565b50620001bd929150620001c1565b5090565b5b80821115620001bd5760008155600101620001c2565b604080519081016001600160401b03811182821017156200020957634e487b7160e01b600052604160045260246000fd5b60405290565b600081830360608112156200022357600080fd5b6200022d620001d8565b835181526040601f19830112156200024457600080fd5b6200024e620001d8565b915060208401518252604084015180151581146200026b57600080fd5b6020838101919091528101919091529392505050565b600181811c908216806200029657607f821691505b60208210811415620002b857634e487b7160e01b600052602260045260246000fd5b50919050565b61234d80620002ce6000396000f3fe6080604052600436106100d55760003560e01c80633eca74551161007957806383230757116100565780638323075714610200578063ab53f2c614610215578063cadc2e7a14610238578063fcb12fce1461026557005b80633eca745514610193578063817d57f3146101c05780638185bc9f146101ed57005b806329e55c7f116100b257806329e55c7f1461012d5780632c10a15914610140578063367678c0146101535780633bc5b7bf1461016657005b80630bf03a25146100de5780631442b017146101065780631e93b0f11461010e57005b366100dc57005b005b6100f16100ec366004611a0a565b610278565b60405190151581526020015b60405180910390f35b6100f16102cf565b34801561011a57600080fd5b506003545b6040519081526020016100fd565b6100dc61013b366004611a2d565b61031c565b6100dc61014e366004611a46565b610340565b6100f1610161366004611adf565b610360565b34801561017257600080fd5b50610186610181366004611afb565b6103b4565b6040516100fd9190611b3e565b34801561019f57600080fd5b506101b36101ae366004611b70565b6103e0565b6040516100fd9190611b89565b3480156101cc57600080fd5b506101e06101db366004611afb565b6103f1565b6040516100fd9190611bc6565b6100f16101fb366004611c80565b610430565b34801561020c57600080fd5b5060015461011f565b34801561022157600080fd5b5061022a610488565b6040516100fd929190611c9c565b34801561024457600080fd5b50610258610253366004611afb565b610525565b6040516100fd9190611cf9565b6100f1610273366004611e50565b610536565b60006102826114bb565b61028a6114e9565b610292611508565b6040805160208082018352878252838301919091526001835281518082019092528282528301526102c3828461058e565b50506020015192915050565b60006102d96114bb565b6102e16114e9565b6102e9611508565b600060a08201526004815260408051602080820190925282815290830152610311828461058e565b505060800151919050565b6103246114bb565b61033c61033636849003840184611f0c565b8261058e565b5050565b6103486114bb565b61033c61035a36849003840184611fd3565b82610b30565b600061036a6114bb565b6103726114e9565b61037a611508565b6040805160208082018352878252838101919091526000835281518082019092528282528301526103ab828461058e565b50505192915050565b60408051606081018252600080825260208201819052918101919091526103da82611023565b92915050565b6103e8611621565b6103da826110fc565b61042760408051606080820183526000808352602080840182905284519283018552818352820181905281840152909182015290565b6103da826111ad565b600061043a6114bb565b6104426114e9565b61044a611508565b6040805160208082018352878252608084019190915260038352815180820190925282825283015261047c828461058e565b50506060015192915050565b60006060600054600280805461049d90612037565b80601f01602080910402602001604051908101604052809291908181526020018280546104c990612037565b80156105165780601f106104eb57610100808354040283529160200191610516565b820191906000526020600020905b8154815290600101906020018083116104f957829003601f168201915b50505050509050915091509091565b61052d61165a565b6103da826112ab565b60006105406114bb565b6105486114e9565b610550611508565b60408051602080820183528782526060840191909152600283528151808201909252828252830152610582828461058e565b50506040015192915050565b61059e6004600054146011611396565b81516105b99015806105b257508251600154145b6012611396565b6000808055600280546105cb90612037565b80601f01602080910402602001604051908101604052809291908181526020018280546105f790612037565b80156106445780601f1061061957610100808354040283529160200191610644565b820191906000526020600020905b81548152906001019060200180831161062757829003601f168201915b505050505080602001905181019061065c919061206c565b90506106666116aa565b7f5a8d166215fc2d434cbb97a632cac5e52fa7df57621d459e558afcf8e984e1f4846040516106959190612168565b60405180910390a160006020850151515160048111156106b7576106b7611b18565b14156108135760208085015151015181526106d43415600c611396565b604051600181527f9865049d10e59a454d4b128329a1d773eae7d24b99c015890a0ec7ca88ed82519060200160405180910390a160018352602080820180516000905282515182015190518201528151510151620927c0111561073a57620927c0610742565b805151602001515b6020828101805160409081019390935280516000606091820181905285515184015183516080908101919091523382526005808652918690208054600160ff19918216811783559551805196830180549092169615159690961790559484015160028601559483015160038501559082015160048401559201519101556107c761174f565b825181516001600160a01b039091169052602080840151825182015260408085015183519015159101528082018051439052606085015190519091015261080d816113bb565b50610b2a565b600160208501515151600481111561082d5761082d611b18565b1415610939576020840151516040908101519082018190525151610854903414600d611396565b604051600181527f4d094e5b3d090c3598f351e39d67acc81c91db1c818b810e2714ec3522211fdc9060200160405180910390a1600160208401528151604080830151515190516001600160a01b039092169181156108fc0291906000818181858888f193505050501580156108ce573d6000803e3d6000fd5b506108d761174f565b825181516001600160a01b0390911690526020808401518251820152604080850151835190151590820152908201514390528201515151606084015161091e908290612271565b6109289190612289565b602080830151015261080d816113bb565b600260208501515151600481111561095357610953611b18565b1415610a4c5761096a82602001513414600e611396565b604051600181527f39ca770d04bcc4bb03c0af498d37d9f7779d442d2e4602e927289a587d68a7ff9060200160405180910390a160016040808501919091528251602084015191516001600160a01b039091169180156108fc02916000818181858888f193505050501580156109e4573d6000803e3d6000fd5b50336000908152600460205260409020805462ff00ff19166001179055610a0961174f565b825181516001600160a01b03909116905260208084018051835183015260408086015184519015159101529082015143905251606084015161091e908290612271565b6003602085015151516004811115610a6657610a66611b18565b1415610abb57610a783415600f611396565b604051600181527fd9e075d91f0eb215b35444f352ea7b3b5967ec95c7bc0b6cc101fc407c841dc59060200160405180910390a1600160608401526107c761174f565b6004602085015151516004811115610ad557610ad5611b18565b1415610b2a57610ae734156010611396565b604051600181527f64db559c3551e6be30a6482af0e2481c00ca31f86360e33095288a50f14138d79060200160405180910390a1600160808401526107c761174f565b50505050565b610b40600160005414600a611396565b8151610b5b901580610b5457508251600154145b600b611396565b600080805560028054610b6d90612037565b80601f0160208091040260200160405190810160405280929190818152602001828054610b9990612037565b8015610be65780601f10610bbb57610100808354040283529160200191610be6565b820191906000526020600020905b815481529060010190602001808311610bc957829003601f168201915b5050505050806020019051810190610bfe91906122a0565b9050610c08611796565b60408051855181526020808701511515908201527f79ca1a789d797004bc78dff9632d64e202e102f2d008dcc20c5a645ef7d4a7d1910160405180910390a1610c5334156008611396565b8151610c6b906001600160a01b031633146009611396565b80516201d4c0905280516103e86020918201526001600081815260078084527fb39221ace053465ec3453ce2b36430bd138b997ecea25c1043da0c366812b828805460ff199081168517909155855180517fb39221ace053465ec3453ce2b36430bd138b997ecea25c1043da0c366812b829558501517fb39221ace053465ec3453ce2b36430bd138b997ecea25c1043da0c366812b82a558486018051620927c09052805161138890870152600284528286527fb7c774451310d1be4108bc180d1b52823cb0ee0274a6c0081bcaf94f115fb96d80548316861790555180517fb7c774451310d1be4108bc180d1b52823cb0ee0274a6c0081bcaf94f115fb96e558501517fb7c774451310d1be4108bc180d1b52823cb0ee0274a6c0081bcaf94f115fb96f5560408601805162124f809052805161271090870152600384528286527f3be6fd20d5acfde5b873b48692cd31f4d3c7e8ee8a813af4696af8859e5ca6c680548316861790555180517f3be6fd20d5acfde5b873b48692cd31f4d3c7e8ee8a813af4696af8859e5ca6c7558501517f3be6fd20d5acfde5b873b48692cd31f4d3c7e8ee8a813af4696af8859e5ca6c855606086018051625b8d809052805161c35090870152600484528286527fb805995a7ec585a251200611a61d179cfd7fb105e1ab17dc415a7336783786f780548316861790555180517fb805995a7ec585a251200611a61d179cfd7fb105e1ab17dc415a7336783786f8558501517fb805995a7ec585a251200611a61d179cfd7fb105e1ab17dc415a7336783786f95560808601805162b71b0090528051620186a090870152600584528286527fbcdda56b5d08466ec462cbbe0adfa57cb0a15fcc8940ef68f702f21b787bc93580548316861790555180517fbcdda56b5d08466ec462cbbe0adfa57cb0a15fcc8940ef68f702f21b787bc936558501517fbcdda56b5d08466ec462cbbe0adfa57cb0a15fcc8940ef68f702f21b787bc9375560a0860180516303938700905280516207a1209087015260069093529084527f55c5b153ab560fcde54a63b18c7f53d75501706907cef8767fbded79ab9997c780549091169092179091555180517f55c5b153ab560fcde54a63b18c7f53d75501706907cef8767fbded79ab9997c85501517f55c5b153ab560fcde54a63b18c7f53d75501706907cef8767fbded79ab9997c955610fdb61174f565b825181516001600160a01b03909116905260208084015182518201526040808501518351901515910152808201805143905251600091015261101c816113bb565b5050505050565b604080516060810182526000808252602082018190529181019190915260016001600160a01b03831660009081526004602052604090205460ff16600181111561106f5761106f611b18565b14156110ec576001600160a01b038216600090815260046020526040908190208151606081019092528054829060ff1660018111156110b0576110b0611b18565b60018111156110c1576110c1611b18565b8152905460ff6101008204811615156020840152620100009091041615156040909101529050919050565b600080825260208201525b919050565b611104611621565b600160008381526007602052604090205460ff16600181111561112957611129611b18565b14156110ec57600082815260076020526040908190208151606081019092528054829060ff16600181111561116057611160611b18565b600181111561117157611171611b18565b81528154610100900460ff1615156020808301919091526040805180820182526001850154815260029094015491840191909152015292915050565b6111e360408051606080820183526000808352602080840182905284519283018552818352820181905281840152909182015290565b60016001600160a01b03831660009081526006602052604090205460ff16600181111561121257611212611b18565b14156110ec576001600160a01b038216600090815260066020526040908190208151606081019092528054829060ff16600181111561125357611253611b18565b600181111561126457611264611b18565b81528154610100900460ff16151560208083019190915260408051606081018252600185015481526002850154928101929092526003909301548184015291015292915050565b6112b361165a565b60016001600160a01b03831660009081526005602052604090205460ff1660018111156112e2576112e2611b18565b14156110ec576001600160a01b038216600090815260056020526040908190208151606081019092528054829060ff16600181111561132357611323611b18565b600181111561133457611334611b18565b81528154610100900460ff90811615156020808401919091526040805160a08101825260018601549093161515835260028501549183019190915260038401548282015260048401546060830152600590930154608082015291015292915050565b8161033c5760405163100960cb60e01b81526004810182905260240160405180910390fd5b805160400151156114605760408051608080820183526000808352602080840182815284860183815260608087018581528951516001600160a01b03168089528a51860151855260018085528b8701518701518352600490975543909655885180860196909652925185890152905115159084015251828401528451808303909301835260a09091019093528051919261145b926002929091019061183d565b505050565b80515160208083015101516040516001600160a01b039092169181156108fc0291906000818181858888f193505050501580156114a1573d6000803e3d6000fd5b50600080805560018190556114b8906002906118c1565b50565b6040805160a08101825260008082526020820181905291810182905260608101829052608081019190915290565b6040518060400160405280600081526020016115036118fb565b905290565b6040805160c0810190915280600081526020016115576040805160e081018252600060208201818152928201819052606082018190526080820181905260a0820181905260c082015290815290565b815260200161157c604080516060810182526000602082018181529282015290815290565b81526020016115e86040805160e081018252600060a0820181815260c08301829052602080840191825284518086018652838152808201849052848601528451808601865283815280820184905260608501528451908101909452908352608082019290925290815290565b815260200161161460408051608081018252600060208201818152928201819052606082015290815290565b8152600060209091015290565b60408051606081019091528060008152602001600015158152602001611503604051806040016040528060008152602001600081525090565b604080516060810190915280600081526020016000151581526020016115036040518060a00160405280600015158152602001600081526020016000815260200160008152602001600081525090565b60405180606001604052806116f16040805160e081018252600060208201818152928201819052606082018190526080820181905260a0820181905260c082015290815290565b815260200161172a6040518060a00160405280600015158152602001600081526020016000815260200160008152602001600081525090565b8152602001611503604080516060810182526000602082018181529282015290815290565b6040805160a08101825260009181018281526060820183905260808201929092529081905b8152602001611503604051806040016040528060008152602001600081525090565b604080516101008101909152600060c0820181815260e0830191909152819081526020016117d7604051806040016040528060008152602001600081525090565b81526020016117f9604051806040016040528060008152602001600081525090565b815260200161181b604051806040016040528060008152602001600081525090565b8152602001611774604051806040016040528060008152602001600081525090565b82805461184990612037565b90600052602060002090601f01602090048101928261186b57600085556118b1565b82601f1061188457805160ff19168380011785556118b1565b828001600101855582156118b1579182015b828111156118b1578251825591602001919060010190611896565b506118bd92915061190e565b5090565b5080546118cd90612037565b6000825580601f106118dd575050565b601f0160209004906000526020600020908101906114b8919061190e565b6040518060200160405280611503611508565b5b808211156118bd576000815560010161190f565b6040805190810167ffffffffffffffff8111828210171561195457634e487b7160e01b600052604160045260246000fd5b60405290565b60405160c0810167ffffffffffffffff8111828210171561195457634e487b7160e01b600052604160045260246000fd5b6040516020810167ffffffffffffffff8111828210171561195457634e487b7160e01b600052604160045260246000fd5b6001600160a01b03811681146114b857600080fd5b6000604082840312156119e357600080fd5b6119eb611923565b90508135815260208201356119ff816119bc565b602082015292915050565b600060408284031215611a1c57600080fd5b611a2683836119d1565b9392505050565b60006102a08284031215611a4057600080fd5b50919050565b600060408284031215611a4057600080fd5b80151581146114b857600080fd5b80356110f781611a58565b600060c08284031215611a8357600080fd5b611a8b61195a565b90508135611a9881611a58565b808252506020820135602082015260408201356040820152606082013560608201526080820135611ac8816119bc565b8060808301525060a082013560a082015292915050565b600060c08284031215611af157600080fd5b611a268383611a71565b600060208284031215611b0d57600080fd5b8135611a26816119bc565b634e487b7160e01b600052602160045260246000fd5b600281106114b8576114b8611b18565b81516060820190611b4e81611b2e565b8083525060208301511515602083015260408301511515604083015292915050565b600060208284031215611b8257600080fd5b5035919050565b81516080820190611b9981611b2e565b80835250602083015115156020830152604083015180516040840152602081015160608401525092915050565b815160a0820190611bd681611b2e565b82526020838101511515818401526040938401518051858501529081015160608401529092015160809091015290565b600060608284031215611c1857600080fd5b6040516060810181811067ffffffffffffffff82111715611c4957634e487b7160e01b600052604160045260246000fd5b6040529050808235611c5a81611a58565b81526020830135611c6a816119bc565b6020820152604092830135920191909152919050565b600060608284031215611c9257600080fd5b611a268383611c06565b82815260006020604081840152835180604085015260005b81811015611cd057858101830151858201606001528201611cb4565b81811115611ce2576000606083870101525b50601f01601f191692909201606001949350505050565b815160e0820190611d0981611b2e565b8083525060208301511515602083015260408301518051151560408401526020810151606084015260408101516080840152606081015160a0840152608081015160c08401525092915050565b600060408284031215611d6857600080fd5b611d70611923565b823581529050602082013563ffffffff19811681146119ff57600080fd5b600081830360e0811215611da157600080fd5b6040516080810181811067ffffffffffffffff82111715611dd257634e487b7160e01b600052604160045260246000fd5b604052915081611de28585611d56565b8152611df18560408601611d56565b6020820152611e038560808601611d56565b6040820152602060bf1983011215611e1a57600080fd5b611e2261198b565b915060c08401356bffffffffffffffffffffffff1981168114611e4457600080fd5b82526060015292915050565b600060e08284031215611e6257600080fd5b611a268383611d8e565b600060c08284031215611e7e57600080fd5b611e8661198b565b9050611e928383611a71565b815292915050565b600060408284031215611eac57600080fd5b611eb461198b565b9050611e9283836119d1565b600060e08284031215611ed257600080fd5b611eda61198b565b9050611e928383611d8e565b600060608284031215611ef857600080fd5b611f0061198b565b9050611e928383611c06565b60008183036102a0811215611f2057600080fd5b611f28611923565b8335815261028080601f1984011215611f4057600080fd5b611f4861198b565b9250611f5261195a565b602086013560058110611f6457600080fd5b8152611f738760408801611e6c565b6020820152611f86876101008801611e9a565b6040820152611f99876101408801611ec0565b6060820152611fac876102208801611ee6565b6080820152611fbc828701611a66565b60a082015283525060208101919091529392505050565b600060408284031215611fe557600080fd5b6040516040810181811067ffffffffffffffff8211171561201657634e487b7160e01b600052604160045260246000fd5b60405282358152602083013561202b81611a58565b60208201529392505050565b600181811c9082168061204b57607f821691505b60208210811415611a4057634e487b7160e01b600052602260045260246000fd5b60006080828403121561207e57600080fd5b6040516080810181811067ffffffffffffffff821117156120af57634e487b7160e01b600052604160045260246000fd5b60405282516120bd816119bc565b81526020838101519082015260408301516120d781611a58565b60408201526060928301519281019290925250919050565b805161210d8382518051825260209081015163ffffffff1916910152565b602081810151805160408601529081015163ffffffff1916606085015250604081015180516080850152602081015163ffffffff191660a0850152506bffffffffffffffffffffffff196060820151511660c0840152505050565b8151815260208201515180516102a0830191906005811061218b5761218b611b18565b806020850152506020810151518051151560408501526020810151606085015260408101516080850152606081015160a085015260018060a01b0360808201511660c085015260a081015160e085015250604081015161220361010085018251805182526020908101516001600160a01b0316910152565b5060608101516122176101408501826120ef565b506080810151518051151561022085015260208101516001600160a01b03166102408501526040015161026084015260a00151151561028090920191909152919050565b634e487b7160e01b600052601160045260246000fd5b600082198211156122845761228461225b565b500190565b60008282101561229b5761229b61225b565b500390565b6000606082840312156122b257600080fd5b6040516060810181811067ffffffffffffffff821117156122e357634e487b7160e01b600052604160045260246000fd5b60405282516122f1816119bc565b815260208381015190820152604083015161230b81611a58565b6040820152939250505056fea26469706673582212204a8ae2ed8fe9caaab5a990e22c95dfadeeecca51865adcf69e437aa75783bb5f64736f6c634300080c0033`,
+  BytecodeLen: 9755,
   Which: `oD`,
   version: 6,
   views: {
@@ -1623,56 +2990,20 @@ const _ETH = {
   };
 export const _stateSourceMap = {
   1: {
-    at: './index.rsh:51:13:after expr stmt semicolon',
+    at: './index.rsh:57:13:after expr stmt semicolon',
     fs: [],
     msg: null,
     who: 'Module'
     },
-  2: {
-    at: 'reach standard library:191:11:after expr stmt semicolon',
-    fs: ['at ./index.rsh:57:55:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
+  3: {
+    at: './index.rsh:200:13:after expr stmt semicolon',
+    fs: [],
     msg: null,
     who: 'Module'
     },
   4: {
-    at: './index.rsh:95:13:after expr stmt semicolon',
+    at: './index.rsh:94:23:after expr stmt semicolon',
     fs: [],
-    msg: null,
-    who: 'Module'
-    },
-  5: {
-    at: './index.rsh:62:17:after expr stmt semicolon',
-    fs: [],
-    msg: null,
-    who: 'Module'
-    },
-  6: {
-    at: 'reach standard library:191:11:after expr stmt semicolon',
-    fs: ['at ./index.rsh:70:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-    msg: null,
-    who: 'Module'
-    },
-  7: {
-    at: './index.rsh:71:17:after expr stmt semicolon',
-    fs: [],
-    msg: null,
-    who: 'Module'
-    },
-  8: {
-    at: 'reach standard library:191:11:after expr stmt semicolon',
-    fs: ['at ./index.rsh:78:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
-    msg: null,
-    who: 'Module'
-    },
-  9: {
-    at: './index.rsh:79:17:after expr stmt semicolon',
-    fs: [],
-    msg: null,
-    who: 'Module'
-    },
-  10: {
-    at: 'reach standard library:191:11:after expr stmt semicolon',
-    fs: ['at ./index.rsh:86:59:application call to "closeTo" (defined at: reach standard library:187:8:function exp)'],
     msg: null,
     who: 'Module'
     }
@@ -1682,8 +3013,19 @@ export const _Connectors = {
   ETH: _ETH
   };
 export const _Participants = {
-  "Alice": Alice,
-  "Bob": Bob
+  "CommunityMember_createClaim": CommunityMember_createClaim,
+  "CommunityMember_payMonthlyFee": CommunityMember_payMonthlyFee,
+  "CommunityMember_registerMembership": CommunityMember_registerMembership,
+  "CommunityMember_respondToClaim": CommunityMember_respondToClaim,
+  "CommunityMember_stopContract": CommunityMember_stopContract,
+  "Insurer": Insurer
   };
 export const _APIs = {
+  CommunityMember: {
+    createClaim: CommunityMember_createClaim,
+    payMonthlyFee: CommunityMember_payMonthlyFee,
+    registerMembership: CommunityMember_registerMembership,
+    respondToClaim: CommunityMember_respondToClaim,
+    stopContract: CommunityMember_stopContract
+    }
   };

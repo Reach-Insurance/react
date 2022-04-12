@@ -17,6 +17,7 @@ function App() {
   const [communityGroupName, setCommunityGroupName] = useState("Test group insurance");
   const [mandatoryEntryFee, setMandatoryEntryFee] = useState(0);
   const insurerContract = useRef(null);
+  const contractInfo = useState({});
   const algoAccount = useRef(null);
 
   const mnemonicRef = useRef(<></>);
@@ -33,18 +34,23 @@ function App() {
   const [errMessage, setErrMessage] = useState("Err occured.");
   const [errCode, setErrCode] = useState("GOTO_LOGIN");
   const [deployerModeOn, setDeployerModeOn] = useState(false);
+  const [connecting, setConnecting] = useState(false);
 
 
   useEffect(() => {
+    setConnecting(true);
     async function readFromDb() {
       try {
         //fetch the contract info
         const { data: infoArr, error } = await supabaseClient.from("smartcontracts").select("info").eq('name', "insurancedapp");
-        if (error) { throw error; }
+        if (error) { setConnecting(false); throw error; }
         //if info was found, 
         if (infoArr.length > 0) {
           setDeployed(true);
+          contractInfo.current = JSON.parse(infoArr[0]);
+          console.log("contract info found from supabase: ", infoArr[0]);
         }
+        setConnecting(false);
       } catch (er) {
         console.log("Oops! Failed to fetch the contract info/address", er);
       }
@@ -54,6 +60,7 @@ function App() {
   }, []);
 
   function Login() {
+    console.log("Login(){...}");
     algoAccount.current = reach.newAccountFromMnemonic(mnemonicStr);
     if (!deployed) {
       const showConfirmPopup = async () => {
@@ -98,9 +105,11 @@ function App() {
     alert(`NOTE: a new algo account is being created for you, 
     please dont forget to copy your new mnemonic and keep it secret.`);
     //create new algo account
+    console.log("Creating a new algorand account");
     algoAccount.current = reach.newTestAccount();
     const newMnemonic = reach.unsafeGetMnemonic(algoAccount.current);
     setMnemonicStr(newMnemonic);
+    console.log("go to Login");
     Login();
   }
 
@@ -152,18 +161,24 @@ function App() {
       if (err) {
         console.log(`Error while saving the contract info to supabase ${err}`);
         console.log(`Saved contract info to supabase: ${JSON.stringify(data)}`);
+      } else {
+        console.log("Contract info saved into supabase.");
       }
     });
 
     // Set deployed contract Init state
-    backend.Insurer.interact.communityGroupName = communityGroupName;
-    backend.Insurer.interact.mandatoryEntryFee = mandatoryEntryFee;
-    backend.Insurer.interact.contractIsRunning = true;
+    console.log("Setting the initial state of the contract just deployed");
+    insurerContract.current.Insurer.interact.communityGroupName = communityGroupName;
+    insurerContract.current.Insurer.interact.mandatoryEntryFee = mandatoryEntryFee;
+    insurerContract.current.Insurer.interact.contractIsRunning = true;
+    console.log("Deployed.");
   }, []);
 
   const stopContract = useCallback(() => {
     //TODO: delete info record from supabase
-    backend.Insurer.interact.contractIsRunning = false;
+    const insurerAccount = algoAccount.current;
+    const insurerContractHandle = insurerAccount.contract(backend, contractInfo.current);
+    insurerContractHandle.Insurer.interact.contractIsRunning = false;
     setContractInfoSaved(false);
   }, []);
 
