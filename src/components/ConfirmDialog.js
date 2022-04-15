@@ -11,11 +11,11 @@ const ConfirmDialog = () => {
             <div className="confirm-dialog">
                 <p>{confirmState?.text && confirmState.text}</p>
                 <div className="confirm-dialog__footer">
-                    <div className="btn" onClick={onConfirm}>
+                    <div className="btn hover:bg-blue hover:text-white" onClick={onConfirm}>
                         Yes
                     </div>
-                    <div className="btn" onClick={onCancel}>
-                        Cancel
+                    <div className="btn hover:bg-red hover:text-white" onClick={onCancel}>
+                        No
                     </div>
                 </div>
             </div>

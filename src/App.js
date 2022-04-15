@@ -7,7 +7,7 @@ import { createClient } from "@supabase/supabase-js";
 import useConfirm from "./hooks/useConfirm";
 import { v4 } from 'uuid';
 //const reach = loadStdlib(process.env);
-const reach = loadStdlib("ALGO");
+const reach = loadStdlib("ALGO-browser");
 const SUPABASE_URL = "https://byolfysahovehogqdena.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5b2xmeXNhaG92ZWhvZ3FkZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDg3NTcwMTYsImV4cCI6MTk2NDMzMzAxNn0.Q5h8nwP-qy1o5oDa0UCAgj1m7vTXOlhPyoZRC-0CNnk";
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -22,13 +22,14 @@ function App() {
   const algoAccount = useRef(null);
   const account = useRef();
   const balance = useRef();
-  const fundAmount = useRef(1000);
+  const fundAmount = useRef(100);
   const mnemonicRef = useRef(<></>);
   const [addressStr, setAddressStr] = useState("");
   const [mnemonicStr, setMnemonicStr] = useState("");
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [loginErr, setLoginErr] = useState("");
   const [activePage, setActivePage] = useState("LOGIN");
   const [insrPackage, setInsrPackage] = useState("");
   const [deployed, setDeployed] = useState(false);
@@ -62,48 +63,63 @@ function App() {
     readFromDb();
   }, []);
 
-  function Login() {
-    console.log("Login(){...}");
-    algoAccount.current = reach.newAccountFromMnemonic(mnemonicStr);
-    if (!deployed) {
-      const showConfirmPopup = async () => {
-        //https://devrecipes.net/custom-confirm-dialog-with-react-hooks-and-the-context-api/
-        const wantToDeployContract = await confirm('The insurer contract is not yet deployed. Are you the insurer ? Deploy it.');
-        if (wantToDeployContract) {
+  function Login(e) {
+    e.preventDefault();
+    try {
+      console.log("Login(){...}");
+      const getPromise = reach.newAccountFromMnemonic(mnemonicStr);
+      getPromise.then((acc) => {
+        setLoginErr("");
+        algoAccount.current = acc;
+        console.log("algoAccount.current = ", algoAccount.current);
+        if (!deployed) {
+          //https://devrecipes.net/custom-confirm-dialog-with-react-hooks-and-the-context-api/
+          console.log("Awaiting want to deploy prompt");
+          confirm('The insurer contract is not yet deployed. Are you the insurer ? Deploy it.')
+            .then(wantToDeployContract => {
+              if (wantToDeployContract) {
+                setActivePage("DEPLOYER");
+              } else {
+                setErrMessage("Wait for the insurer to deploy the contract, or contact them for help");
+                setErrCode("GOTO_LOGIN");
+                setActivePage("ERROR");
+              }
+            });
+        } else if (deployerModeOn) {
           setActivePage("DEPLOYER");
         } else {
-          setErrMessage("Wait for the insurer to deploy the contract, or contact them for help");
-          setErrCode("GOTO_LOGIN");
-          setActivePage("ERROR");
-        }
-      }
-      showConfirmPopup();
-    } else if (deployerModeOn) {
-      setActivePage("DEPLOYER");
-    } else {
 
-      async function accessDb() {
-        let isRegisteredMember = false;
-        const memberAddr = reach.formatAddress(algoAccount.current);
-        const { data: memberDataArr, error } = await supabaseClient.from("members").select("*").eq('memberAddr', memberAddr);
-        if (error) {
-          setErrMessage(JSON.stringify(error));
-          setErrCode("GOTO_LOGIN");
-          setActivePage("ERROR");
+          async function accessDb() {
+            let isRegisteredMember = false;
+            const memberAddr = reach.formatAddress(algoAccount.current);
+            const { data: memberDataArr, error } = await supabaseClient.from("members").select("*").eq('memberAddr', memberAddr);
+            if (error) {
+              setErrMessage(JSON.stringify(error));
+              setErrCode("GOTO_LOGIN");
+              setActivePage("ERROR");
+            }
+            if (memberDataArr.length > 0) {
+              isRegisteredMember = true;
+            }
+            if (isRegisteredMember) {
+              setActivePage("DASHBOARD");
+            } else {
+              setActivePage("SIGNUP");
+            }
+          }
+          accessDb();
         }
-        if (memberDataArr.length > 0) {
-          isRegisteredMember = true;
-        }
-        if (isRegisteredMember) {
-          setActivePage("DASHBOARD");
-        } else {
-          setActivePage("SIGNUP");
-        }
-      }
-      accessDb();
+      }).catch((er) => {
+        console.log("Eer: ", er.message);
+        setLoginErr(er.message);
+      });
+
+    } catch (er) {
+      console.log("errr: ", er);
     }
   }
 
+  /*
   function newAlgoAccount() {
     alert(`NOTE: a new algo account is being created for you, 
     please dont forget to copy your new mnemonic and keep it secret.`);
@@ -115,24 +131,28 @@ function App() {
       console.log("Account created:=> ", account.current);
       //const newMnemonic = reach.unsafeGetMnemonic(algoAccount.current);
       //setMnemonicStr(newMnemonic);
-      console.log("going to Login");
-      Login();
     }
     const getBalance = async () => {
       console.log("getting balance ...");
       let rawBalance = await reach.balanceOf(account.current);
       balance.current = reach.formatCurrency(rawBalance, 4);
-      console.log(balance.current);
+      console.log("rawBalance = ", rawBalance, " balance.current = ", balance.current);
     }
     const fundWallet = async () => {
-      console.log("funding the wallet ...");
+      console.log("funding the wallet here ...", account.current, "fundAmt=", fundAmount.current);
       await reach.fundFromFaucet(account.current, reach.parseCurrency(fundAmount.current));
       console.log("...OK");
     }
-    getAccount();
-    fundWallet();
-    getBalance();
+    getAccount().then(() => {
+      fundWallet().then(() => {
+        getBalance().then(() => {
+          console.log("going to Login");
+          Login();
+        });
+      });
+    });
   }
+  */
 
   function Signup() {
     if (!email || email === "") {
@@ -169,11 +189,14 @@ function App() {
     accessDb();
   });
 
-  const deployContract = useCallback(() => {
+  const deployContract = useCallback((e) => {
+    e.preventDefault();
     const insurerAccount = algoAccount.current;
     //deploy the contract
     setIsSavingContractInfo(true);
+    console.log("Deploying...");
     insurerContract.current = insurerAccount.contract(backend);
+    console.log("... Done.");
     //save the contract info into supabase
     supabaseClient.from("smartcontracts").insert([{
       name: "insurancedapp", info: JSON.stringify(insurerContract.current.getInfo())
@@ -190,7 +213,7 @@ function App() {
     // Set deployed contract Init state
     console.log("Setting the initial state of the contract just deployed");
     insurerContract.current.Insurer.interact.communityGroupName = communityGroupName;
-    insurerContract.current.Insurer.interact.mandatoryEntryFee = mandatoryEntryFee;
+    insurerContract.current.Insurer.interact.mandatoryEntryFee = Number(mandatoryEntryFee);
     insurerContract.current.Insurer.interact.contractIsRunning = true;
     console.log("Deployed.");
   }, []);
@@ -216,6 +239,11 @@ function App() {
               </span>
             </h1>
             <hr />
+            {(loginErr !== "") &&
+              <>
+                <span className="text-red">{loginErr}</span> <hr />
+              </>
+            }
 
             <h1 className='text-xl font-medium text-primary mt-6 mb-6 text-center'>
               Enter Your mnemonic to Login
@@ -234,7 +262,7 @@ function App() {
               </div>
 
               <div>
-                <label>Have no Algorand account ? <span onClick={newAlgoAccount} href='#' className='text-blue-600'>Create a new</span> </label>
+                <label>Have no Algorand account ? <a target="_blank" href="https://perawallet.app/" className='text-blue-600'>Create a new</a> </label>
 
               </div>
 
@@ -330,11 +358,9 @@ function App() {
                 <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-2 px-16 shadow'>
                   <h1 className='text-4xl text-blue-700  text-primary mt-2 mb-2 text-center'> Insurance Dapp </h1>
                   <hr />
-                  <small> Keep your mnemonic secret: ( {mnemonicStr} ) </small>
-                  <hr />
 
                   <h1 className='text-xl font-medium text-primary mt-6 mb-6 text-center'>
-                    Register for insurance services
+                    Deploy the contract
                   </h1>
 
                   <form >
@@ -353,7 +379,7 @@ function App() {
                       <input
                         type="number"
                         value={mandatoryEntryFee}
-                        onChange={e => setMandatoryEntryFee(Number(e.target.value))}
+                        onChange={e => setMandatoryEntryFee(e.target.value)}
                         className={`w-full py px-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                       />
                     </div>
@@ -366,7 +392,7 @@ function App() {
                       </button>
                       {
                         isSavingContractInfo && <span>
-                          <img src={loadingGif1} width="50px" />
+                          <img src={loadingGif1} width="40px" />
                         </span>
                       }
                       {contractInfoSaved &&

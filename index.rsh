@@ -5,7 +5,6 @@ export const main = Reach.App(() => {
         mandatoryEntryFee: UInt,
         communityGroupName: Bytes(60),
         contractIsRunning: Bool,
-
         createDatabase: Fun([], Null),
         approveNewMembership: Fun([Address], Null),
         createAddressForNewUSer: Fun([], Address),
@@ -34,10 +33,10 @@ export const main = Reach.App(() => {
         payMonthlyFee: Fun([Object({ who: Address, mfee: UInt })], Bool),
         //changePackage: Fun([Bytes(60)], Bool),
         createClaim: Fun([Object({ claimant: Address, amountRequested: UInt, amountSet: UInt, accepted: Bool, approvalsCount: UInt, sumOfSetAmounts: UInt })], Bool),
-        stopContract: Fun([], Bool),
         respondToClaim: Fun([Object({
             claimant: Address, accepted: Bool, setAmount: UInt
         })], Bool),
+        stopContract: Fun([], Bool),
         //inheritAccount: Fun([], Null),
         //approveInheritance: Fun([], Null),
         //approveExit: Fun([], Null),
