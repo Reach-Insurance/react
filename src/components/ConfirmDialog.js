@@ -1,27 +1,48 @@
-import React from 'react';
-import { createPortal } from 'react-dom';
-import useConfirm from '../hooks/useConfirm';
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
-const ConfirmDialog = () => {
-    const { onConfirm, onCancel, confirmState } = useConfirm();
+export default function ConfirmDialog() {
+  const [open, setOpen] = React.useState(false);
 
-    const portalElement = document.getElementById('portal');
-    const component = confirmState.show ? (
-        <div className="portal-overlay">
-            <div className="confirm-dialog">
-                <p>{confirmState?.text && confirmState.text}</p>
-                <div className="confirm-dialog__footer">
-                    <div className="btn" onClick={onConfirm}>
-                        Yes
-                    </div>
-                    <div className="btn" onClick={onCancel}>
-                        Cancel
-                    </div>
-                </div>
-            </div>
-        </div>
-    ) : null;
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-    return createPortal(component, portalElement);
-};
-export default ConfirmDialog;
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      <Button variant="outlined" onClick={handleClickOpen}>
+        Open confirm dialog
+      </Button>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Get covered Immediately"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you insure, do you want to get insure?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Yes</Button>
+          <Button onClick={handleClose} autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
