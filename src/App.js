@@ -39,8 +39,9 @@ function App() {
   const [errCode, setErrCode] = useState("GOTO_LOGIN");
   const [deployerModeOn, setDeployerModeOn] = useState(false);
   const [connecting, setConnecting] = useState(false);
+  const [isRegisteringMember, setIsRegisteringMember] = useState(false);
 
-
+  //===============================================================
   useEffect(() => {
     setConnecting(true);
     async function readFromDb() {
@@ -51,8 +52,8 @@ function App() {
         //if info was found, 
         if (infoArr.length > 0) {
           setDeployed(true);
-          contractInfo.current = JSON.parse(infoArr[0]);
-          console.log("contract info found from supabase: ", infoArr[0]);
+          contractInfo.current = JSON.parse(infoArr[0].info);
+          console.log("contract info found from supabase: ", infoArr[0].info);
         }
         setConnecting(false);
       } catch (er) {
@@ -63,6 +64,7 @@ function App() {
     readFromDb();
   }, []);
 
+  //===============================================================
   function Login(e) {
     e.preventDefault();
     try {
@@ -119,42 +121,80 @@ function App() {
     }
   }
 
-  /*
-  function newAlgoAccount() {
-    alert(`NOTE: a new algo account is being created for you, 
-    please dont forget to copy your new mnemonic and keep it secret.`);
-    //create new algo account
-    console.log("Creating a new algorand account");
-    //algoAccount.current = reach.newTestAccount();
-    const getAccount = async () => {
-      account.current = await reach.createAccount();
-      console.log("Account created:=> ", account.current);
-      //const newMnemonic = reach.unsafeGetMnemonic(algoAccount.current);
-      //setMnemonicStr(newMnemonic);
-    }
-    const getBalance = async () => {
-      console.log("getting balance ...");
-      let rawBalance = await reach.balanceOf(account.current);
-      balance.current = reach.formatCurrency(rawBalance, 4);
-      console.log("rawBalance = ", rawBalance, " balance.current = ", balance.current);
-    }
-    const fundWallet = async () => {
-      console.log("funding the wallet here ...", account.current, "fundAmt=", fundAmount.current);
-      await reach.fundFromFaucet(account.current, reach.parseCurrency(fundAmount.current));
-      console.log("...OK");
-    }
-    getAccount().then(() => {
-      fundWallet().then(() => {
-        getBalance().then(() => {
-          console.log("going to Login");
-          Login();
-        });
-      });
-    });
-  }
-  */
+  //===============================================================
+  const deployContract = async (e) => {
+    e.preventDefault();
+    setIsSavingContractInfo(true);
 
-  function Signup() {
+    const insurerAccount = algoAccount.current;
+    //deploy the contract
+    console.log("Deploying... insurerAccount=", insurerAccount);
+    const ctc = insurerAccount.contract(backend);
+    insurerContract.current = ctc;
+    console.log("aprmmmm: ");
+    const prm = await ctc.getInfo();
+    console.log("prmmmm =", prm);
+
+    /*
+    prm.then((info) => {
+      console.log("yes, info = ", info);
+      const infoStr = JSON.stringify(info);
+      //save the contract info into supabase
+      supabaseClient.from("smartcontracts").insert([{
+        name: "insurancedapp", info: infoStr
+      }]).then(({ data, error: err }) => {
+        setIsSavingContractInfo(false);
+        if (err) {
+          console.log(`Error while saving the contract info to supabase ${err}`);
+        } else {
+          console.log(`Saved contract info to supabase: ${JSON.stringify(data)}`);
+        }
+      }).catch(er => {
+        console.log(`Error while accessing database. ${er}`);
+      });
+
+      // Set deployed contract Init state
+      console.log("Setting the initial state of the contract just deployed");
+      //define the insurer interact
+      //---------
+      const defineInsurerInteract = async () => {
+        await insurerContract.current.Insurer({
+          communityGroupName: communityGroupName,
+          mandatoryEntryFee: Number(mandatoryEntryFee),
+          contractIsRunning: true,
+          saveNewMemberDetails: ({ fullName, phone, email, chosenInsurancePackage }) => {
+            supabaseClient.from("members").insert([{
+              fullName, phone, email, chosenInsurancePackage, memberAddr: algoAccount.current.networkAccount.addr
+            }]).then(({ data, error }) => {
+              setIsRegisteringMember(false);
+              if (error) {
+                console.log(`Error while saving member details ${error}`);
+              } else {
+                console.log(`Member registered successfully: ${JSON.stringify(data)}`);
+              }
+            }).catch(er => {
+              console.log(`Error while accessing members database. ${er}`);
+            });
+          }
+        });
+        console.log("Deployed.");
+      };
+      defineInsurerInteract();
+      //---------
+      console.log("... Done.", "insurerContract.curnt=", insurerContract.current);
+      console.log("infoStr = ", infoStr);
+
+    }).catch(er => {
+      console.log("Eeer : ", er);
+    });
+    */
+
+  };
+
+  //===============================================================
+  function Signup(e) {
+    e.preventDefault();
+    setIsRegisteringMember(true);
     if (!email || email === "") {
       alert("Email is required");
     } else if (!phone || phone === "") {
@@ -164,10 +204,14 @@ function App() {
     } else if (!insrPackage || insrPackage === "") {
       alert("Please select your insurance package");
     }
-    const success = backend._APIs.Insurer.registerMembership({
+
+    const insurerContractHandle = algoAccount.current.contract(backend, contractInfo.current);
+
+    const success = insurerContractHandle.apis.CommunityMember.registerMembership({
       fullName: fullname, phone, email,
       chosenInsurancePackage: insrPackage
     });
+
     if (success) {
       alert("Registered successfully.");
     } else {
@@ -175,57 +219,16 @@ function App() {
     }
   }
 
-  backend.Insurer.saveNewMemberDetails = useCallback(({ fullName, phone, email, chosenInsurancePackage }) => {
-    async function accessDb() {
-      const { error } = await supabaseClient.from("members").insert([{
-        fullName, phone, email, chosenInsurancePackage
-      }]);
-      if (error) {
-        console.log(error);
-      } else {
-        alert("Details save successfully");
-      }
-    }
-    accessDb();
-  });
-
-  const deployContract = useCallback((e) => {
-    e.preventDefault();
-    const insurerAccount = algoAccount.current;
-    //deploy the contract
-    setIsSavingContractInfo(true);
-    console.log("Deploying...");
-    insurerContract.current = insurerAccount.contract(backend);
-    console.log("... Done.");
-    //save the contract info into supabase
-    supabaseClient.from("smartcontracts").insert([{
-      name: "insurancedapp", info: JSON.stringify(insurerContract.current.getInfo())
-    }]).then(({ data, err }) => {
-      setIsSavingContractInfo(false);
-      if (err) {
-        console.log(`Error while saving the contract info to supabase ${err}`);
-        console.log(`Saved contract info to supabase: ${JSON.stringify(data)}`);
-      } else {
-        console.log("Contract info saved into supabase.");
-      }
-    });
-
-    // Set deployed contract Init state
-    console.log("Setting the initial state of the contract just deployed");
-    insurerContract.current.Insurer.interact.communityGroupName = communityGroupName;
-    insurerContract.current.Insurer.interact.mandatoryEntryFee = Number(mandatoryEntryFee);
-    insurerContract.current.Insurer.interact.contractIsRunning = true;
-    console.log("Deployed.");
-  }, []);
-
+  //===============================================================
   const stopContract = useCallback(() => {
     //TODO: delete info record from supabase
     const insurerAccount = algoAccount.current;
     const insurerContractHandle = insurerAccount.contract(backend, contractInfo.current);
     insurerContractHandle.Insurer.interact.contractIsRunning = false;
     setContractInfoSaved(false);
-  }, []);
+  }, [contractInfo]);
 
+  //===============================================================
   return (
     <>
       {(activePage === "LOGIN") ?
@@ -252,7 +255,7 @@ function App() {
             <form >
               <div>
                 <input ref={mnemonicRef}
-                  type="text"
+                  type="password"
                   value={mnemonicStr}
                   onChange={e => setMnemonicStr(e.target.value)}
                   className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
@@ -262,7 +265,7 @@ function App() {
               </div>
 
               <div>
-                <label>Have no Algorand account ? <a target="_blank" href="https://perawallet.app/" className='text-blue-600'>Create a new</a> </label>
+                <label>Have no Algorand account ? <a target="_blank" href="https://perawallet.app/" className='text-blue-600' rel="noreferrer">Create a new</a> </label>
 
               </div>
 
@@ -281,7 +284,7 @@ function App() {
             <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-2 px-16 shadow'>
               <h1 className='text-4xl text-blue-700  text-primary mt-2 mb-2 text-center'> Insurance Dapp </h1>
               <hr />
-              <small> Keep your mnemonic secret: ( {mnemonicStr} ) </small>
+              <small> Please keep your mnemonic secret: ( ... ) </small>
               <hr />
 
               <h1 className='text-xl font-medium text-primary mt-6 mb-6 text-center'>
@@ -329,12 +332,14 @@ function App() {
                     onChange={e => setInsrPackage(e.target.value)}
                     className={`w-full py px-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                   >
-                    <option> package1 - 1000 - 120,000 </option>
-                    <option> package2 - 5000 - 600,000 </option>
-                    <option> package3 - 10,000 - 1,200,000 </option>
-                    <option> package4 - 50,000 - 6,000,000 </option>
-                    <option> package5 - 100,000 - 12,000,000 </option>
-                    <option> package6 - 500,000 - 60,000,000 </option>
+                    <option value={1}> Package-1 - 1000 - 120,000 </option>
+                    <option value={2}> Package-2 - 5000 - 600,000 </option>
+                    <option value={3}> Package-3 - 10,000 - 1,200,000 </option>
+                    <option value={4}> Package-4 - 50,000 - 6,000,000 </option>
+                    <option value={5}> Package-5 - 100,000 - 12,000,000 </option>
+                    <option value={6}> Package-6 - 500,000 - 60,000,000 </option>
+                    <option value={7}> Package-7 - 1,000,000 - 120,000,000 </option>
+                    <option value={8}> Package-8 - 5,000,000 - 600,000,000 </option>
                   </select>
                 </div>
 
@@ -392,7 +397,7 @@ function App() {
                       </button>
                       {
                         isSavingContractInfo && <span>
-                          <img src={loadingGif1} width="40px" />
+                          <img src={loadingGif1} width="40px" alt='' />
                         </span>
                       }
                       {contractInfoSaved &&
