@@ -1,97 +1,217 @@
-# Insurance Dapp
-This is an Insurance Decentralized Application (Dapp) developed in reach. 
+# [Material Dashboard 2 React](http://demos.creative-tim.com/material-dashboard-react/#/dashboard?ref=readme-mdr) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?url=https://www.creative-tim.com/product/material-dashboard-react&text=Check%20Material%20Dashboard%202%20react%20made%20by%20@CreativeTim%20#webdesign%20#dashboard%20#materialdesign%20#react%20https://www.creative-tim.com/product/material-dashboard-react)
 
-## Idea
-It's a community owned insurance platform, where every member is both an insurer and a policy holder (client) at the same time. When a member faces any disaster such as loss/damage of property, loss of a relative, sickness, or any other situation that calls for emmergency help, they can submit a claim for funding to the decentralized application which is communally owned. All that is required for the member to be funded is approval of atleast 5 members of the same community, who then act as the witnesses of the reported incidence. Upon receiving the claim, the Dapp notifies every member of the community, prompting anyone of them to voluntarilly approve the claim in case they are aware of it and hence they can act as witnesses. If the Dapp receives atleast 5 approvals, then the requested amount of money will be taken off the treasury account and transfered to the account of the claimant. However, the amount that can be given to the claimant cannot exceed their funding limit. The funding limit depends on how much monthly fee the member pays.
+![version](https://img.shields.io/badge/version-2.1.0-blue.svg) [![GitHub issues open](https://img.shields.io/github/issues/creativetimofficial/material-dashboard-react.svg)](https://github.com/creativetimofficial/material-dashboard-react/issues?q=is%3Aopen+is%3Aissue) [![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/creativetimofficial/material-dashboard-react.svg)](https://github.com/creativetimofficial/material-dashboard-react/issues?q=is%3Aissue+is%3Aclosed)
 
-## Source of funds
-Every member pays a monthly subscription fee to the Dapp for the insurance security the same way they would do to a traditional insurance company. They can also pay for their dependants such as children. The more monthly fee a member pays, the higher their funding limit. 
+![Image](https://s3.amazonaws.com/creativetim_bucket/products/71/original/material-dashboard-react.jpg?1638950990)
 
-## Entities
-![entities](https://user-images.githubusercontent.com/47475700/158845877-bed7a73d-1f17-4195-87df-08ae03134e14.png)
+Material Dashboard 2 React is our newest free MUI Admin Template based on React. If you’re a developer looking to create an admin dashboard that is developer-friendly, rich with features, and highly customisable, here is your match. Our innovative MUI & React dashboard comes with a beautiful design inspired by Google's Material Design and it will help you create stunning websites & web apps to delight your clients.
 
-## Participants
+**Fully Coded Elements**
+Material Dashboard 2 React is built with over 70 frontend individual elements, like buttons, inputs, navbars, nav tabs, cards, or alerts, giving you the freedom of choosing and combining. All components can take variations in color, which you can easily modify using MUI styled() API and sx prop. You will save a lot of time going from prototyping to full-functional code because all elements are implemented.
 
-### Community Member
-This is a general member of the community that will be using the Dapp. Upon registration an account will be created for the member. The member will have to make a monthy contribution to continue being a member. Once a payment is missed the member's account will be suspended. 
+This free MUI & React Dashboard is coming with prebuilt design blocks, so the development process is seamless,
+switching from our pages to the real website is very easy to be done.
 
-### Functionality
+View [all components here](https://www.creative-tim.com/learning-lab/react/alerts/material-dashboard/).
 
-#### Registration
-* Register New Members
-  * Complete a form
-* Email account should be verified
-* Contact Details should be varified
-* Blockchain account should be created
-* The first contribution should be collected
+**Documentation built by Developers**
 
-#### Submit a Claim
-A member creates a claim. They do this by filling in a form:
-* Description of the claim
-* Documents to support the claim
-#### Respond to a Claim
-* Approve a Claim
-* Reject a Claim
-* Cannot be the member that created the claim
+Each element is well presented in very complex documentation.
 
-#### Cancel Mmembership
-A member can request the cancel their membership. Once they do this, their account will be freezed and achieved.
+You can read more about the [documentation here](https://www.creative-tim.com/learning-lab/react/overview/material-dashboard/).
 
-### Claim
-Claim Should Coexist
+**Example Pages**
 
-### Data Models
+If you want to get inspiration or just show something directly to your clients, you can jump-start your development with our pre-built example pages. You will be able to quickly set up the basic structure for your web project.
 
-#### Member Data - Frontend
-|Field|Data Type|Description|
-|-----|---------|-----------|
-|Account|Hash|Public Key of members blockchain account|
-|Names|String|Full names of the member|
-|Email|String|Email address of the member|
-|Address|String|Physical Address of the member|
-|Contacts|String|Contact number of the member|
-|AccountActive|Bool|Used to depermine whether or not the account is active|
+View [example pages here](https://demos.creative-tim.com/material-dashboard-react/#/dashboard).
 
-#### Member Data - Blockchain
-|Field|Data Type|Description|
-|-----|---------|-----------|
-|Montly contributions|Int|The number of contributions made by the member|
-|Balance|Currency|Balance of the member's account|
-|Claims|Object|The claims that the member has created|
+**HELPFUL LINKS**
 
-#### Claim Data
-|Field|Data Type|Description|
-|-----|---------|-----------|
-|OwnerAddress|Hash|The address of the person that created the claim|
-|ClaimId|Guid|The Id used to identify the claim|
-|Description|String|A detailed description of the claim|
-|Amount|Currency|The amount that is due if the claim is accepted|
-|Accepted|Bool|True is the claim is accepted, default is false|
-|Documents|Url|A link to the supporting documents of the claim, IPFS|
-|Approvals|Array[Approval]|A list of the approvals|
+- View [Github Repository](https://github.com/creativetimofficial/material-dashboard-react)
+- Check [FAQ Page](https://www.creative-tim.com/faq)
 
-#### Approval
-|Field|Data Type|Description|
-|-----|---------|-----------|
-|Approver|Hash|The address of the member that approved or rejected the claim|
-|Response|Bool|True or False, for Approve or Reject|
+#### Special thanks
 
-### Accounts
+During the development of this dashboard, we have used many existing resources from awesome developers. We want to thank them for providing their tools open source:
 
-#### Treasury Account
-This is the main account into which all funds are collected. The funds in this account will be used to fund the claims. 
+- [MUI](https://mui.com/) - The React UI library for faster and easier web development.
+- [React ChartJS 2](http://reactchartjs.github.io/react-chartjs-2/#/) - Simple yet flexible React charting for designers & developers.
+- [ChromaJS](https://gka.github.io/chroma.js/) - A small-ish zero-dependency JavaScript library for all kinds of color conversions and color scales.
 
-This can be an abstract accout. Abstract in the sense that it's a sum of all the accounts. It will be defined in the smart contract the the funds in each accout can only be sent to pay a claim or if that respective account has a claim that has been approaved and needs to withdraw the funds received for the claim.
+Let us know your thoughts below. And good luck with development!
 
-#### User Account
-This account is created for each member. Funds that are paid into this account cannot be sent or withdrawn.
+## Table of Contents
 
-Funds can only be sent when:
-* There is payout for a claim.
-* Funds are used to pay another members claim.
+- [Versions](#versions)
+- [Demo](#demo)
+- [Quick Start](#quick-start)
+- [Documentation](#documentation)
+- [File Structure](#file-structure)
+- [Browser Support](#browser-support)
+- [Resources](#resources)
+- [Reporting Issues](#reporting-issues)
+- [Technical Support or Questions](#technical-support-or-questions)
+- [Licensing](#licensing)
+- [Useful Links](#useful-links)
 
-### Packages
-Allow members to pay what they are comfortable with paying
+## Versions
 
-### Delay intrest rate
-What is the intrest that a member needs to pay if they miss a payment. When you miss a payment your account is not active till you pay a certain fee with intrest, that needs to be calculated.
+[<img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/react-logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/material-dashboard-react?ref=readme-mdr)
+
+| React |
+| ----- |
+
+| [![Material Dashboard React](https://s3.amazonaws.com/creativetim_bucket/products/71/thumb/material-dashboard-react.jpg?1638950990)](http://demos.creative-tim.com/material-dashboard-react/#/dashboard?ref=readme-mdr)
+
+## Demo
+
+- [Dashboard](http://demos.creative-tim.com/material-dashboard-react/#/dashboard?ref=readme-sudr)
+- [Profile](https://demos.creative-tim.com/material-dashboard-react/#/profile?ref=readme-sudr)
+- [RTL](https://demos.creative-tim.com/material-dashboard-react/#/rtl?ref=readme-sudr)
+- [Sign In](https://demos.creative-tim.com/material-dashboard-react/#/authentication/sign-in?ref=readme-sudr)
+- [Sign Up](https://demos.creative-tim.com/material-dashboard-react/#/authentication/sign-up?ref=readme-sudr)
+
+[View More](https://demos.creative-tim.com/material-dashboard-react/#/dashboard?ref=readme-mdr).
+
+## Quick start
+
+Quick start options:
+
+- Download from [Creative Tim](https://www.creative-tim.com/product/material-dashboard-react?ref=readme-mdr).
+
+## Terminal Commands
+
+1. Download and Install NodeJs LTS version from [NodeJs Official Page](https://nodejs.org/en/download/).
+2. Navigate to the root ./ directory of the product and run `yarn install` or `npm install` to install our local dependencies.
+
+## Documentation
+
+The documentation for the Material Dashboard is hosted at our [website](https://www.creative-tim.com/learning-lab/react/overview/material-dashboard/?ref=readme-mdr).
+
+### What's included
+
+Within the download you'll find the following directories and files:
+
+```
+material-dashboard-react
+    ├── public
+    │   ├── apple-icon.png
+    │   ├── favicon.png
+    │   ├── index.html
+    │   ├── manifest.json
+    │   └── robots.txt
+    ├── src
+    │   ├── assets
+    │   │   ├── images
+    │   │   └── theme
+    │   │       ├── base
+    │   │       ├── components
+    │   │       ├── functions
+    │   │       ├── index.js
+    │   │       └── theme-rtl.js
+    │   │   └── theme-dark
+    │   │       ├── base
+    │   │       ├── components
+    │   │       ├── functions
+    │   │       ├── index.js
+    │   │       └── theme-rtl.js
+    │   ├── components
+    │   │   ├── MDAlert
+    │   │   ├── MDAvatar
+    │   │   ├── MDBadge
+    │   │   ├── MDBox
+    │   │   ├── MDButton
+    │   │   ├── MDInput
+    │   │   ├── MDPagination
+    │   │   ├── MDProgress
+    │   │   ├── MDSnackbar
+    │   │   └── MDTypography
+    │   ├── context
+    │   ├── examples
+    │   │   ├── Breadcrumbs
+    │   │   ├── Cards
+    │   │   ├── Charts
+    │   │   ├── Configurator
+    │   │   ├── Footer
+    │   │   ├── Items
+    │   │   ├── LayoutContainers
+    │   │   ├── Lists
+    │   │   ├── Navbars
+    │   │   ├── Sidenav
+    │   │   ├── Tables
+    │   │   └── Timeline
+    │   ├── layouts
+    │   │   ├── authentication
+    │   │   ├── billing
+    │   │   ├── dashboard
+    │   │   ├── notifications
+    │   │   ├── profile
+    │   │   ├── rtl
+    │   │   └── tables
+    │   ├── App.js
+    │   ├── index.js
+    │   └── routes.js
+    ├── .eslintrc.json
+    ├── .prettierrc.json
+    ├── CHANGELOG.md
+    ├── ISSUE_TEMPLATE.md
+    ├── jsconfig.json
+    ├── LICENSE.md
+    ├── package.json
+    └── README.md
+```
+
+## Browser Support
+
+At present, we officially aim to support the last two versions of the following browsers:
+
+<img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/chrome.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/firefox.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/edge.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/safari.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/opera.png" width="64" height="64">
+
+## Resources
+
+- [Live Preview](https://demos.creative-tim.com/material-dashboard-react/#/dashboard?ref=readme-mdr)
+- [Download Page](https://www.creative-tim.com/product/material-dashboard-react?ref=readme-mdr)
+- Documentation is [here](https://www.creative-tim.com/learning-lab/react/overview/material-dashboard/?ref=readme-mdr)
+- [License Agreement](https://www.creative-tim.com/license?ref=readme-mdr)
+- [Support](https://www.creative-tim.com/contact-us?ref=readme-mdr)
+- Issues: [Github Issues Page](https://github.com/creativetimofficial/material-dashboard-react/issues)
+
+## Reporting Issues
+
+We use GitHub Issues as the official bug tracker for the Material Dashboard React. Here are some advices for our users that want to report an issue:
+
+1. Make sure that you are using the latest version of the Material Dashboard React. Check the CHANGELOG from your dashboard on our [website](https://www.creative-tim.com/product/material-dashboard-react?ref=readme-mdr).
+2. Providing us reproducible steps for the issue will shorten the time it takes for it to be fixed.
+3. Some issues may be browser specific, so specifying in what browser you encountered the issue might help.
+
+## Technical Support or Questions
+
+If you have questions or need help integrating the product please [contact us](https://www.creative-tim.com/contact-us?ref=readme-mdr) instead of opening an issue.
+
+## Licensing
+
+- Copyright 2021 [Creative Tim](https://www.creative-tim.com?ref=readme-mdr)
+- Creative Tim [license](https://www.creative-tim.com/license?ref=readme-mdr)
+
+## Useful Links
+
+- [More products](https://www.creative-tim.com/templates?ref=readme-mdr) from Creative Tim
+
+- [Tutorials](https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w)
+
+- [Freebies](https://www.creative-tim.com/bootstrap-themes/free?ref=readme-mdr) from Creative Tim
+
+- [Affiliate Program](https://www.creative-tim.com/affiliates/new?ref=readme-mdr) (earn money)
+
+##### Social Media
+
+Twitter: <https://twitter.com/CreativeTim>
+
+Facebook: <https://www.facebook.com/CreativeTim>
+
+Dribbble: <https://dribbble.com/creativetim>
+
+Google+: <https://plus.google.com/+CreativetimPage>
+
+Instagram: <https://instagram.com/creativetimofficial>
