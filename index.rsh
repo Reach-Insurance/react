@@ -27,22 +27,13 @@ export const main = Reach.App(() => {
 
     const CommunityMember = API('CommunityMember', {
         registerMembership: Fun([Object({ fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: Bytes(60) })], Bool),
-        //registerDependant: Fun([Address], Bool),
-        //cancelMembership: Fun([Address], Bool),
-        //payEntryFee: Fun([Address, UInt], Bool),
         payMonthlyFee: Fun([Object({ who: Address, mfee: UInt })], Bool),
-        //changePackage: Fun([Bytes(60)], Bool),
         createClaim: Fun([Object({ claimant: Address, amountRequested: UInt, amountSet: UInt, accepted: Bool, approvalsCount: UInt, sumOfSetAmounts: UInt })], Bool),
         respondToClaim: Fun([Object({
             claimant: Address, accepted: Bool, setAmount: UInt
         })], Bool),
-        stopContract: Fun([], Bool),
-        //inheritAccount: Fun([], Null),
-        //approveInheritance: Fun([], Null),
-        //approveExit: Fun([], Null),
-        //seeResponse: Fun([Address, Object({
-        //    claimant: Address, accepted: Bool, setAmount: UInt
-        //})], Null)
+        //changePackage: Fun([Bytes(60)], Bool),
+        stopContract: Fun([], Bool)
     });
     init();
 
@@ -76,18 +67,7 @@ export const main = Reach.App(() => {
         matureBalance: UInt
     }));
 
-    //a constant list of insurance packages, in a map.
-    const insurancePackages = new Map(UInt, Object({ monthlyFee: UInt, fundingLimit: UInt }));
-    insurancePackages[1] = { monthlyFee: 1000, fundingLimit: 120000 };
-    insurancePackages[2] = { monthlyFee: 5000, fundingLimit: 600000 };
-    insurancePackages[3] = { monthlyFee: 10000, fundingLimit: 1200000 };
-    insurancePackages[4] = { monthlyFee: 50000, fundingLimit: 6000000 };
-    insurancePackages[5] = { monthlyFee: 100000, fundingLimit: 12000000 };
-    insurancePackages[6] = { monthlyFee: 500000, fundingLimit: 60000000 };
-
     const [
-        //openClaims,
-        //membersWithClaims,
         membersCount,
         claimsCount
     ] = parallelReduce([0, 0])
