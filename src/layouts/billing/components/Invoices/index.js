@@ -24,12 +24,12 @@ import MDButton from "components/MDButton";
 // Billing page components
 import Invoice from "layouts/billing/components/Invoice";
 
-function Invoices() {
+function Payments() {
   return (
     <Card sx={{ height: "100%" }}>
       <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
         <MDTypography variant="h6" fontWeight="medium">
-          Invoices
+          Payments
         </MDTypography>
         <MDButton variant="outlined" color="info" size="small">
           view all
@@ -48,4 +48,4 @@ function Invoices() {
   );
 }
 
-export default Invoices;
+export default Payments;

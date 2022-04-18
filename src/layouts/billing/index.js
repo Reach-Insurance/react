@@ -25,12 +25,13 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import MasterCard from "examples/Cards/MasterCard";
 import DefaultInfoCard from "examples/Cards/InfoCards/DefaultInfoCard";
+import DefaultPricingCard from "examples/Cards/PricingCards/DefaultPricingCard";
 
 // Billing page components
 import PaymentMethod from "layouts/billing/components/PaymentMethod";
 import Invoices from "layouts/billing/components/Invoices";
-import BillingInformation from "layouts/billing/components/BillingInformation";
-import Transactions from "layouts/billing/components/Transactions";
+// import BillingInformation from "layouts/billing/components/BillingInformation";
+// import Transactions from "layouts/billing/components/Transactions";
 
 function Billing() {
   return (
@@ -47,17 +48,25 @@ function Billing() {
                 <Grid item xs={12} md={6} xl={3}>
                   <DefaultInfoCard
                     icon="account_balance"
-                    title="salary"
-                    description="Belong Interactive"
+                    title="Balance"
+                    description="Algo Account"
                     value="+$2000"
+                    color="dark"
                   />
                 </Grid>
                 <Grid item xs={12} md={6} xl={3}>
-                  <DefaultInfoCard
-                    icon="paypal"
-                    title="paypal"
-                    description="Freelance Payment"
-                    value="$455.00"
+                  <DefaultPricingCard
+                    icon="money"
+                    title="$50"
+                    description="April"
+                    value="+$2000"
+                    color="dark"
+                    action={{
+                      type: "internal",
+                      route: "/",
+                      color: "dark",
+                      label: "pay",
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -70,7 +79,7 @@ function Billing() {
             </Grid>
           </Grid>
         </MDBox>
-        <MDBox mb={3}>
+        {/* <MDBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={7}>
               <BillingInformation />
@@ -79,7 +88,7 @@ function Billing() {
               <Transactions />
             </Grid>
           </Grid>
-        </MDBox>
+        </MDBox> */}
       </MDBox>
       <Footer />
     </DashboardLayout>

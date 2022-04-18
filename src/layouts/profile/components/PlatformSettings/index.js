@@ -18,6 +18,7 @@ import { useState } from "react";
 // @mui material components
 import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
+import { Grid } from "@mui/material";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -38,6 +39,19 @@ function PlatformSettings() {
           platform settings
         </MDTypography>
       </MDBox>
+      <Grid pt={1} pb={2} px={2} container spacing={2}>
+        <Grid item xs={12} xm={6} xl={6}>
+          <MDTypography variant="caption" fontWeight="bold" textTransform="uppercase">
+            account
+          </MDTypography>
+          <Switch checked={followsMe} onChange={() => setFollowsMe(!followsMe)} />
+        </Grid>
+        <Grid item xs={4}>
+          <MDTypography variant="caption" fontWeight="bold" textTransform="uppercase">
+            application
+          </MDTypography>
+        </Grid>
+      </Grid>
       <MDBox pt={1} pb={2} px={2} lineHeight={1.25}>
         <MDTypography variant="caption" fontWeight="bold" color="text" textTransform="uppercase">
           account
