@@ -5,17 +5,13 @@ export const main = Reach.App(() => {
         mandatoryEntryFee: UInt,
         communityGroupName: Bytes(60),
         contractIsRunning: Bool,
-        createDatabase: Fun([], Null),
-        approveNewMembership: Fun([Address], Null),
-        createAddressForNewUSer: Fun([], Address),
+        //approveNewMembership: Fun([Address], Null),
         createInvoices: Fun([], Null),
         moveMaturedPayments: Fun([], Null),
         saveNewMemberDetails: Fun([Object({
             fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: Bytes(60)
         })], Null),
-        saveNewClaim: Fun([Object({
-            claimant: Address, amountRequested: UInt, amountSet: UInt, accepted: Bool, approvalsCount: UInt, sumOfSetAmounts: UInt
-        })], Null),
+        saveNewClaim: Fun([Object({ claimant: Address, amountRequested: UInt })], Null),
         notifyMembersAboutNewClaim: Fun([Object({
             ownerAddr: Address,
             amountRequested: UInt,
@@ -116,7 +112,7 @@ export const main = Reach.App(() => {
             ((claimInfo, sendResponse) => {
                 const who = this;
                 sendResponse(true);
-                Insurer.interact.saveNewClaim(claimInfo);
+                Insurer.interact.saveNewClaim({ claimant: who, amountRequested: claimInfo.amountRequested });
 
                 //TODO: read all the details of this member from the db
 
