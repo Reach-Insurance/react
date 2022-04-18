@@ -131,63 +131,76 @@ function App() {
     console.log("Deploying... insurerAccount=", insurerAccount);
     const ctc = insurerAccount.contract(backend);
     insurerContract.current = ctc;
-    console.log("aprmmmm: ");
-    const prm = await ctc.getInfo();
-    console.log("prmmmm =", prm);
 
-    /*
-    prm.then((info) => {
-      console.log("yes, info = ", info);
-      const infoStr = JSON.stringify(info);
-      //save the contract info into supabase
-      supabaseClient.from("smartcontracts").insert([{
-        name: "insurancedapp", info: infoStr
-      }]).then(({ data, error: err }) => {
-        setIsSavingContractInfo(false);
-        if (err) {
-          console.log(`Error while saving the contract info to supabase ${err}`);
+    //---------
+    // Set deployed contract Init state
+    console.log("Setting the initial state of the contract just deployed");
+    await insurerContract.current.p.Insurer({
+      communityGroupName: communityGroupName,
+      mandatoryEntryFee: Number(mandatoryEntryFee),
+      contractIsRunning: true,
+      saveNewMemberDetails: async ({ fullName, phone, email, chosenInsurancePackage }) => {
+        const { data, error } = await supabaseClient.from("members").insert([{
+          fullName, phone, email, chosenInsurancePackage, memberAddr: algoAccount.current.networkAccount.addr
+        }]);
+        setIsRegisteringMember(false);
+        if (error) {
+          console.log(`Error while saving member details ${error}`);
         } else {
-          console.log(`Saved contract info to supabase: ${JSON.stringify(data)}`);
+          console.log(`Member registered successfully: ${JSON.stringify(data)}`);
         }
-      }).catch(er => {
-        console.log(`Error while accessing database. ${er}`);
-      });
+      },
+      seeFeedback: () => {
+        console.log("insurer saw feedback on deploying the contract");
+      },
+      saveNewClaim: async ({ claimant, amountRequested }) => {
+        const amountSet = amountRequested;
+        const sumOfSetAmounts = 0;
+        const accepted = false;
+        const approvalsCount = 0;
 
-      // Set deployed contract Init state
-      console.log("Setting the initial state of the contract just deployed");
-      //define the insurer interact
-      //---------
-      const defineInsurerInteract = async () => {
-        await insurerContract.current.Insurer({
-          communityGroupName: communityGroupName,
-          mandatoryEntryFee: Number(mandatoryEntryFee),
-          contractIsRunning: true,
-          saveNewMemberDetails: ({ fullName, phone, email, chosenInsurancePackage }) => {
-            supabaseClient.from("members").insert([{
-              fullName, phone, email, chosenInsurancePackage, memberAddr: algoAccount.current.networkAccount.addr
-            }]).then(({ data, error }) => {
-              setIsRegisteringMember(false);
-              if (error) {
-                console.log(`Error while saving member details ${error}`);
-              } else {
-                console.log(`Member registered successfully: ${JSON.stringify(data)}`);
-              }
-            }).catch(er => {
-              console.log(`Error while accessing members database. ${er}`);
-            });
-          }
-        });
-        console.log("Deployed.");
-      };
-      defineInsurerInteract();
-      //---------
-      console.log("... Done.", "insurerContract.curnt=", insurerContract.current);
-      console.log("infoStr = ", infoStr);
-
-    }).catch(er => {
-      console.log("Eeer : ", er);
+        //save details to supabase
+        const { data, error } = await supabaseClient.from("claims").insert([{
+          claimant: algoAccount.current.networkAccount.addr,
+          amountRequested, amountSet, sumOfSetAmounts, approvalsCount
+        }]);
+        if (error) {
+          console.log(`Error while saving new claim details ${error}`);
+        } else {
+          console.log(`New claim recorded successfully: ${JSON.stringify(data)}`);
+        }
+      },
+      notifyMembersAboutNewClaim: ({ ownerAddr, amountRequested, description, supportDocuments }) => {
+        //TODO: access emails of all members and send an email notification to each member
+        console.log("Emal notifications sent to all members", ownerAddr, amountRequested, description, supportDocuments);
+      },
+      createInvoices: () => {
+        console.log("creating invoices at the end of the month ...");
+      },
+      moveMaturedPayments: () => {
+        console.log("moving matured payments from temporary queue ...");
+      }
     });
-    */
+    //---------
+
+    const info = await insurerContract.current.getInfo();
+    console.log("info =", info);
+    const infoStr = JSON.stringify(info);
+    console.log("infoStr = ", infoStr);
+
+    //save the contract info into supabase
+    const { data, error: err } = await supabaseClient.from("smartcontracts").insert([{
+      name: "insurancedapp", info: infoStr
+    }]);
+    setIsSavingContractInfo(false);
+    if (err) {
+      console.log(`Error while saving the contract info to supabase ${err}`);
+    } else {
+      console.log(`Saved contract info to supabase: ${JSON.stringify(data)}`);
+    }
+
+    console.log("... Done.");
+    console.log("insurerContract.current=", insurerContract.current);
 
   };
 
