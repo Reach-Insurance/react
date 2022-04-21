@@ -2,15 +2,22 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
 import loadingGif1 from './images/ajax-loader.gif';
 import * as backend from './reach-build/index.main.mjs';
-import { loadStdlib } from '@reach-sh/stdlib';
+import { loadStdlib, ALGO_WalletConnect as WalletConnect } from '@reach-sh/stdlib';
 import { createClient } from "@supabase/supabase-js";
 import useConfirm from "./hooks/useConfirm";
-import { v4 } from 'uuid';
+//import { v4 } from 'uuid';
+import Dashboard from './dashbord';
+
 //const reach = loadStdlib(process.env);
-const reach = loadStdlib("ALGO-browser");
+const reach = loadStdlib("ALGO");
 const SUPABASE_URL = "https://byolfysahovehogqdena.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5b2xmeXNhaG92ZWhvZ3FkZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDg3NTcwMTYsImV4cCI6MTk2NDMzMzAxNn0.Q5h8nwP-qy1o5oDa0UCAgj1m7vTXOlhPyoZRC-0CNnk";
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+//reach.setWalletFallback(reach.walletFallback({}));
+
+//WalletConnect: enables the Dapp to connect to any wallet
+reach.setWalletFallback(reach.walletFallback({ providerEnv: 'TestNet', WalletConnect }));
 
 function App() {
   const { confirm } = useConfirm();
@@ -40,6 +47,7 @@ function App() {
   const [deployerModeOn, setDeployerModeOn] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [isRegisteringMember, setIsRegisteringMember] = useState(false);
+  const [newClaimData, setNewClaimData] = useState({});
 
   //===============================================================
   useEffect(() => {
@@ -93,7 +101,7 @@ function App() {
 
           async function accessDb() {
             let isRegisteredMember = false;
-            const memberAddr = reach.formatAddress(algoAccount.current);
+            const memberAddr = algoAccount.current.networkAccount.addr;
             const { data: memberDataArr, error } = await supabaseClient.from("members").select("*").eq('memberAddr', memberAddr);
             if (error) {
               setErrMessage(JSON.stringify(error));
@@ -104,6 +112,8 @@ function App() {
               isRegisteredMember = true;
             }
             if (isRegisteredMember) {
+              //create a contract handle and assign it to insurerContract
+              insurerContract.current = algoAccount.contract(backend, contractInfo.current);
               setActivePage("DASHBOARD");
             } else {
               setActivePage("SIGNUP");
@@ -153,10 +163,9 @@ function App() {
       seeFeedback: () => {
         console.log("insurer saw feedback on deploying the contract");
       },
-      saveNewClaim: async ({ claimant, amountRequested }) => {
+      saveNewClaim: async ({ amountRequested }) => {
         const amountSet = amountRequested;
         const sumOfSetAmounts = 0;
-        const accepted = false;
         const approvalsCount = 0;
 
         //save details to supabase
@@ -167,6 +176,15 @@ function App() {
         if (error) {
           console.log(`Error while saving new claim details ${error}`);
         } else {
+          if (data.length > 0) {
+            const claimId = newClaimData.id;
+            const { data: members } = await supabaseClient.from("members").select("memberAddr");
+            members.forEach(({ memberAddr: addr }) => {
+              // link the new claim with all members in the joining "claimnotifications" table.
+              const { error } = await supabaseClient.from("claimnotifications").insert([{ claimId, member: addr }]);
+              if (error) { console.log(error); }
+            });
+          }
           console.log(`New claim recorded successfully: ${JSON.stringify(data)}`);
         }
       },
@@ -179,16 +197,53 @@ function App() {
       },
       moveMaturedPayments: () => {
         console.log("moving matured payments from temporary queue ...");
+      },
+      getMemberData: async () => {
+        const memberAddress = algoAccount.current.networkAccount.addr;
+        const { data: memberDataArr, error } = await supabaseClient.from("members").select("*").eq('memberAddr', memberAddress);
+        if (error) {
+          console.log("interact.getMemberDetails errored: ", error.message);
+        }
+        if (memberDataArr.length > 0) {
+          const { matureBalance, fundLimit, chosenInsurancePackage, amountDue } = memberDataArr[0];
+          return {
+            insrPackageId: chosenInsurancePackage,
+            amountDue,
+            matureBalance,
+            fundLimit
+          };
+        } else {
+          return {
+            insrPackageId: 1,
+            amountDue: 0,
+            matureBalance: 0,
+            fundLimit: 0
+          };
+        }
+      },
+      stopContract: async () => {
+        const interact = await insurerContract.current.p.Insurer;
+        await insurerContract.current.p.Insurer({ ...interact, contractIsRunning: false });
+        //delete info record from supabase
+        const { error: err } = await supabaseClient.from("smartcontracts").delete().match({ name: "insurancedapp" });
+        if (err) { return false; }
+        return true;
+      },
+      notifyFundedMember: async (address) => {
+        //TODO: update the member's claim status to "funded"
+        console.log("Your claim has been funded. Member address = ", address);
       }
     });
     //---------
 
+    console.log("getting the contract info ...");
     const info = await insurerContract.current.getInfo();
     console.log("info =", info);
     const infoStr = JSON.stringify(info);
     console.log("infoStr = ", infoStr);
 
     //save the contract info into supabase
+    console.log("saving the contract info into supabase ...");
     const { data, error: err } = await supabaseClient.from("smartcontracts").insert([{
       name: "insurancedapp", info: infoStr
     }]);
@@ -201,12 +256,12 @@ function App() {
 
     console.log("... Done.");
     console.log("insurerContract.current=", insurerContract.current);
-
   };
 
   //===============================================================
-  function Signup(e) {
+  async function Signup(e) {
     e.preventDefault();
+    console.log("Signup() invoked");
     setIsRegisteringMember(true);
     if (!email || email === "") {
       alert("Email is required");
@@ -218,27 +273,29 @@ function App() {
       alert("Please select your insurance package");
     }
 
+    //if we are here, then contractInfo was retrieved earlier by useEffect(()=>{ ... }) above
     const insurerContractHandle = algoAccount.current.contract(backend, contractInfo.current);
 
-    const success = insurerContractHandle.apis.CommunityMember.registerMembership({
-      fullName: fullname, phone, email,
-      chosenInsurancePackage: insrPackage
+    const success = await insurerContractHandle.apis.CommunityMember.registerMembership({
+      fullName: fullname, phone, email, chosenInsurancePackage: insrPackage
     });
 
     if (success) {
-      alert("Registered successfully.");
+      console.log("Registered successfully.");
+      //go to dashboard
+      setActivePage("DASHBOARD");
     } else {
-      alert("Failed to register");
+      console.log("Failed to register");
     }
   }
 
   //===============================================================
   const stopContract = useCallback(() => {
-    //TODO: delete info record from supabase
+    console.log("stopContract() invoked");
     const insurerAccount = algoAccount.current;
     const insurerContractHandle = insurerAccount.contract(backend, contractInfo.current);
-    insurerContractHandle.Insurer.interact.contractIsRunning = false;
-    setContractInfoSaved(false);
+    const ok = await insurerContractHandle.apis.CommunityMember.stopContract();
+    setContractInfoSaved(!ok);
   }, [contractInfo]);
 
   //===============================================================
@@ -368,9 +425,7 @@ function App() {
             </div>
           </div >
           : (activePage === "DASHBOARD") ?
-            <div>
-              Dashboard
-            </div>
+            <Dashboard insurerContract={insurerContract.current} addr={algoAccount.current.networkAccount.addr} />
             : (activePage === "DEPLOYER") ?
               <div className='h-screen flex bg-blue-100'>
                 <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-2 px-16 shadow'>
