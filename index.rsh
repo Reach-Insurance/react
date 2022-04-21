@@ -9,22 +9,27 @@ export const main = Reach.App(() => {
         createInvoices: Fun([], Null),
         moveMaturedPayments: Fun([], Null),
         saveNewMemberDetails: Fun([Object({
-            fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: Bytes(60)
+            fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: UInt
         })], Null),
-        saveNewClaim: Fun([Object({ claimant: Address, amountRequested: UInt })], Null),
+        saveNewClaim: Fun([Object({ amountRequested: UInt })], Null),
         notifyMembersAboutNewClaim: Fun([Object({
             ownerAddr: Address,
             amountRequested: UInt,
             description: Bytes(600),
             supportDocuments: Bytes(100)
         })], Null),
-        seeFeedback: Fun([], Null)
+        seeFeedback: Fun([], Null),
+        getMemberData: Fun([], Object({
+            insrPackageId: UInt, amountDue: UInt, matureBalance: UInt, fundLimit: UInt
+        })),
+        notifyFundedMember: Fun([Address], Null),
+        stopContract: Fun([], Bool)
     });
 
     const CommunityMember = API('CommunityMember', {
-        registerMembership: Fun([Object({ fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: Bytes(60) })], Bool),
+        registerMembership: Fun([Object({ fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: UInt })], Bool),
         payMonthlyFee: Fun([Object({ who: Address, mfee: UInt })], Bool),
-        createClaim: Fun([Object({ claimant: Address, amountRequested: UInt, amountSet: UInt, accepted: Bool, approvalsCount: UInt, sumOfSetAmounts: UInt })], Bool),
+        createClaim: Fun([Object({ amountRequested: UInt, amountSet: UInt, accepted: Bool, approvalsCount: UInt, sumOfSetAmounts: UInt })], Bool),
         respondToClaim: Fun([Object({
             claimant: Address, accepted: Bool, setAmount: UInt
         })], Bool),
@@ -98,12 +103,8 @@ export const main = Reach.App(() => {
             (ob) => ob.mfee,
             ((ob, sendResponse) => {
                 sendResponse(true);
-                const who = this;
-                //require(balance(who) >= ob.mfee, `You don't have enough credit on your account.`);
-
                 //deposit into the treasury account
                 transfer(ob.mfee).to(Insurer);
-
                 return [membersCount, claimsCount];
             })
         ).api(CommunityMember.createClaim,
@@ -111,22 +112,24 @@ export const main = Reach.App(() => {
             (_) => 0,
             ((claimInfo, sendResponse) => {
                 const who = this;
-                sendResponse(true);
-                Insurer.interact.saveNewClaim({ claimant: who, amountRequested: claimInfo.amountRequested });
+                Insurer.interact.saveNewClaim({ amountRequested: claimInfo.amountRequested });
 
-                //TODO: read all the details of this member from the db
+                //read all the details of this member from the db
+                const memberDetails = Insurer.interact.getMemberData();
 
-                //TODO: add the details to the map of current claim owners
+                //add the details to the map of current claim owners
+                claimOwners[who] = {
+                    insrPackageId: memberDetails.insrPackageId,
+                    amountDue: memberDetails.amountDue,
+                    matureBalance: memberDetails.matureBalance
+                };
 
-                //TODO: get the package this member subscribed for
+                const fundLimitt = memberDetails.fundLimit;
 
-                //TODO: read the funding limit of this member's package
-                const fundLimit = 600000;
-
-                //claim amount can not exceed the limit
-                const claimAmount = claimInfo.amountRequested >= fundLimit ? claimInfo.amountRequested : fundLimit;
+                const claimAmount = claimInfo.amountRequested >= fundLimitt ? claimInfo.amountRequested : fundLimitt;
                 insuranceClaims[who] = { amountRequested: claimInfo.amountRequested, amountSet: claimAmount, accepted: false, approvalsCount: 0, sumOfSetAmounts: claimInfo.amountRequested };
 
+                sendResponse(true);
                 return [membersCount, claimsCount + 1];
             })
         ).api(CommunityMember.respondToClaim,
@@ -137,19 +140,35 @@ export const main = Reach.App(() => {
                 const forWho = opinion.claimant;
                 sendResponse(true);
 
-                //get the claim of this claimant
-
                 if (opinion.accepted) {
-                    //openClaims[forWho].approvalsCount = openClaims[forWho].approvalsCount + 1;
-                    //openClaims[forWho].sumOfSetAmounts += opinion.setAmount;
-                    if (maybe(insuranceClaims[forWho], 0, readFromMap("approvalsCount")) >= 5) {
-                        //TODO: determine the final amount agreed, and 
-                        //TODO: transfer(agreedClaimAmount).to(opinion.claimant);
-                        //TODO: eliminate the member from the list of claim owners (membersWithClaims)
-                        //TODO: eliminate the claim from the list of open claims (openClaims)
+                    //openClaims[forWho].approvalsCount = openClaims[forWho].approvalsCount + 1; //wrong syntax
+                    const approvalsCnt = maybe(insuranceClaims[forWho], 0, readFromMap("approvalsCount"));
+                    const sumOfSetAmts = maybe(insuranceClaims[forWho], 0, readFromMap("sumOfSetAmounts"));
+                    const amtRqsted = maybe(insuranceClaims[forWho], 0, readFromMap("amountRequested"));
+                    const amtSet = maybe(insuranceClaims[forWho], 0, readFromMap("amountSet"));
+                    const agreedClaimAmount = (approvalsCnt < 5) ? amtSet : sumOfSetAmts / approvalsCnt;
+                    insuranceClaims[forWho] = {
+                        approvalsCount: approvalsCnt + 1,
+                        sumOfSetAmounts: sumOfSetAmts + opinion.setAmount,
+                        amountRequested: amtRqsted,
+                        amountSet: agreedClaimAmount,
+                        accepted: true,
+                    };
+
+                    if (approvalsCnt >= 5) {
+                        transfer(agreedClaimAmount).to(forWho);
+
+                        //eliminate the member from the list of claim owners (membersWithClaims)
+                        delete claimOwners[forWho];
+
+                        //eliminate the claim from the list of open claims (openClaims)
+                        delete insuranceClaims[forWho];
+
+                        //Notify the funded member
+                        Insurer.interact.notifyFundedMember(forWho);
                     }
                 }
-                //claimant.interact.seeResponse(who, opinion);
+
                 return [membersCount, claimsCount];
             })
         ).api(CommunityMember.stopContract,
@@ -158,11 +177,16 @@ export const main = Reach.App(() => {
             ((sendResponse) => {
                 //this must be done by the deployer of the contract only.
                 const who = this;
-                //require(who == Insurer, `You are not allowed to take this action.`);
-                sendResponse(true);
-                //FUTURE IMPROVEMENT: ensure that the deployer/Insurer does not have authority over the platform.
-                //ensure that he first get permission from members to stop the contract.
-                //ensure there are clearly agreed rules for non participation on this matter.
+                require(who == Insurer, "You are not allowed to take this action.");
+                const ok = Insurer.interact.stopContract();
+                if (ok) {
+                    sendResponse(true);
+                    //FUTURE IMPROVEMENT: ensure that the deployer/Insurer does not have authority over the platform.
+                    //ensure that he first get permission from members to stop the contract.
+                    //ensure there are clearly agreed rules for non participation on this matter.
+                } else {
+                    sendResponse(false);
+                }
 
                 return [membersCount, claimsCount];
             })
@@ -177,18 +201,10 @@ export const main = Reach.App(() => {
     exit();
 });
 
-
-
-
-
-
-
-
-//follow example here:
-// https://github.com/reach-sh/reach-lang/blob/master/examples/rsvp/index.rsh
-
+//REF:
+//follow example:  https://github.com/reach-sh/reach-lang/blob/master/examples/rsvp/index.rsh
 //invariants info: https://en.wikipedia.org/wiki/Loop_invariant
-
-//TODO: use IPFS: https://www.freecodecamp.org/news/technical-guide-to-ipfs-decentralized-storage-of-web3/
+//TODO: use IPFS:  https://www.freecodecamp.org/news/technical-guide-to-ipfs-decentralized-storage-of-web3/
+//to use supabase: https://supabase.com/docs/reference/javascript/delete
 
 
