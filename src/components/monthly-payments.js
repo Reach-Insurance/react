@@ -35,17 +35,18 @@ function MonthlyPayments({ insurerContract: insurerContractHandle, addr, dashboa
     }, [dashboardRender]);
 
     const payMonthlyFee = async () => {
-        //convert UGX to ALGO
+        //convert other currency amount to ALGO
         const mfee = Math.ceil(amountDue / 2590);
-        //TODO: prompt for cnfirmation first, then pay
+        //prompt for confirmation first, then pay
         const yes = await confirm(`Do you want to pay ${mfee} Algo${(mfee !== 1) ? "s" : ""} from your account ?`);
+        console.log("yes=", yes);
         if (yes) {
             const success = await insurerContractHandle.apis.CommunityMember.payMonthlyFee({ mfee });
             if (success) {
                 console.log("Payment recorded successfully.");
-                //TODO: update this member's details in members table
-                const { data, error } = await supabaseClient.from('members').update({ amountDue: 0 }).match({ memberAddr: addr });
-                console.log("data-->", data, "error-->", error);
+                //update this member's details in members table
+                const { error } = await supabaseClient.from('members').update({ amountDue: 0 }).match({ memberAddr: addr });
+                if (error) { console.log("Failed to update member"); }
             } else {
                 console.log("Failed to record payment");
             }

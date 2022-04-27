@@ -97,6 +97,7 @@ export const main = Reach.App(() => {
             ((newMemberDetails, sendResponse) => {
                 const who = this;
                 sendResponse(true);
+                Insurer.interact.log("backend: API.CommunityMember.registerMembership ...");
                 Insurer.interact.log("backend: Insurer.interact.saveNewMemberDetails(newMemberDetails) ...");
                 Insurer.interact.saveNewMemberDetails(newMemberDetails);
                 Insurer.interact.log("backend: done.");
@@ -112,6 +113,7 @@ export const main = Reach.App(() => {
             (ob) => ob.mfee,
             ((ob, sendResponse) => {
                 sendResponse(true);
+                Insurer.interact.log("backend: API.CommunityMember.payMonthlyFee ...ob.mfee=");
                 //deposit into the treasury account
                 transfer(ob.mfee).to(Insurer);
                 return [membersCount, claimsCount];
@@ -123,6 +125,7 @@ export const main = Reach.App(() => {
                 const who = this;
                 //TODO: require(registeredMembers.member(who), "Only registered members can create claims.");
                 Insurer.interact.saveNewClaim({ amountRequested: claimInfo.amountRequested });
+                Insurer.interact.log("backend: API.CommunityMember.createClaim ...");
 
                 //add the details to the map of current claim owners
                 claimOwners[who] = {
@@ -151,7 +154,7 @@ export const main = Reach.App(() => {
                 const who = this;
                 const forWho = opinion.claimant;
                 sendResponse(true);
-
+                Insurer.interact.log("backend: API.CommunityMember.respondToClaim ...");
                 if (opinion.accepted) {
                     const approvalsCnt = maybe(insuranceClaims[forWho], 1, readFromMap("approvalsCount"));
                     const sumOfSetAmts = maybe(insuranceClaims[forWho], 0, readFromMap("sumOfSetAmounts"));

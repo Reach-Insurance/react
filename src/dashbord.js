@@ -10,56 +10,24 @@ const SUPABASE_URL = "https://byolfysahovehogqdena.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5b2xmeXNhaG92ZWhvZ3FkZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDg3NTcwMTYsImV4cCI6MTk2NDMzMzAxNn0.Q5h8nwP-qy1o5oDa0UCAgj1m7vTXOlhPyoZRC-0CNnk";
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-function Dashboard({ algoAccount, addr, insurerContract, backend, contractInfo, currentUser }) {
+function Dashboard({ algoAccount, addr, insurerContract, backend, contractInfo, currentUser, refreshDashbord }) {
     const [showNewClaimForm, setShowNewClaimForm] = useState(false);
     const [description, setDescription] = useState("");
     const [amountRequested, setAmountRequested] = useState(0);
-    const [refreshCount, setRefreshCount] = useState(0);
+
     const [createClaimFeedback, setCreateClaimFeedback] = useState("");
     const [dashboardRender, setDashboardRender] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
-
 
     const createNewClaim = async (e) => {
         e.preventDefault();
         setIsProcessing(true);
         const memberAccount = algoAccount.current;
         const insurerContractHandle = memberAccount.contract(backend, contractInfo.current);
-        /*
+
         const ok = await insurerContractHandle.apis.CommunityMember.createClaim({
             amountRequested, amountSet: amountRequested, accepted: false, approvalsCount: 0, sumOfSetAmounts: 0
         });
-        */
-
-        const deadline = new Date();
-        deadline.setDate(deadline.getDate() + 10); //new claim will expire if it fails to rise 5 approvals in 10 days.
-        console.log("deadline =", deadline);
-
-        //TODO: REMOVE
-        const amountSet = amountRequested;
-        const sumOfSetAmounts = 0;
-        const approvalscount = 0;
-        const { data: newClaimData, error } = await supabaseClient.from("claims").insert([{
-            claimant: algoAccount.current.networkAccount.addr,
-            amountRequested, amountSet, sumOfSetAmounts, approvalscount,
-            description, deadline
-        }]);
-        if (error) {
-            console.log(`Error while saving new claim details `, error);
-        } else {
-            if (newClaimData.length > 0) {
-                console.log("newClaimData[0].id =", newClaimData[0].id);
-                const claimId = newClaimData[0].id;
-                const { data: members } = await supabaseClient.from("members").select("memberAddr");
-                members.forEach(async ({ memberAddr: notified }) => {
-                    // link the new claim with all members in the joining "claimnotifications" table.
-                    const { error } = await supabaseClient.from("claimnotifications").insert([{ claimId: claimId, member: notified, claimant: addr }]);
-                    if (error) { console.log(error); }
-                });
-            }
-            console.log(`New claim recorded successfully: ${JSON.stringify(newClaimData)}`);
-        }
-        const ok = error ? false : true;
 
         if (!ok) {
             setCreateClaimFeedback("Claim submission failed.");
@@ -71,9 +39,6 @@ function Dashboard({ algoAccount, addr, insurerContract, backend, contractInfo, 
         setIsProcessing(false);
     };
 
-    function refreshDashbord() {
-        setRefreshCount(refreshCount + 1);
-    }
 
     return (
         <>

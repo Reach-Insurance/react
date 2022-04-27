@@ -17,8 +17,8 @@ function Header({ currentUser, refreshPage }) {
     }
 
     function disconnectWallet() {
-        //
         alert("Disconnecting...");
+        //
     }
 
     return (

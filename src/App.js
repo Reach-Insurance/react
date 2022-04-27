@@ -52,6 +52,7 @@ function App() {
   const [errCode, setErrCode] = useState("GOTO_LOGIN");
   const [deployerModeOn, setDeployerModeOn] = useState(false);
   const [connecting, setConnecting] = useState(false);
+  const [refreshCount, setRefreshCount] = useState(0);
   const interact = useRef({
     communityGroupName: communityGroupName,
     mandatoryEntryFee: Number(mandatoryEntryFee),
@@ -70,24 +71,27 @@ function App() {
       console.log("insurer saw feedback on deploying the contract");
     },
     saveNewClaim: async ({ amountRequested }) => {
+      const deadline = new Date();
+      deadline.setDate(deadline.getDate() + 10); //new claim will expire if it fails to raise 5 approvals in 10 days.
+
       const amountSet = amountRequested;
       const sumOfSetAmounts = 0;
-      const approvalsCount = 0;
-
-      //save details to supabase
+      const approvalscount = 0;
       const { data: newClaimData, error } = await supabaseClient.from("claims").insert([{
         claimant: algoAccount.current.networkAccount.addr,
-        amountRequested, amountSet, sumOfSetAmounts, approvalsCount
+        amountRequested, amountSet, sumOfSetAmounts, approvalscount,
+        description, deadline
       }]);
       if (error) {
-        console.log(`Error while saving new claim details ${error}`);
+        console.log(`Error while saving new claim details `, error);
       } else {
         if (newClaimData.length > 0) {
-          const claimId = newClaimData.id;
+          console.log("newClaimData[0].id =", newClaimData[0].id);
+          const claimId = newClaimData[0].id;
           const { data: members } = await supabaseClient.from("members").select("memberAddr");
-          members.forEach(async ({ memberAddr: addr }) => {
+          members.forEach(async ({ memberAddr: notified }) => {
             // link the new claim with all members in the joining "claimnotifications" table.
-            const { error } = await supabaseClient.from("claimnotifications").insert([{ claimId, member: addr }]);
+            const { error } = await supabaseClient.from("claimnotifications").insert([{ claimId: claimId, member: notified, claimant: addr }]);
             if (error) { console.log(error); }
           });
         }
@@ -300,6 +304,10 @@ function App() {
     setContractInfoSaved(!ok);
   };
 
+  function refreshDashbord() {
+    setRefreshCount(refreshCount + 1);
+  }
+
   //===============================================================
   return (
     <>
@@ -376,6 +384,7 @@ function App() {
               backend={backend}
               contractInfo={contractInfo}
               currentUser={currentUser.current}
+              refreshDashbord={refreshDashbord}
             />
 
             : (activePage === "DEPLOYER") ?

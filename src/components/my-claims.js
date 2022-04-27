@@ -10,16 +10,14 @@ const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function MyClaims({ addr, setShowNewClaimForm, showNewClaimForm }) {
     const myclaim = useRef({ amountRequested: 0, approvalsCount: 0 });
-    //const [errorFromDb, setErrorFromDb] = useState("");
     const errorFromDb = useRef("");
     const [loading, setLoading] = useState(true);
     const [hasClaim, setHasClaim] = useState(false);
     const [openNewClaimForm, setOpenNewClaimForm] = useState(false);
 
-    const fetchData = async () => {
+    const fetchMyClaimData = async () => {
         const { data: claimArr, error: er } = await supabaseClient.from("claims").select("*").match({ claimant: addr });
         if (er) {
-            //setErrorFromDb(er.message);
             errorFromDb.current = er.message;
         } else {
             if (claimArr.length > 0) {
@@ -35,7 +33,7 @@ function MyClaims({ addr, setShowNewClaimForm, showNewClaimForm }) {
         }
         setLoading(false);
     }
-    fetchData();
+    fetchMyClaimData();
 
     const showNewClaimFormm = async () => {
         setShowNewClaimForm(!openNewClaimForm);
