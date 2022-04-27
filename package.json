@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "GENERATE_SOURCEMAP=false react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build && rm -rf ../go-dapp-server/pages && mv build ../go-dapp-server/pages",
     "test": "GENERATE_SOURCEMAP=false react-scripts test",
     "eject": "react-scripts eject"
   },

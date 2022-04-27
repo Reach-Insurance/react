@@ -1,5 +1,7 @@
 'reach 0.1';
 
+//REF: REACH ARCHITECTURE: https://docs.reach.sh/rsh/#ref-programs
+
 export const main = Reach.App(() => {
     const Insurer = Participant('Insurer', {
         mandatoryEntryFee: UInt,
@@ -19,17 +21,15 @@ export const main = Reach.App(() => {
             supportDocuments: Bytes(100)
         })], Null),
         seeFeedback: Fun([], Null),
-        getMemberData: Fun([], Object({
-            insrPackageId: UInt, amountDue: UInt, matureBalance: UInt, fundLimit: UInt
-        })),
         notifyFundedMember: Fun([Address], Null),
-        stopContract: Fun([], Bool)
+        stopContract: Fun([], Null),
+        log: Fun(true, Null) //REF: https://docs.reach.sh/guide/logging/
     });
 
     const CommunityMember = API('CommunityMember', {
         registerMembership: Fun([Object({ fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: UInt })], Bool),
         payMonthlyFee: Fun([Object({ who: Address, mfee: UInt })], Bool),
-        createClaim: Fun([Object({ amountRequested: UInt, amountSet: UInt, accepted: Bool, approvalsCount: UInt, sumOfSetAmounts: UInt })], Bool),
+        createClaim: Fun([Object({ amountRequested: UInt, amountSet: UInt, accepted: Bool, approvalsCount: UInt, sumOfSetAmounts: UInt, insrPackageId: UInt, amountDue: UInt, matureBalance: UInt, fundLimit: UInt })], Bool),
         respondToClaim: Fun([Object({
             claimant: Address, accepted: Bool, setAmount: UInt
         })], Bool),
@@ -37,6 +37,8 @@ export const main = Reach.App(() => {
         stopContract: Fun([], Bool)
     });
     init();
+
+    //REF: REACH ARCHITECTURE: https://docs.reach.sh/rsh/#ref-programs
 
     Insurer.only(() => {
         const mandatoryEntryFee = declassify(interact.mandatoryEntryFee);
@@ -68,10 +70,11 @@ export const main = Reach.App(() => {
         matureBalance: UInt
     }));
 
+
     const [
         membersCount,
         claimsCount
-    ] = parallelReduce([0, 0])
+    ] = parallelReduce([1, 1])
         .define(() => {
             //the "readFromMap" function below can be passed to maybe(...) function to 
             //get the value from a mayBe which is returned by a Map of objects
@@ -82,15 +85,21 @@ export const main = Reach.App(() => {
         })
         .invariant(invariantCondition)
         .while(contractIsRunning)
+        //.case(Insurer,                  //PART_EXPR
+        //    () => {const _ = true},     //PUBLISH_EXPR
+        //    (_) => 0,                   //PAY_EXPR
+        //    ()=>{
+        //                                //CONSENSUS_EXPR
+        //    })
         .api(CommunityMember.registerMembership,
             (_) => { const _ = true; },
             (_) => mandatoryEntryFee,
             ((newMemberDetails, sendResponse) => {
                 const who = this;
-                //the registering member must have enough credit on their account to pay the entry fee.
-                //require(balance(who) >= mandatoryEntryFee, `Entry fee cannot be less than ${mandatoryEntryFee}`);
-                Insurer.interact.saveNewMemberDetails(newMemberDetails);
                 sendResponse(true);
+                Insurer.interact.log("backend: Insurer.interact.saveNewMemberDetails(newMemberDetails) ...");
+                Insurer.interact.saveNewMemberDetails(newMemberDetails);
+                Insurer.interact.log("backend: done.");
                 transfer(mandatoryEntryFee).to(Insurer);
 
                 //add member's address to the list of addresses
@@ -112,24 +121,27 @@ export const main = Reach.App(() => {
             (_) => 0,
             ((claimInfo, sendResponse) => {
                 const who = this;
+                //TODO: require(registeredMembers.member(who), "Only registered members can create claims.");
                 Insurer.interact.saveNewClaim({ amountRequested: claimInfo.amountRequested });
-
-                //read all the details of this member from the db
-                const memberDetails = Insurer.interact.getMemberData();
 
                 //add the details to the map of current claim owners
                 claimOwners[who] = {
-                    insrPackageId: memberDetails.insrPackageId,
-                    amountDue: memberDetails.amountDue,
-                    matureBalance: memberDetails.matureBalance
+                    insrPackageId: claimInfo.insrPackageId,
+                    amountDue: claimInfo.amountDue,
+                    matureBalance: claimInfo.matureBalance
                 };
 
-                const fundLimitt = memberDetails.fundLimit;
+                const fundLimitt = claimInfo.fundLimit;
 
                 const claimAmount = claimInfo.amountRequested >= fundLimitt ? claimInfo.amountRequested : fundLimitt;
                 insuranceClaims[who] = { amountRequested: claimInfo.amountRequested, amountSet: claimAmount, accepted: false, approvalsCount: 0, sumOfSetAmounts: claimInfo.amountRequested };
-
                 sendResponse(true);
+
+                //change mode from "concensus step" to "step"
+                commit();
+                //now change mode back to "concensus step" and pay for the claimant.
+                Insurer.pay(claimAmount);
+
                 return [membersCount, claimsCount + 1];
             })
         ).api(CommunityMember.respondToClaim,
@@ -141,22 +153,21 @@ export const main = Reach.App(() => {
                 sendResponse(true);
 
                 if (opinion.accepted) {
-                    //openClaims[forWho].approvalsCount = openClaims[forWho].approvalsCount + 1; //wrong syntax
-                    const approvalsCnt = maybe(insuranceClaims[forWho], 0, readFromMap("approvalsCount"));
+                    const approvalsCnt = maybe(insuranceClaims[forWho], 1, readFromMap("approvalsCount"));
                     const sumOfSetAmts = maybe(insuranceClaims[forWho], 0, readFromMap("sumOfSetAmounts"));
                     const amtRqsted = maybe(insuranceClaims[forWho], 0, readFromMap("amountRequested"));
-                    const amtSet = maybe(insuranceClaims[forWho], 0, readFromMap("amountSet"));
+                    const amtSet = maybe(insuranceClaims[forWho], amtRqsted, readFromMap("amountSet"));
                     const agreedClaimAmount = (approvalsCnt < 5) ? amtSet : sumOfSetAmts / approvalsCnt;
                     insuranceClaims[forWho] = {
                         approvalsCount: approvalsCnt + 1,
-                        sumOfSetAmounts: sumOfSetAmts + opinion.setAmount,
-                        amountRequested: amtRqsted,
                         amountSet: agreedClaimAmount,
                         accepted: true,
+                        amountRequested: amtRqsted,
+                        sumOfSetAmounts: sumOfSetAmts
                     };
 
                     if (approvalsCnt >= 5) {
-                        transfer(agreedClaimAmount).to(forWho);
+                        //transfer(agreedClaimAmount).to(forWho);
 
                         //eliminate the member from the list of claim owners (membersWithClaims)
                         delete claimOwners[forWho];
@@ -177,16 +188,13 @@ export const main = Reach.App(() => {
             ((sendResponse) => {
                 //this must be done by the deployer of the contract only.
                 const who = this;
-                require(who == Insurer, "You are not allowed to take this action.");
-                const ok = Insurer.interact.stopContract();
-                if (ok) {
-                    sendResponse(true);
-                    //FUTURE IMPROVEMENT: ensure that the deployer/Insurer does not have authority over the platform.
-                    //ensure that he first get permission from members to stop the contract.
-                    //ensure there are clearly agreed rules for non participation on this matter.
-                } else {
-                    sendResponse(false);
-                }
+                //TODO: require(who == Insurer, "You are not allowed to take this action.");
+                Insurer.interact.stopContract();
+
+                sendResponse(true);
+                //FUTURE IMPROVEMENT: ensure that the deployer/Insurer does not have authority over the platform.
+                //ensure that he first get permission from members to stop the contract.
+                //ensure there are clearly agreed rules for non participation on this matter.
 
                 return [membersCount, claimsCount];
             })

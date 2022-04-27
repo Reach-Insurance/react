@@ -1,23 +1,36 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import loadingGif1 from './images/ajax-loader.gif';
+import errorIcon from './images/error.png';
 import * as backend from './reach-build/index.main.mjs';
-import { loadStdlib, ALGO_WalletConnect as WalletConnect } from '@reach-sh/stdlib';
+import { loadStdlib } from '@reach-sh/stdlib';
+import { ALGO_WalletConnect as WalletConnect } from '@reach-sh/stdlib';
 import { createClient } from "@supabase/supabase-js";
 import useConfirm from "./hooks/useConfirm";
-//import { v4 } from 'uuid';
 import Dashboard from './dashbord';
+import SignupForm from './components/signup-form';
 
 //const reach = loadStdlib(process.env);
-const reach = loadStdlib("ALGO");
+//const reach = loadStdlib("ALGO");
+const reach = loadStdlib({
+  REACH_CONNECTOR_MODE: "ALGO-browser",
+  PUBLIC_URL: "https%3A%2F%2Fr.bridge.walletconnect.org"
+});
+
+//reach.unsafeAllowMultipleStdlibs();
 const SUPABASE_URL = "https://byolfysahovehogqdena.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5b2xmeXNhaG92ZWhvZ3FkZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDg3NTcwMTYsImV4cCI6MTk2NDMzMzAxNn0.Q5h8nwP-qy1o5oDa0UCAgj1m7vTXOlhPyoZRC-0CNnk";
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+//REF: https://docs.reach.sh/frontend/#js_setProviderByName
+//reach.setProviderByName('TestNet');
 //reach.setWalletFallback(reach.walletFallback({}));
-
+//...
 //WalletConnect: enables the Dapp to connect to any wallet
-reach.setWalletFallback(reach.walletFallback({ providerEnv: 'TestNet', WalletConnect }));
+//REF: https://docs.reach.sh/tut/rps/#p_421
+//reach.setWalletFallback(reach.walletFallback({ providerEnv: 'TestNet', WalletConnect }));
+
+//console.log("connectorFunctions.getConnectorMode()=", reach.getConnectorMode());
 
 function App() {
   const { confirm } = useConfirm();
@@ -25,20 +38,13 @@ function App() {
   const [communityGroupName, setCommunityGroupName] = useState("Test group insurance");
   const [mandatoryEntryFee, setMandatoryEntryFee] = useState(0);
   const insurerContract = useRef(null);
+  const currentUser = useRef({ fullName: "Guest" });
   const contractInfo = useState({});
-  const algoAccount = useRef(null);
-  const account = useRef();
-  const balance = useRef();
-  const fundAmount = useRef(100);
+  const algoAccount = useRef({ networkAccount: { addr: "" } });
   const mnemonicRef = useRef(<></>);
-  const [addressStr, setAddressStr] = useState("");
   const [mnemonicStr, setMnemonicStr] = useState("");
-  const [fullname, setFullname] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [loginErr, setLoginErr] = useState("");
   const [activePage, setActivePage] = useState("LOGIN");
-  const [insrPackage, setInsrPackage] = useState("");
   const [deployed, setDeployed] = useState(false);
   const [isSavingContractInfo, setIsSavingContractInfo] = useState(false);
   const [contractInfoSaved, setContractInfoSaved] = useState(false);
@@ -46,8 +52,94 @@ function App() {
   const [errCode, setErrCode] = useState("GOTO_LOGIN");
   const [deployerModeOn, setDeployerModeOn] = useState(false);
   const [connecting, setConnecting] = useState(false);
-  const [isRegisteringMember, setIsRegisteringMember] = useState(false);
-  const [newClaimData, setNewClaimData] = useState({});
+  const interact = useRef({
+    communityGroupName: communityGroupName,
+    mandatoryEntryFee: Number(mandatoryEntryFee),
+    contractIsRunning: true,
+    saveNewMemberDetails: async ({ fullName, phone, email, chosenInsurancePackage }) => {
+      const { data, error } = await supabaseClient.from("members").insert([{
+        fullName, phone, email, chosenInsurancePackage, memberAddr: algoAccount.current.networkAccount.addr
+      }]);
+      if (error) {
+        console.log(`Error while saving member details ${error}`);
+      } else {
+        console.log(`Member registered successfully: ${JSON.stringify(data)}`);
+      }
+    },
+    seeFeedback: () => {
+      console.log("insurer saw feedback on deploying the contract");
+    },
+    saveNewClaim: async ({ amountRequested }) => {
+      const amountSet = amountRequested;
+      const sumOfSetAmounts = 0;
+      const approvalsCount = 0;
+
+      //save details to supabase
+      const { data: newClaimData, error } = await supabaseClient.from("claims").insert([{
+        claimant: algoAccount.current.networkAccount.addr,
+        amountRequested, amountSet, sumOfSetAmounts, approvalsCount
+      }]);
+      if (error) {
+        console.log(`Error while saving new claim details ${error}`);
+      } else {
+        if (newClaimData.length > 0) {
+          const claimId = newClaimData.id;
+          const { data: members } = await supabaseClient.from("members").select("memberAddr");
+          members.forEach(async ({ memberAddr: addr }) => {
+            // link the new claim with all members in the joining "claimnotifications" table.
+            const { error } = await supabaseClient.from("claimnotifications").insert([{ claimId, member: addr }]);
+            if (error) { console.log(error); }
+          });
+        }
+        console.log(`New claim recorded successfully: ${JSON.stringify(newClaimData)}`);
+      }
+    },
+    notifyMembersAboutNewClaim: ({ ownerAddr, amountRequested, description, supportDocuments }) => {
+      //TODO: access emails of all members and send an email notification to each member
+      console.log("Email notifications sent to all members", ownerAddr, amountRequested, description, supportDocuments);
+    },
+    createInvoices: () => {
+      console.log("creating invoices at the end of the month ...");
+    },
+    moveMaturedPayments: () => {
+      console.log("moving matured payments from temporary queue ...");
+    },
+    getMemberData: async () => {
+      const memberAddress = algoAccount.current.networkAccount.addr;
+      const { data: memberDataArr, error } = await supabaseClient.from("members").select("*").eq('memberAddr', memberAddress);
+      if (error) {
+        console.log("interact.getMemberDetails errored: ", error.message);
+      }
+      if (memberDataArr.length > 0) {
+        const { matureBalance, fundLimit, chosenInsurancePackage, amountDue } = memberDataArr[0];
+        return {
+          insrPackageId: chosenInsurancePackage,
+          amountDue,
+          matureBalance,
+          fundLimit
+        };
+      } else {
+        return {
+          insrPackageId: 1,
+          amountDue: 0,
+          matureBalance: 0,
+          fundLimit: 0
+        };
+      }
+    },
+    stopContract: async () => {
+      interact.current.contractIsRunning = false;
+      await insurerContract.current.p.Insurer(interact.current);
+      //delete info record from supabase
+      const { error: err } = await supabaseClient.from("smartcontracts").delete().match({ name: "insurancedapp" });
+      if (err) { console.log("err: ", err); }
+    },
+    notifyFundedMember: async (address) => {
+      //TODO: update the member's claim status to "funded"
+      console.log("Your claim has been funded. Member address = ", address);
+    },
+    log: console.log //REF: https://docs.reach.sh/guide/logging/
+  });
 
   //===============================================================
   useEffect(() => {
@@ -60,8 +152,8 @@ function App() {
         //if info was found, 
         if (infoArr.length > 0) {
           setDeployed(true);
-          contractInfo.current = JSON.parse(infoArr[0].info);
-          console.log("contract info found from supabase: ", infoArr[0].info);
+          contractInfo.current = infoArr[0].info;
+          console.log("contract info found: ", infoArr[0].info);
         }
         setConnecting(false);
       } catch (er) {
@@ -73,66 +165,94 @@ function App() {
   }, []);
 
   //===============================================================
-  function Login(e) {
+  function LoginWithMnemonic(e) {
+    ConnectWallet(e, true);
+  }
+  function ConnectWallet(e, loginWithMnemonic = false) {
     e.preventDefault();
-    try {
-      console.log("Login(){...}");
-      const getPromise = reach.newAccountFromMnemonic(mnemonicStr);
-      getPromise.then((acc) => {
-        setLoginErr("");
-        algoAccount.current = acc;
-        console.log("algoAccount.current = ", algoAccount.current);
-        if (!deployed) {
-          //https://devrecipes.net/custom-confirm-dialog-with-react-hooks-and-the-context-api/
-          console.log("Awaiting want to deploy prompt");
-          confirm('The insurer contract is not yet deployed. Are you the insurer ? Deploy it.')
-            .then(wantToDeployContract => {
-              if (wantToDeployContract) {
-                setActivePage("DEPLOYER");
-              } else {
-                setErrMessage("Wait for the insurer to deploy the contract, or contact them for help");
+    if (connecting) {
+      alert("Pease wait (Page is still loading)");
+    } else {
+      try {
+        console.log("Login(){...}");
+        reach.setWalletFallback(reach.walletFallback({
+          providerEnv: {
+            ALGO_TOKEN: '',
+            ALGO_SERVER: "https://testnet-api.algonode.cloud",
+            ALGO_PORT: '',
+            ALGO_INDEXER_TOKEN: '',
+            ALGO_INDEXER_SERVER: "https://testnet-idx.algonode.cloud",
+            ALGO_INDEXER_PORT: '',
+          },
+          WalletConnect
+        }));
+
+        //reach.setWalletFallback(reach.walletFallback({ providerEnv: 'TestNet', WalletConnect }));
+
+        let getPromise = null;
+        if (loginWithMnemonic) {
+          getPromise = reach.newAccountFromMnemonic(mnemonicStr);
+        } else {
+          getPromise = reach.getDefaultAccount();
+        }
+
+        getPromise.then((acc) => {
+          setLoginErr("");
+          algoAccount.current = acc;
+          console.log("algoAccount.current = ", algoAccount.current);
+          if (!deployed) {
+            //https://devrecipes.net/custom-confirm-dialog-with-react-hooks-and-the-context-api/
+            console.log("Awaiting want to deploy prompt");
+            confirm('The insurer contract is not yet deployed. Do you want to deploy it ?.')
+              .then(wantToDeployContract => {
+                if (wantToDeployContract) {
+                  setActivePage("DEPLOYER");
+                } else {
+                  setErrMessage("Wait for the insurer to deploy the contract, or contact them for help");
+                  setErrCode("GOTO_LOGIN");
+                  setActivePage("ERROR");
+                }
+              });
+          } else if (deployerModeOn) {
+            setActivePage("DEPLOYER");
+          } else {
+            async function accessDb() {
+              let isRegisteredMember = false;
+              const memberAddr = algoAccount.current.networkAccount.addr;
+              const { data: memberDataArr, error } = await supabaseClient.from("members").select("*").eq('memberAddr', memberAddr);
+              if (error) {
+                setErrMessage(JSON.stringify(error));
                 setErrCode("GOTO_LOGIN");
                 setActivePage("ERROR");
               }
-            });
-        } else if (deployerModeOn) {
-          setActivePage("DEPLOYER");
-        } else {
-
-          async function accessDb() {
-            let isRegisteredMember = false;
-            const memberAddr = algoAccount.current.networkAccount.addr;
-            const { data: memberDataArr, error } = await supabaseClient.from("members").select("*").eq('memberAddr', memberAddr);
-            if (error) {
-              setErrMessage(JSON.stringify(error));
-              setErrCode("GOTO_LOGIN");
-              setActivePage("ERROR");
+              if (memberDataArr.length > 0) {
+                isRegisteredMember = true;
+                currentUser.current = memberDataArr[0];
+              }
+              if (isRegisteredMember) {
+                //create a contract handle and assign it to insurerContract
+                insurerContract.current = algoAccount.current.contract(backend, contractInfo.current);
+                setActivePage("DASHBOARD");
+              } else {
+                setActivePage("SIGNUP");
+              }
             }
-            if (memberDataArr.length > 0) {
-              isRegisteredMember = true;
-            }
-            if (isRegisteredMember) {
-              //create a contract handle and assign it to insurerContract
-              insurerContract.current = algoAccount.contract(backend, contractInfo.current);
-              setActivePage("DASHBOARD");
-            } else {
-              setActivePage("SIGNUP");
-            }
+            accessDb();
           }
-          accessDb();
-        }
-      }).catch((er) => {
-        console.log("Eer: ", er.message);
-        setLoginErr(er.message);
-      });
+        }).catch((er) => {
+          console.log("Eer: ", er.message);
+          setLoginErr(er.message);
+        });
 
-    } catch (er) {
-      console.log("errr: ", er);
+      } catch (er) {
+        console.log("errr: ", er);
+      }
     }
   }
 
   //===============================================================
   const deployContract = async (e) => {
+    console.log("deployContract(){...}");
     e.preventDefault();
     setIsSavingContractInfo(true);
 
@@ -141,105 +261,18 @@ function App() {
     console.log("Deploying... insurerAccount=", insurerAccount);
     const ctc = insurerAccount.contract(backend);
     insurerContract.current = ctc;
-
+    console.log("insurerContract.current=", insurerContract.current);
     //---------
     // Set deployed contract Init state
     console.log("Setting the initial state of the contract just deployed");
-    await insurerContract.current.p.Insurer({
-      communityGroupName: communityGroupName,
-      mandatoryEntryFee: Number(mandatoryEntryFee),
-      contractIsRunning: true,
-      saveNewMemberDetails: async ({ fullName, phone, email, chosenInsurancePackage }) => {
-        const { data, error } = await supabaseClient.from("members").insert([{
-          fullName, phone, email, chosenInsurancePackage, memberAddr: algoAccount.current.networkAccount.addr
-        }]);
-        setIsRegisteringMember(false);
-        if (error) {
-          console.log(`Error while saving member details ${error}`);
-        } else {
-          console.log(`Member registered successfully: ${JSON.stringify(data)}`);
-        }
-      },
-      seeFeedback: () => {
-        console.log("insurer saw feedback on deploying the contract");
-      },
-      saveNewClaim: async ({ amountRequested }) => {
-        const amountSet = amountRequested;
-        const sumOfSetAmounts = 0;
-        const approvalsCount = 0;
-
-        //save details to supabase
-        const { data, error } = await supabaseClient.from("claims").insert([{
-          claimant: algoAccount.current.networkAccount.addr,
-          amountRequested, amountSet, sumOfSetAmounts, approvalsCount
-        }]);
-        if (error) {
-          console.log(`Error while saving new claim details ${error}`);
-        } else {
-          if (data.length > 0) {
-            const claimId = newClaimData.id;
-            const { data: members } = await supabaseClient.from("members").select("memberAddr");
-            members.forEach(({ memberAddr: addr }) => {
-              // link the new claim with all members in the joining "claimnotifications" table.
-              const { error } = await supabaseClient.from("claimnotifications").insert([{ claimId, member: addr }]);
-              if (error) { console.log(error); }
-            });
-          }
-          console.log(`New claim recorded successfully: ${JSON.stringify(data)}`);
-        }
-      },
-      notifyMembersAboutNewClaim: ({ ownerAddr, amountRequested, description, supportDocuments }) => {
-        //TODO: access emails of all members and send an email notification to each member
-        console.log("Emal notifications sent to all members", ownerAddr, amountRequested, description, supportDocuments);
-      },
-      createInvoices: () => {
-        console.log("creating invoices at the end of the month ...");
-      },
-      moveMaturedPayments: () => {
-        console.log("moving matured payments from temporary queue ...");
-      },
-      getMemberData: async () => {
-        const memberAddress = algoAccount.current.networkAccount.addr;
-        const { data: memberDataArr, error } = await supabaseClient.from("members").select("*").eq('memberAddr', memberAddress);
-        if (error) {
-          console.log("interact.getMemberDetails errored: ", error.message);
-        }
-        if (memberDataArr.length > 0) {
-          const { matureBalance, fundLimit, chosenInsurancePackage, amountDue } = memberDataArr[0];
-          return {
-            insrPackageId: chosenInsurancePackage,
-            amountDue,
-            matureBalance,
-            fundLimit
-          };
-        } else {
-          return {
-            insrPackageId: 1,
-            amountDue: 0,
-            matureBalance: 0,
-            fundLimit: 0
-          };
-        }
-      },
-      stopContract: async () => {
-        const interact = await insurerContract.current.p.Insurer;
-        await insurerContract.current.p.Insurer({ ...interact, contractIsRunning: false });
-        //delete info record from supabase
-        const { error: err } = await supabaseClient.from("smartcontracts").delete().match({ name: "insurancedapp" });
-        if (err) { return false; }
-        return true;
-      },
-      notifyFundedMember: async (address) => {
-        //TODO: update the member's claim status to "funded"
-        console.log("Your claim has been funded. Member address = ", address);
-      }
-    });
+    await insurerContract.current.p.Insurer(interact.current);
     //---------
 
     console.log("getting the contract info ...");
     const info = await insurerContract.current.getInfo();
     console.log("info =", info);
     const infoStr = JSON.stringify(info);
+    //const infoStr = "RNE5XUWGHA56LKQFAS7KWQPZAGOR5U6ZCARU4SOZ4XQRVPWO6WCYLUD4HE";
     console.log("infoStr = ", infoStr);
 
     //save the contract info into supabase
@@ -259,44 +292,13 @@ function App() {
   };
 
   //===============================================================
-  async function Signup(e) {
-    e.preventDefault();
-    console.log("Signup() invoked");
-    setIsRegisteringMember(true);
-    if (!email || email === "") {
-      alert("Email is required");
-    } else if (!phone || phone === "") {
-      alert("Phone number is required");
-    } else if (!fullname || fullname === "") {
-      alert("Full name number is required");
-    } else if (!insrPackage || insrPackage === "") {
-      alert("Please select your insurance package");
-    }
-
-    //if we are here, then contractInfo was retrieved earlier by useEffect(()=>{ ... }) above
-    const insurerContractHandle = algoAccount.current.contract(backend, contractInfo.current);
-
-    const success = await insurerContractHandle.apis.CommunityMember.registerMembership({
-      fullName: fullname, phone, email, chosenInsurancePackage: insrPackage
-    });
-
-    if (success) {
-      console.log("Registered successfully.");
-      //go to dashboard
-      setActivePage("DASHBOARD");
-    } else {
-      console.log("Failed to register");
-    }
-  }
-
-  //===============================================================
-  const stopContract = useCallback(() => {
+  const stopContract = async () => {
     console.log("stopContract() invoked");
     const insurerAccount = algoAccount.current;
     const insurerContractHandle = insurerAccount.contract(backend, contractInfo.current);
     const ok = await insurerContractHandle.apis.CommunityMember.stopContract();
     setContractInfoSaved(!ok);
-  }, [contractInfo]);
+  };
 
   //===============================================================
   return (
@@ -312,15 +314,21 @@ function App() {
               </span>
             </h1>
             <hr />
-            {(loginErr !== "") &&
-              <>
-                <span className="text-red">{loginErr}</span> <hr />
-              </>
-            }
 
-            <h1 className='text-xl font-medium text-primary mt-6 mb-6 text-center'>
+            {(loginErr !== "") && <> <span className="text-red-400">{loginErr}</span> <span><img src={errorIcon} width="30px" alt="" /></span> <hr /> </>}
+            <br />
+            <button onClick={ConnectWallet}
+              className={`w-full bg-green-500 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark`}
+            >
+              {connecting && <span> <img src={loadingGif1} width="12px" alt='' /> </span>}
+              <span>{connecting ? "Please wait ..." : "Connect algo wallet"}</span>
+            </button>
+            <hr />
+            <br />
+            OR
+            <h3 className='text-l font-medium text-primary mt-6 mb-6 text-center'>
               Enter Your mnemonic to Login
-            </h1>
+            </h3>
 
             <form >
               <div>
@@ -336,96 +344,40 @@ function App() {
 
               <div>
                 <label>Have no Algorand account ? <a target="_blank" href="https://perawallet.app/" className='text-blue-600' rel="noreferrer">Create a new</a> </label>
-
               </div>
 
               <div className='flex justify-center items-center mt-6'>
-                <button onClick={Login}
+                <button onClick={LoginWithMnemonic}
                   className={` bg-blue-500 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark`}
                 >
-                  Login
+                  {connecting && <span> <img src={loadingGif1} width="12px" alt='' /> </span>}
+                  <span>{connecting ? "Wait ..." : "Login"}</span>
                 </button>
               </div>
             </form>
           </div>
         </div>
+
         : (activePage === "SIGNUP") ?
-          <div className='h-screen flex bg-blue-100'>
-            <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-2 px-16 shadow'>
-              <h1 className='text-4xl text-blue-700  text-primary mt-2 mb-2 text-center'> Insurance Dapp </h1>
-              <hr />
-              <small> Please keep your mnemonic secret: ( ... ) </small>
-              <hr />
 
-              <h1 className='text-xl font-medium text-primary mt-6 mb-6 text-center'>
-                Register for insurance services
-              </h1>
+          <SignupForm
+            algoAccount={algoAccount}
+            setActivePage={setActivePage}
+            backend={backend}
+            contractInfo={contractInfo}
+          />
 
-              <form >
-                <div>
-                  <label htmlFor='fullname'>Full name </label>
-                  <input
-                    type="text"
-                    value={fullname}
-                    onChange={e => setFullname(e.target.value)}
-                    className={`w-full py px-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                    id='fullname'
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor='phone'>Phone number </label>
-                  <input
-                    type="text"
-                    value={phone}
-                    onChange={e => setPhone(e.target.value)}
-                    className={`w-full py px-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                    id='phone'
-                  />
-                </div>
-
-                <div>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    className={`w-full py px-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                    placeholder='your@email.com'
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor='phone'> Select the insurance package you prefer </label>
-                  <select
-                    type="select"
-                    value={insrPackage}
-                    onChange={e => setInsrPackage(e.target.value)}
-                    className={`w-full py px-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                  >
-                    <option value={1}> Package-1 - 1000 - 120,000 </option>
-                    <option value={2}> Package-2 - 5000 - 600,000 </option>
-                    <option value={3}> Package-3 - 10,000 - 1,200,000 </option>
-                    <option value={4}> Package-4 - 50,000 - 6,000,000 </option>
-                    <option value={5}> Package-5 - 100,000 - 12,000,000 </option>
-                    <option value={6}> Package-6 - 500,000 - 60,000,000 </option>
-                    <option value={7}> Package-7 - 1,000,000 - 120,000,000 </option>
-                    <option value={8}> Package-8 - 5,000,000 - 600,000,000 </option>
-                  </select>
-                </div>
-
-
-                <div className='flex justify-center items-center mt-6'>
-                  <button onClick={Signup}
-                    className={`bg-blue-500 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark`}
-                  >
-                    Register now
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div >
           : (activePage === "DASHBOARD") ?
-            <Dashboard insurerContract={insurerContract.current} addr={algoAccount.current.networkAccount.addr} />
+
+            <Dashboard
+              insurerContract={insurerContract.current}
+              addr={algoAccount.current.networkAccount.addr}
+              algoAccount={algoAccount}
+              backend={backend}
+              contractInfo={contractInfo}
+              currentUser={currentUser.current}
+            />
+
             : (activePage === "DEPLOYER") ?
               <div className='h-screen flex bg-blue-100'>
                 <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-2 px-16 shadow'>
@@ -477,7 +429,9 @@ function App() {
                   </form>
                 </div>
               </div >
+
               : (activePage === "ERROR") ?
+
                 <div>
                   <h1> Error ! </h1>
                   <p> {errMessage} </p>
