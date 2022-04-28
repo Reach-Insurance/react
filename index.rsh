@@ -33,6 +33,7 @@ export const main = Reach.App(() => {
         respondToClaim: Fun([Object({
             claimant: Address, accepted: Bool, setAmount: UInt
         })], Bool),
+        withDrawClaim: Fun([], Bool),
         //changePackage: Fun([Bytes(60)], Bool),
         stopContract: Fun([], Bool)
     });
@@ -185,6 +186,26 @@ export const main = Reach.App(() => {
 
                 return [membersCount, claimsCount];
             })
+        ).api(CommunityMember.withDrawClaim,
+            () => { const _ = true; },
+            () => 0,
+            (sendResponse) => {
+                const who = this;
+                sendResponse(true);
+
+                //take the funds that the insurer had put on the table (paid), 
+                //back into the treasury
+                const memberRequestedAmount = maybe(insuranceClaims[who], 0, readFromMap("amountRequested"));
+                transfer(memberRequestedAmount).to(Insurer);
+
+                //delete the claim from the list of open claims
+                delete insuranceClaims[who];
+
+                //eliminate this member from the list of claim owners (membersWithClaims)
+                delete claimOwners[who];
+
+                return [membersCount, claimsCount];
+            }
         ).api(CommunityMember.stopContract,
             () => { const _ = true; },
             () => 0,

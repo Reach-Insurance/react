@@ -34,19 +34,16 @@ function ListingTable({ addr, dashboardRender, setDashboardRender }) {
         then enter the amount you suggest in the input box below. 
         If you don't even want to allow this person to be funded, just enter 0`, defaultAmnt);
         console.log("setAmount = ", setAmount);
-        /*
+
         const ok = await insurerContractHandle.apis.CommunityMember.respondToClaim({
             claimant, accepted: true, setAmount
         });
-        */
-        //TODO: REMOVE
-        const ok = true;
 
         if (ok) {
-            //update the approvalsCount of this claim in the claims table
-            console.log("about to increment claim id=", claimId);
+            //update the approvalscount of this claim in the claims table
             const { data: updatedClaim, error } = await supabaseClient.rpc('incrementapprovalsby', { claim_id: claimId, increment_by: 1 });
             console.log("updatedClaim=", updatedClaim, "error =", error);
+
             let selectedClaim = {};
             if (!error) {
                 const { data: selectedClaimArr, errr } = await supabaseClient.from("claims").select("*").match({ id: claimId });
@@ -55,9 +52,6 @@ function ListingTable({ addr, dashboardRender, setDashboardRender }) {
                 }
             }
             if (selectedClaim.approvalscount && selectedClaim.approvalscount >= 5) {
-                //TODO: fund the claimant
-                console.log("Claimant funded. addr=", addr);
-                //TODO: delete the claim from the db
                 const { error } = await supabaseClient.from("claims").delete().match({ id: claimId });
                 if (error) {
                     console.log("Failed to delete the claim after funding claimant", error);
@@ -79,13 +73,9 @@ function ListingTable({ addr, dashboardRender, setDashboardRender }) {
     const withdrawMyClaim = async ({ claimId }) => {
         const yes = await confirm(`Are you sure you want to withdraw your claim ?`);
         if (yes) {
-            /*
             const ok = await insurerContractHandle.apis.CommunityMember.withDrawClaim();
-            */
-            //TODO: REMOVE
-            const ok = true;
+
             if (ok) {
-                console.log("Claimant decided to withdraw claim. addr=", addr);
                 //First delete all notifications that had been sent to all members about this claim
                 const { error } = await supabaseClient.from("claimnotifications").delete().match({ claimId: claimId });
                 if (error) {
