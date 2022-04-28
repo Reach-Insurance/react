@@ -86,7 +86,6 @@ function App() {
         console.log(`Error while saving new claim details `, error);
       } else {
         if (newClaimData.length > 0) {
-          console.log("newClaimData[0].id =", newClaimData[0].id);
           const claimId = newClaimData[0].id;
           const { data: members } = await supabaseClient.from("members").select("memberAddr");
           members.forEach(async ({ memberAddr: notified }) => {
@@ -142,7 +141,7 @@ function App() {
       //TODO: update the member's claim status to "funded"
       console.log("Your claim has been funded. Member address = ", address);
     },
-    log: console.log //REF: https://docs.reach.sh/guide/logging/
+    log: console.log             //REF: https://docs.reach.sh/guide/logging/
   });
 
   //===============================================================

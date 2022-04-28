@@ -35,13 +35,14 @@ function MonthlyPayments({ insurerContract: insurerContractHandle, addr, dashboa
     }, [dashboardRender]);
 
     const payMonthlyFee = async () => {
-        //convert other currency amount to ALGO
-        const mfee = Math.ceil(amountDue / 2590);
+        const monthlyFee = amountDue;
+
         //prompt for confirmation first, then pay
-        const yes = await confirm(`Do you want to pay ${mfee} Algo${(mfee !== 1) ? "s" : ""} from your account ?`);
-        console.log("yes=", yes);
+        const yes = await confirm(`Do you want to pay ${monthlyFee} Algo${(monthlyFee !== 1) ? "s" : ""} from your account ?`);
         if (yes) {
-            const success = await insurerContractHandle.apis.CommunityMember.payMonthlyFee({ mfee });
+            console.log("yes=", yes);
+            const success = await insurerContractHandle.apis.CommunityMember.payMonthlyFee({ mfee: monthlyFee });
+            console.log("backend succeeded =", success);
             if (success) {
                 console.log("Payment recorded successfully.");
                 //update this member's details in members table
