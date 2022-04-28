@@ -196,7 +196,7 @@ export const main = Reach.App(() => {
                 //take the funds that the insurer had put on the table (paid), 
                 //back into the treasury
                 const memberRequestedAmount = maybe(insuranceClaims[who], 0, readFromMap("amountRequested"));
-                transfer(memberRequestedAmount).to(Insurer);
+                //transfer(memberRequestedAmount).to(Insurer);
 
                 //delete the claim from the list of open claims
                 delete insuranceClaims[who];
