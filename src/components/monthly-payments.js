@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import loadingGif from "../images/ajax-loader.gif";
 import { createClient } from "@supabase/supabase-js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,10 +9,10 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 
-function MonthlyPayments({ insurerContract: insurerContractHandle, addr }) {
+function MonthlyPayments({ insurerContract: insurerContractHandle, addr, dashboardRender, setDashboardRender }) {
     const { confirm } = useConfirm();
     const [amountDue, setAmountDue] = useState(0);
-    const [errorFromBackend, setErrorFromBackend] = useState("");
+    const errorFromBackend = useRef("");
     const [currency, setCurrency] = useState("UGX");
     const [loading, setLoading] = useState(true);
 
@@ -20,7 +20,7 @@ function MonthlyPayments({ insurerContract: insurerContractHandle, addr }) {
         const fetchData = async () => {
             const { data: amountArr, error: er } = await supabaseClient.from("members").select("amountDue", "currency").match({ memberAddr: addr });
             if (er) {
-                setErrorFromBackend(er.message);
+                errorFromBackend.current = er.message;
             } else {
                 if (amountArr.length > 0) {
                     setAmountDue(amountArr[0].amountDue);
@@ -32,24 +32,27 @@ function MonthlyPayments({ insurerContract: insurerContractHandle, addr }) {
             setLoading(false);
         }
         fetchData();
-    }, []);
+    }, [dashboardRender]);
 
     const payMonthlyFee = async () => {
-        //convert UGX to ALGO
-        const mfee = Math.ceil(amountDue / 2590);
-        //TODO: prompt for cnfirmation first, then pay
-        const yes = await confirm(`Do you want to pay ${mfee} Algos from your account ?`);
+        const monthlyFee = amountDue;
+
+        //prompt for confirmation first, then pay
+        const yes = await confirm(`Do you want to pay ${monthlyFee} Algo${(monthlyFee !== 1) ? "s" : ""} from your account ?`);
         if (yes) {
-            const success = await insurerContractHandle.apis.CommunityMember.payMonthlyFee({ mfee });
+            console.log("yes=", yes);
+            const success = await insurerContractHandle.apis.CommunityMember.payMonthlyFee({ mfee: monthlyFee });
+            console.log("backend succeeded =", success);
             if (success) {
                 console.log("Payment recorded successfully.");
-                //TODO: update this member's details in members table
-                const { data, error } = await supabaseClient.from('members').update({ amountDue: 0 }).match({ memberAddr: addr });
-                console.log("data-->", data, "error-->", error);
+                //update this member's details in members table
+                const { error } = await supabaseClient.from('members').update({ amountDue: 0 }).match({ memberAddr: addr });
+                if (error) { console.log("Failed to update member"); }
             } else {
                 console.log("Failed to record payment");
             }
         }
+        setDashboardRender(!dashboardRender);
     };
 
     return (
@@ -61,19 +64,19 @@ function MonthlyPayments({ insurerContract: insurerContractHandle, addr }) {
                         <div className="rounded p-3 bg-green-600"><FontAwesomeIcon icon={faWallet} /></div>
                     </div>
                     <div className="flex-1 text-center md:center-center">
-                        <h5 className="font-bold uppercase text-gray-500"> Monthly fees </h5>
-                        <h3 className="font-bold text-3xl">
+                        <h5 className="font-bold uppercase text-gray-500"> {(amountDue > 0) && <button onClick={payMonthlyFee} className="bg-blue-300 py px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark">pay</button>} Monthly fees</h5>
+                        <h3 className="font-bold text-2xl">
                             {currency}
                             {
                                 loading ?
                                     <span style={{ paddingTop: "1px" }}>
                                         <img src={loadingGif} width="20px" />
                                     </span>
-                                    : errorFromBackend === "" ?
-                                        amountDue
-                                        : <small> {errorFromBackend} </small>
+                                    : errorFromBackend.current === "" ?
+                                        <>{amountDue}</>
+                                        : <small> {errorFromBackend.current} </small>
 
-                            } {amountDue && <button onClick={payMonthlyFee} className="bg-blue-200 text-blue-600">pay</button>}
+                            }
                         </h3>
                     </div>
                 </div>
@@ -81,7 +84,6 @@ function MonthlyPayments({ insurerContract: insurerContractHandle, addr }) {
             {/*<!--/Metric Card-->*/}
         </div>
     );
-
 }
 
 export default MonthlyPayments;
