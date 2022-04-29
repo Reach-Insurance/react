@@ -69,18 +69,20 @@ function App() {
     },
     seeFeedback: () => {
       console.log("insurer saw feedback on deploying the contract");
+      return;
     },
-    saveNewClaim: async ({ amountRequested }) => {
+    saveNewClaim: async ({ amountRequested, description }) => {
       const deadline = new Date();
       deadline.setDate(deadline.getDate() + 10); //new claim will expire if it fails to raise 5 approvals in 10 days.
 
       const amountSet = amountRequested;
       const sumOfSetAmounts = 0;
       const approvalscount = 0;
+      const addr = algoAccount.current.networkAccount.addr;
       const { data: newClaimData, error } = await supabaseClient.from("claims").insert([{
-        claimant: algoAccount.current.networkAccount.addr,
-        amountRequested, amountSet, sumOfSetAmounts, approvalscount,
-        description, deadline
+        claimant: addr,
+        amountRequested, amountSet, sumOfSetAmounts,
+        approvalscount, description, deadline
       }]);
       if (error) {
         console.log(`Error while saving new claim details `, error);
@@ -157,6 +159,7 @@ function App() {
           setDeployed(true);
           contractInfo.current = infoArr[0].info;
           console.log("contract info found: ", infoArr[0].info);
+          console.log("contractInfo.current: ", contractInfo.current, " typeof(contractInfo.current)=", typeof contractInfo.current);
         }
         setConnecting(false);
       } catch (er) {

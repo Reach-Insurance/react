@@ -6,7 +6,6 @@ import refreshIcon from "../images/refresh.png";
 function Header({ currentUser, refreshPage }) {
     const [userMenuActive, setUserMenuActive] = useState(false);
     const [navMenuActive, setNavMenuActive] = useState(false);
-    const [userProfilePicture, setUserProfilePicture] = useState(defaultUserPicture);
 
     function toggleUserMenuDiv() {
         setUserMenuActive(!userMenuActive);
@@ -33,7 +32,7 @@ function Header({ currentUser, refreshPage }) {
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <img src={logo} width="40px" />
+                                            <img src={logo} width="40px" alt="" />
                                         </td>
                                         <td>
                                             <span style={{ fontSize: "3vw" }}> Insurance Dapp </span>
@@ -53,7 +52,7 @@ function Header({ currentUser, refreshPage }) {
                             </div>
                             <div className="relative text-sm">
                                 <button className="flex items-center focus:outline-none mr-3" onClick={toggleUserMenuDiv}>
-                                    <img className="w-8 h-8 rounded-full mr-4 border-solid border-2 border-green-600" src={userProfilePicture} alt="User" />
+                                    <img className="w-8 h-8 rounded-full mr-4 border-solid border-2 border-green-600" src={defaultUserPicture} alt="User" />
                                     <span className="hidden md:inline-block"> {currentUser.fullName} </span>
                                 </button>
                                 <div className={`bg-white rounded shadow-md mt-2 absolute mt-12 top-0 right-0 min-w-full overflow-auto z-30 

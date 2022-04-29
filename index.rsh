@@ -11,9 +11,12 @@ export const main = Reach.App(() => {
         createInvoices: Fun([], Null),
         moveMaturedPayments: Fun([], Null),
         saveNewMemberDetails: Fun([Object({
-            fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: UInt
+            fullName: Bytes(60), phone: Bytes(20),
+            email: Bytes(60), chosenInsurancePackage: UInt
         })], Null),
-        saveNewClaim: Fun([Object({ amountRequested: UInt })], Null),
+        saveNewClaim: Fun([Object({
+            amountRequested: UInt, description: Bytes(200)
+        })], Null),
         notifyMembersAboutNewClaim: Fun([Object({
             ownerAddr: Address,
             amountRequested: UInt,
@@ -27,9 +30,18 @@ export const main = Reach.App(() => {
     });
 
     const CommunityMember = API('CommunityMember', {
-        registerMembership: Fun([Object({ fullName: Bytes(60), phone: Bytes(20), email: Bytes(60), chosenInsurancePackage: UInt })], Bool),
+        registerMembership: Fun([Object({
+            fullName: Bytes(60), phone: Bytes(20),
+            email: Bytes(60),
+            chosenInsurancePackage: UInt
+        })], Bool),
         payMonthlyFee: Fun([Object({ who: Address, mfee: UInt })], Bool),
-        createClaim: Fun([Object({ amountRequested: UInt, amountSet: UInt, accepted: Bool, approvalsCount: UInt, sumOfSetAmounts: UInt, insrPackageId: UInt, amountDue: UInt, matureBalance: UInt, fundLimit: UInt })], Bool),
+        createClaim: Fun([Object({
+            amountRequested: UInt, amountSet: UInt, accepted: Bool,
+            approvalsCount: UInt, sumOfSetAmounts: UInt,
+            insrPackageId: UInt, amountDue: UInt, matureBalance: UInt,
+            fundLimit: UInt, description: Bytes(200)
+        })], Bool),
         respondToClaim: Fun([Object({
             claimant: Address, accepted: Bool, setAmount: UInt
         })], Bool),
@@ -37,7 +49,9 @@ export const main = Reach.App(() => {
         //changePackage: Fun([Bytes(60)], Bool),
         stopContract: Fun([], Bool)
     });
+    setOptions({ untrustworthyMaps: true });
     init();
+
 
     //REF: REACH ARCHITECTURE: https://docs.reach.sh/rsh/#ref-programs
 
@@ -57,7 +71,8 @@ export const main = Reach.App(() => {
 
     //claim shape
     const insuranceClaims = new Map(Object({
-        amountRequested: UInt, amountSet: UInt, accepted: Bool, approvalsCount: UInt, sumOfSetAmounts: UInt
+        amountRequested: UInt, amountSet: UInt, accepted: Bool,
+        approvalsCount: UInt, sumOfSetAmounts: UInt
     }));
 
     //details of members with open claims are kept close, 
@@ -81,8 +96,13 @@ export const main = Reach.App(() => {
             //get the value from a mayBe which is returned by a Map of objects
             //Example:   maybe(myMapOfObjects[forWho], 0, readFromMap(objectKey) )
             //will return the value of the specified object key if the map contains 
-            // an object at its "forWho" key. if the key doesnt exist in the map, it will return 0 
-            const readFromMap = (key) => { return (objectInMapInstance) => { return objectInMapInstance[key]; }; };
+            // an object at its "forWho" key. if the key doesnt exist in 
+            // the map, it will return 0 
+            const readFromMap = (key) => {
+                return (objectInMapInstance) => {
+                    return objectInMapInstance[key];
+                };
+            };
         })
         .invariant(invariantCondition)
         .while(contractIsRunning)
@@ -99,7 +119,7 @@ export const main = Reach.App(() => {
                 const who = this;
                 sendResponse(true);
                 Insurer.interact.log("backend: API.CommunityMember.registerMembership ...");
-                Insurer.interact.log("backend: Insurer.interact.saveNewMemberDetails(newMemberDetails) ...");
+                Insurer.interact.log("backend: Insurer.interact.saveNewMemberDetails invoked ...");
                 Insurer.interact.saveNewMemberDetails(newMemberDetails);
                 Insurer.interact.log("backend: done.");
                 transfer(mandatoryEntryFee).to(Insurer);
@@ -114,7 +134,7 @@ export const main = Reach.App(() => {
             (ob) => ob.mfee,
             ((ob, sendResponse) => {
                 sendResponse(true);
-                Insurer.interact.log("backend: API.CommunityMember.payMonthlyFee ...ob.mfee=");
+                Insurer.interact.log("backend: API.CommunityMember.payMonthlyFee invoked.");
                 //deposit into the treasury account
                 transfer(ob.mfee).to(Insurer);
                 return [membersCount, claimsCount];
@@ -124,8 +144,10 @@ export const main = Reach.App(() => {
             (_) => 0,
             ((claimInfo, sendResponse) => {
                 const who = this;
-                //TODO: require(registeredMembers.member(who), "Only registered members can create claims.");
-                Insurer.interact.saveNewClaim({ amountRequested: claimInfo.amountRequested });
+                Insurer.interact.saveNewClaim({
+                    amountRequested: claimInfo.amountRequested,
+                    description: claimInfo.description
+                });
                 Insurer.interact.log("backend: API.CommunityMember.createClaim ...");
 
                 //add the details to the map of current claim owners
@@ -137,8 +159,13 @@ export const main = Reach.App(() => {
 
                 const fundLimitt = claimInfo.fundLimit;
 
-                const claimAmount = claimInfo.amountRequested >= fundLimitt ? claimInfo.amountRequested : fundLimitt;
-                insuranceClaims[who] = { amountRequested: claimInfo.amountRequested, amountSet: claimAmount, accepted: false, approvalsCount: 0, sumOfSetAmounts: claimInfo.amountRequested };
+                const amt = claimInfo.amountRequested;
+                const claimAmount = amt >= fundLimitt ? amt : fundLimitt;
+                insuranceClaims[who] = {
+                    amountRequested: amt,
+                    amountSet: claimAmount, accepted: false, approvalsCount: 0,
+                    sumOfSetAmounts: amt
+                };
                 sendResponse(true);
 
                 //change mode from "concensus step" to "step"
@@ -216,8 +243,8 @@ export const main = Reach.App(() => {
                 Insurer.interact.stopContract();
 
                 sendResponse(true);
-                //FUTURE IMPROVEMENT: ensure that the deployer/Insurer does not have authority over the platform.
-                //ensure that he first get permission from members to stop the contract.
+                //FUTURE IMPROVEMENT: ensure that the deployer/Insurer does not have authority 
+                //over the platform. Ensure that he first gets permission from members to stop the contract.
                 //ensure there are clearly agreed rules for non participation on this matter.
 
                 return [membersCount, claimsCount];

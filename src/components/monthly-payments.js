@@ -70,7 +70,7 @@ function MonthlyPayments({ insurerContract: insurerContractHandle, addr, dashboa
                             {
                                 loading ?
                                     <span style={{ paddingTop: "1px" }}>
-                                        <img src={loadingGif} width="20px" />
+                                        <img src={loadingGif} width="20px" alt="" />
                                     </span>
                                     : errorFromBackend.current === "" ?
                                         <>{amountDue}</>

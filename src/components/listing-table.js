@@ -6,7 +6,7 @@ const SUPABASE_URL = "https://byolfysahovehogqdena.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5b2xmeXNhaG92ZWhvZ3FkZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDg3NTcwMTYsImV4cCI6MTk2NDMzMzAxNn0.Q5h8nwP-qy1o5oDa0UCAgj1m7vTXOlhPyoZRC-0CNnk";
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-function ListingTable({ addr, dashboardRender, setDashboardRender }) {
+function ListingTable({ addr, dashboardRender, setDashboardRender, insurerContract: insurerContractHandle }) {
     const { confirm } = useConfirm();
     const [loading, setLoading] = useState(true);
     const [dataFromBackend, setDataFromBackend] = useState([]);
@@ -28,7 +28,7 @@ function ListingTable({ addr, dashboardRender, setDashboardRender }) {
         fetchClaimNotifications();
     }, [dashboardRender, addr]);
 
-    const respondToClaim = async ({ claimId, claimantFullName, defaultAmnt = 0, claimAmnt, claimCurrency = "UGX" }) => {
+    const respondToClaim = async ({ claimId, claimant, claimantFullName, defaultAmnt = 0, claimAmnt, claimCurrency = "UGX" }) => {
         const setAmount = prompt(`${claimantFullName} requested for ${claimCurrency} ${claimAmnt}. 
         In case you think this amount is too much or too little, 
         then enter the amount you suggest in the input box below. 
@@ -143,7 +143,7 @@ function ListingTable({ addr, dashboardRender, setDashboardRender }) {
                                                         </button>
                                                         :
                                                         <button
-                                                            onClick={respondToClaim.bind(this, { claimId: notifcn.claim.id, claimantFullName: notifcn.claimant.fullName, defaultAmnt: notifcn.claim.amountRequested, claimAmnt: notifcn.claim.amountRequested })}
+                                                            onClick={respondToClaim.bind(this, { claimId: notifcn.claim.id, claimant: notifcn.claim.claimant, claimantFullName: notifcn.claimant.fullName, defaultAmnt: notifcn.claim.amountRequested, claimAmnt: notifcn.claim.amountRequested })}
                                                             className={`bg-green-500 py px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark`}>
                                                             Respond
                                                         </button>
