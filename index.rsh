@@ -24,6 +24,7 @@ export const main = Reach.App(() => {
             supportDocuments: Bytes(100)
         })], Null),
         seeFeedback: Fun([], Null),
+        signout: Fun([], Null),
         notifyFundedMember: Fun([Address], Null),
         stopContract: Fun([], Null),
         log: Fun(true, Null) //REF: https://docs.reach.sh/guide/logging/
@@ -62,6 +63,7 @@ export const main = Reach.App(() => {
     });
     Insurer.publish(mandatoryEntryFee, contractIsRunning);
     const invariantCondition = true;
+    Insurer.interact.log("backend: starting...");
     commit();
     Insurer.publish();
 

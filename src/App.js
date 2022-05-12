@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import loadingGif1 from './images/ajax-loader.gif';
-import errorIcon from './images/error.png';
 import * as backend from './reach-build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib';
 import { ALGO_WalletConnect as WalletConnect } from '@reach-sh/stdlib';
 import { createClient } from "@supabase/supabase-js";
 import useConfirm from "./hooks/useConfirm";
 import Dashboard from './dashbord';
+import Connect from './components/connect';
 import SignupForm from './components/signup-form';
+import Deployer from './components/deployer';
+import ErrorPage from './components/error';
 
 //const reach = loadStdlib(process.env);
 //const reach = loadStdlib("ALGO");
@@ -16,6 +18,18 @@ const reach = loadStdlib({
   REACH_CONNECTOR_MODE: "ALGO-browser",
   PUBLIC_URL: "https%3A%2F%2Fr.bridge.walletconnect.org"
 });
+
+reach.setWalletFallback(reach.walletFallback({
+  providerEnv: {
+    ALGO_TOKEN: '',
+    ALGO_SERVER: "https://testnet-api.algonode.cloud",
+    ALGO_PORT: '',
+    ALGO_INDEXER_TOKEN: '',
+    ALGO_INDEXER_SERVER: "https://testnet-idx.algonode.cloud",
+    ALGO_INDEXER_PORT: '',
+  },
+  WalletConnect
+}));
 
 //reach.unsafeAllowMultipleStdlibs();
 const SUPABASE_URL = "https://byolfysahovehogqdena.supabase.co";
@@ -99,10 +113,6 @@ function App() {
         console.log(`New claim recorded successfully: ${JSON.stringify(newClaimData)}`);
       }
     },
-    notifyMembersAboutNewClaim: ({ ownerAddr, amountRequested, description, supportDocuments }) => {
-      //TODO: access emails of all members and send an email notification to each member
-      console.log("Email notifications sent to all members", ownerAddr, amountRequested, description, supportDocuments);
-    },
     createInvoices: () => {
       console.log("creating invoices at the end of the month ...");
     },
@@ -138,6 +148,9 @@ function App() {
       //delete info record from supabase
       const { error: err } = await supabaseClient.from("smartcontracts").delete().match({ name: "insurancedapp" });
       if (err) { console.log("err: ", err); }
+    },
+    signout: () => {
+      console.log("signing out of contract, leaving it running");
     },
     notifyFundedMember: async (address) => {
       //TODO: update the member's claim status to "funded"
@@ -180,21 +193,8 @@ function App() {
       alert("Pease wait (Page is still loading)");
     } else {
       try {
-        console.log("Login(){...}");
-        reach.setWalletFallback(reach.walletFallback({
-          providerEnv: {
-            ALGO_TOKEN: '',
-            ALGO_SERVER: "https://testnet-api.algonode.cloud",
-            ALGO_PORT: '',
-            ALGO_INDEXER_TOKEN: '',
-            ALGO_INDEXER_SERVER: "https://testnet-idx.algonode.cloud",
-            ALGO_INDEXER_PORT: '',
-          },
-          WalletConnect
-        }));
-
-        //reach.setWalletFallback(reach.walletFallback({ providerEnv: 'TestNet', WalletConnect }));
-
+        console.log("ConnectWallet(){...}");
+        
         let getPromise = null;
         if (loginWithMnemonic) {
           getPromise = reach.newAccountFromMnemonic(mnemonicStr);
@@ -227,7 +227,7 @@ function App() {
               const memberAddr = algoAccount.current.networkAccount.addr;
               const { data: memberDataArr, error } = await supabaseClient.from("members").select("*").eq('memberAddr', memberAddr);
               if (error) {
-                setErrMessage(JSON.stringify(error));
+                setErrMessage(error.message);
                 setErrCode("GOTO_LOGIN");
                 setActivePage("ERROR");
               }
@@ -237,7 +237,9 @@ function App() {
               }
               if (isRegisteredMember) {
                 //create a contract handle and assign it to insurerContract
+                
                 insurerContract.current = algoAccount.current.contract(backend, contractInfo.current);
+                
                 setActivePage("DASHBOARD");
               } else {
                 setActivePage("SIGNUP");
@@ -263,38 +265,42 @@ function App() {
     setIsSavingContractInfo(true);
 
     const insurerAccount = algoAccount.current;
-    //deploy the contract
-    console.log("Deploying... insurerAccount=", insurerAccount);
+    //deploy the contract now
     const ctc = insurerAccount.contract(backend);
     insurerContract.current = ctc;
     console.log("insurerContract.current=", insurerContract.current);
     //---------
     // Set deployed contract Init state
     console.log("Setting the initial state of the contract just deployed");
-    await insurerContract.current.p.Insurer(interact.current);
+    insurerContract.current.p.Insurer(interact.current);
     //---------
 
     console.log("getting the contract info ...");
-    const info = await insurerContract.current.getInfo();
-    console.log("info =", info);
-    const infoStr = JSON.stringify(info);
-    //const infoStr = "RNE5XUWGHA56LKQFAS7KWQPZAGOR5U6ZCARU4SOZ4XQRVPWO6WCYLUD4HE";
-    console.log("infoStr = ", infoStr);
-
-    //save the contract info into supabase
-    console.log("saving the contract info into supabase ...");
-    const { data, error: err } = await supabaseClient.from("smartcontracts").insert([{
-      name: "insurancedapp", info: infoStr
-    }]);
-    setIsSavingContractInfo(false);
-    if (err) {
-      console.log(`Error while saving the contract info to supabase ${err}`);
-    } else {
-      console.log(`Saved contract info to supabase: ${JSON.stringify(data)}`);
-    }
-
-    console.log("... Done.");
-    console.log("insurerContract.current=", insurerContract.current);
+    
+    insurerContract.current.getInfo().then(async (info) => {
+        const infoStr = JSON.stringify(info);
+        
+        //save the contract info into supabase
+        const { data, error: err } = await supabaseClient.from("smartcontracts").insert([{
+          name: "insurancedapp", info: infoStr
+        }]);
+        setIsSavingContractInfo(false);
+        if (err) {
+          console.log(`Error while saving the contract info to supabase ${err}`);
+        } else {
+          console.log(`Saved contract info to supabase: ${JSON.stringify(data)}`);
+          setDeployed(true);
+        }
+    });
+    
+    //deployer will leave the contract running, signout from it
+    await reach.withDisconnect(() => {
+        console.log("Deployer disconnecting from the contract...");
+        reach.disconnect(null);
+    });
+    setContractInfoSaved(true);
+    
+    console.log("........................................... OK.");
   };
 
   //===============================================================
@@ -314,59 +320,18 @@ function App() {
   return (
     <>
       {(activePage === "LOGIN") ?
-        <div className='h-screen flex bg-blue-100'>
-          <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-2 px-16 shadow'>
-            <h1 className='text-4xl text-blue-700  text-primary mt-2 mb-2 text-center'> Insurance Dapp
-              <span>
-                <button onClick={setDeployerModeOn.bind(this, (!deployerModeOn))} className="pl-4 text-bold">
-                  [{deployerModeOn && "d"}]
-                </button>
-              </span>
-            </h1>
-            <hr />
-
-            {(loginErr !== "") && <> <span className="text-red-400">{loginErr}</span> <span><img src={errorIcon} width="30px" alt="" /></span> <hr /> </>}
-            <br />
-            <button onClick={ConnectWallet}
-              className={`w-full bg-green-500 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark`}
-            >
-              {connecting && <span> <img src={loadingGif1} width="12px" alt='' /> </span>}
-              <span>{connecting ? "Please wait ..." : "Connect algo wallet"}</span>
-            </button>
-            <hr />
-            <br />
-            OR
-            <h3 className='text-l font-medium text-primary mt-6 mb-6 text-center'>
-              Enter Your mnemonic to Login
-            </h3>
-
-            <form >
-              <div>
-                <input ref={mnemonicRef}
-                  type="password"
-                  value={mnemonicStr}
-                  onChange={e => setMnemonicStr(e.target.value)}
-                  className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                  id='mnemonic'
-                  placeholder='12-word phrase'
-                />
-              </div>
-
-              <div>
-                <label>Have no Algorand account ? <a target="_blank" href="https://perawallet.app/" className='text-blue-600' rel="noreferrer">Create a new</a> </label>
-              </div>
-
-              <div className='flex justify-center items-center mt-6'>
-                <button onClick={LoginWithMnemonic}
-                  className={` bg-blue-500 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark`}
-                >
-                  {connecting && <span> <img src={loadingGif1} width="12px" alt='' /> </span>}
-                  <span>{connecting ? "Wait ..." : "Login"}</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        
+        <Connect
+           setDeployerModeOn={setDeployerModeOn} 
+           deployerModeOn={deployerModeOn} 
+           loginErr={loginErr} 
+           ConnectWallet={ConnectWallet} 
+           connecting={connecting}
+           mnemonicStr={mnemonicStr} 
+           mnemonicRef={mnemonicRef}
+           setMnemonicStr={setMnemonicStr}
+           LoginWithMnemonic={LoginWithMnemonic}
+        />
 
         : (activePage === "SIGNUP") ?
 
@@ -390,74 +355,29 @@ function App() {
             />
 
             : (activePage === "DEPLOYER") ?
-              <div className='h-screen flex bg-blue-100'>
-                <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-2 px-16 shadow'>
-                  <h1 className='text-4xl text-blue-700  text-primary mt-2 mb-2 text-center'> Insurance Dapp </h1>
-                  <hr />
-
-                  <h1 className='text-xl font-medium text-primary mt-6 mb-6 text-center'>
-                    Deploy the contract
-                  </h1>
-
-                  <form >
-                    <div>
-                      <label htmlFor='fullname'> Insurer name </label>
-                      <input
-                        type="text"
-                        value={communityGroupName}
-                        onChange={e => setCommunityGroupName(e.target.value)}
-                        className={`w-full py px-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor='phone'> Mandatory entry fee </label>
-                      <input
-                        type="number"
-                        value={mandatoryEntryFee}
-                        onChange={e => setMandatoryEntryFee(e.target.value)}
-                        className={`w-full py px-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                      />
-                    </div>
-
-                    <div className='flex justify-center items-center mt-6'>
-                      <button onClick={deployContract}
-                        className={`bg-blue-500 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark ${(isSavingContractInfo || contractInfoSaved) ? "opacity-50 cursor-not-allowed" : ""}`}
-                      >
-                        {contractInfoSaved ? "Deployed" : isSavingContractInfo ? "Deploying ..." : "Deploy contract now"}
-                      </button>
-                      {
-                        isSavingContractInfo && <span>
-                          <img src={loadingGif1} width="40px" alt='' />
-                        </span>
-                      }
-                      {contractInfoSaved &&
-                        <button onClick={stopContract}
-                          className={`bg-blue-500 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark`}
-                        > Stop contract </button>
-                      }
-                    </div>
-                  </form>
-                </div>
-              </div >
+              
+              <Deployer
+                communityGroupName={communityGroupName} 
+                setCommunityGroupName={setCommunityGroupName} 
+                mandatoryEntryFee={mandatoryEntryFee} 
+                setMandatoryEntryFee={setMandatoryEntryFee} 
+                deployContract={deployContract} 
+                ConnectWallet={ConnectWallet} 
+                stopContract={stopContract} 
+                contractInfoSaved={contractInfoSaved} 
+                isSavingContractInfo={isSavingContractInfo} 
+              />
 
               : (activePage === "ERROR") ?
 
-                <div>
-                  <h1> Error ! </h1>
-                  <p> {errMessage} </p>
-                  <br />
-                  <hr />
-                  {
-                    errCode === "GOTO_LOGIN" ?
-                      <button onClick={setActivePage.bind(this, "LOGIN")}>Go back to login </button>
-                      : errCode === "GOTO_SIGNUP" ?
-                        <button onClick={setActivePage.bind(this, "SIGNUP")}>Go back to login </button>
-                        :
-                        <button onClick={setActivePage.bind(this, "LOGIN")}>Go back to login </button>
-                  }
-                </div>
+                <ErrorPage 
+                errMessage={errMessage} 
+                setActivePage={setActivePage} 
+                errCode={errCode} 
+                />
+                
                 :
+                
                 <div>
                   <h1> Oops!!, Unexpected Error.  </h1>
                 </div>
