@@ -76,7 +76,7 @@ It takes 5 members to approve a claim, so once a claim has been approved, funds 
 ![withdraw-funds](https://drive.google.com/file/d/11spIQhm3UsECqMzJ-svNgFarrYB9ha4i/view?usp=sharing)
 
 ## Conclution
-This is a very basic and simple example but what it does well is that it shows us the power of blockchain and the simplicity offered by [Reach](https://reach.sh) to create decentralized application. The big take away is that insurance shoudl be decentralized and this is possible with the use of blockchain.
+This is a very basic and simple example but what it does well is that it shows us the power of blockchain and the simplicity offered by [Reach](https://reach.sh) to create decentralized application. The big take away is that insurance should be decentralized and this is possible with the use of blockchain.
 
 ### Improvement
 This application can be inproved in a number of ways. The front end can connect to other systems and services such as emergency services, payment gateways and such.  We can also create API that will expose fuctions that run on the blockchain and we can use that to run automation. 
