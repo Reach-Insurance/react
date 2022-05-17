@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
-import loadingGif1 from './images/ajax-loader.gif';
 import * as backend from './reach-build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib';
 import { ALGO_WalletConnect as WalletConnect } from '@reach-sh/stdlib';
@@ -156,7 +155,9 @@ function App() {
       //TODO: update the member's claim status to "funded"
       console.log("Your claim has been funded. Member address = ", address);
     },
-    log: console.log             //REF: https://docs.reach.sh/guide/logging/
+    log: (msg) => {
+        console.log(msg);
+    }
   });
 
   //===============================================================
@@ -170,9 +171,8 @@ function App() {
         //if info was found, 
         if (infoArr.length > 0) {
           setDeployed(true);
-          contractInfo.current = infoArr[0].info;
+          contractInfo.current = JSON.parse(infoArr[0].info);
           console.log("contract info found: ", infoArr[0].info);
-          console.log("contractInfo.current: ", contractInfo.current, " typeof(contractInfo.current)=", typeof contractInfo.current);
         }
         setConnecting(false);
       } catch (er) {

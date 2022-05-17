@@ -35,31 +35,31 @@ function ListingTable({ addr, dashboardRender, setDashboardRender, insurerContra
         If you don't even want to allow this person to be funded, just enter 0`, defaultAmnt);
         console.log("setAmount = ", setAmount);
 
-        const ok = await insurerContractHandle.apis.CommunityMember.respondToClaim({
+        insurerContractHandle.a.CommunityMember.respondToClaim({
             claimant, accepted: true, setAmount
+        }).then(async (ok) => {
+            if (ok) {
+                //update the approvalscount of this claim in the claims table
+                const { data: updatedClaim, error } = await supabaseClient.rpc('incrementapprovalsby', { claim_id: claimId, increment_by: 1 });
+                console.log("updatedClaim=", updatedClaim, "error =", error);
+
+                let selectedClaim = {};
+                if (!error) {
+                    const { data: selectedClaimArr, errr } = await supabaseClient.from("claims").select("*").match({ id: claimId });
+                    if ((!errr) && (selectedClaimArr.length > 0)) {
+                        selectedClaim = selectedClaimArr[0];
+                    }
+                }
+                if (selectedClaim.approvalscount && selectedClaim.approvalscount >= 5) {
+                    const { error } = await supabaseClient.from("claims").delete().match({ id: claimId });
+                    if (error) {
+                        console.log("Failed to delete the claim after funding claimant", error);
+                    }
+                }
+            } else {
+                console.log("Oops! The backend failed to process your response to the claim.");
+            }
         });
-
-        if (ok) {
-            //update the approvalscount of this claim in the claims table
-            const { data: updatedClaim, error } = await supabaseClient.rpc('incrementapprovalsby', { claim_id: claimId, increment_by: 1 });
-            console.log("updatedClaim=", updatedClaim, "error =", error);
-
-            let selectedClaim = {};
-            if (!error) {
-                const { data: selectedClaimArr, errr } = await supabaseClient.from("claims").select("*").match({ id: claimId });
-                if ((!errr) && (selectedClaimArr.length > 0)) {
-                    selectedClaim = selectedClaimArr[0];
-                }
-            }
-            if (selectedClaim.approvalscount && selectedClaim.approvalscount >= 5) {
-                const { error } = await supabaseClient.from("claims").delete().match({ id: claimId });
-                if (error) {
-                    console.log("Failed to delete the claim after funding claimant", error);
-                }
-            }
-        } else {
-            console.log("Oops! The backend failed to process your response to the claim.");
-        }
 
         //delete the link btn this member and the claim (ie, in the claimnotifications table), 
         //so that he will not see it again on the list of open claims
@@ -68,13 +68,16 @@ function ListingTable({ addr, dashboardRender, setDashboardRender, insurerContra
             console.log("Failed to delete the notification link btn member and claim", error);
         }
         setDashboardRender(!dashboardRender);
+        console.log("Notification deleted");
     };
 
     const withdrawMyClaim = async ({ claimId }) => {
         const yes = await confirm(`Are you sure you want to withdraw your claim ?`);
+        console.log("yes...");
         if (yes) {
+            console.log("2yes...");
             const ok = await insurerContractHandle.apis.CommunityMember.withDrawClaim();
-
+            console.log("withdraw calaim - OK.");
             if (ok) {
                 //First delete all notifications that had been sent to all members about this claim
                 const { error } = await supabaseClient.from("claimnotifications").delete().match({ claimId: claimId });
@@ -92,6 +95,7 @@ function ListingTable({ addr, dashboardRender, setDashboardRender, insurerContra
             }
             setDashboardRender(!dashboardRender);
         }
+        console.log("withdraw calaim...");
     };
 
     return (

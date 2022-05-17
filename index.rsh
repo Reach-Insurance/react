@@ -10,19 +10,19 @@ export const main = Reach.App(() => {
         //approveNewMembership: Fun([Address], Null),
         createInvoices: Fun([], Null),
         moveMaturedPayments: Fun([], Null),
-        saveNewMemberDetails: Fun([Object({
-            fullName: Bytes(60), phone: Bytes(20),
-            email: Bytes(60), chosenInsurancePackage: UInt
-        })], Null),
-        saveNewClaim: Fun([Object({
-            amountRequested: UInt, description: Bytes(200)
-        })], Null),
-        notifyMembersAboutNewClaim: Fun([Object({
-            ownerAddr: Address,
-            amountRequested: UInt,
-            description: Bytes(600),
-            supportDocuments: Bytes(100)
-        })], Null),
+        saveNewMemberDetails: Fun([Struct([
+            ["fullName", Bytes(60)], ["phone", Bytes(20)],
+            ["email", Bytes(60)], ["chosenInsurancePackage", UInt]
+        ])], Null),
+        saveNewClaim: Fun([Struct([
+            ["amountRequested", UInt], ["description", Bytes(200)]
+        ])], Null),
+        notifyMembersAboutNewClaim: Fun([Struct([
+            ["ownerAddr", Address],
+            ["amountRequested", UInt],
+            ["description", Bytes(600)],
+            ["supportDocuments", Bytes(100)]
+        ])], Null),
         seeFeedback: Fun([], Null),
         signout: Fun([], Null),
         notifyFundedMember: Fun([Address], Null),
@@ -31,21 +31,21 @@ export const main = Reach.App(() => {
     });
 
     const CommunityMember = API('CommunityMember', {
-        registerMembership: Fun([Object({
-            fullName: Bytes(60), phone: Bytes(20),
-            email: Bytes(60),
-            chosenInsurancePackage: UInt
-        })], Bool),
-        payMonthlyFee: Fun([Object({ who: Address, mfee: UInt })], Bool),
-        createClaim: Fun([Object({
-            amountRequested: UInt, amountSet: UInt, accepted: Bool,
-            approvalsCount: UInt, sumOfSetAmounts: UInt,
-            insrPackageId: UInt, amountDue: UInt, matureBalance: UInt,
-            fundLimit: UInt, description: Bytes(200)
-        })], Bool),
-        respondToClaim: Fun([Object({
-            claimant: Address, accepted: Bool, setAmount: UInt
-        })], Bool),
+        registerMembership: Fun([Struct([
+            ["fullName", Bytes(60)], ["phone", Bytes(20)],
+            ["email", Bytes(60)],
+            ["chosenInsurancePackage", UInt]
+        ])], Bool),
+        payMonthlyFee: Fun([Struct([["who", Address], ["mfee", UInt]])], Bool),
+        createClaim: Fun([Struct([
+            ["amountRequested", UInt], ["amountSet", UInt], ["accepted", Bool],
+            ["approvalsCount", UInt], ["sumOfSetAmounts", UInt],
+            ["insrPackageId", UInt], ["amountDue", UInt], ["matureBalance", UInt],
+            ["fundLimit", UInt], ["description", Bytes(200)]
+        ])], Bool),
+        respondToClaim: Fun([Struct([
+           ["claimant", Address], ["accepted", Bool], ["setAmount", UInt]
+        ])], Bool),
         withDrawClaim: Fun([], Bool),
         //changePackage: Fun([Bytes(60)], Bool),
         stopContract: Fun([], Bool)
@@ -72,21 +72,21 @@ export const main = Reach.App(() => {
     const registeredMembers = new Set();
 
     //claim shape
-    const insuranceClaims = new Map(Object({
-        amountRequested: UInt, amountSet: UInt, accepted: Bool,
-        approvalsCount: UInt, sumOfSetAmounts: UInt
-    }));
+    const insuranceClaims = new Map(Struct([
+      ["amountRequested", UInt], ["amountSet", UInt], ["accepted", Bool],
+      ["approvalsCount", UInt], ["sumOfSetAmounts", UInt]
+    ]));
 
     //details of members with open claims are kept close, 
     //other members are kept away from here (in the db)
-    const claimOwners = new Map(Object({
-        //fullName: Bytes(60),
-        //physicalAddress: Bytes(100),
-        insrPackageId: UInt,
-        //dateJoined: Bytes(30),
-        amountDue: UInt,
-        matureBalance: UInt
-    }));
+    const claimOwners = new Map(Struct([
+        //["fullName", Bytes(60)],
+        //["physicalAddress", Bytes(100)],
+        //dateJoined, Bytes(30),
+        ["insrPackageId", UInt],
+        ["amountDue", UInt],
+      ["matureBalance", UInt]
+    ]));
 
 
     const [
@@ -132,11 +132,11 @@ export const main = Reach.App(() => {
                 return [membersCount + 1, claimsCount];
             })
         ).api(CommunityMember.payMonthlyFee,
-            (_) => { const _ = true; },
+            (ob) => { const _ = true; },
             (ob) => ob.mfee,
             ((ob, sendResponse) => {
-                sendResponse(true);
                 Insurer.interact.log("backend: API.CommunityMember.payMonthlyFee invoked.");
+                sendResponse(true);
                 //deposit into the treasury account
                 transfer(ob.mfee).to(Insurer);
                 return [membersCount, claimsCount];
@@ -146,28 +146,27 @@ export const main = Reach.App(() => {
             (_) => 0,
             ((claimInfo, sendResponse) => {
                 const who = this;
-                Insurer.interact.saveNewClaim({
-                    amountRequested: claimInfo.amountRequested,
-                    description: claimInfo.description
-                });
+                Insurer.interact.saveNewClaim(Struct([["amountRequested", UInt], ["description", Bytes(200)]
+                ]).fromObject({amountRequested: claimInfo.amountRequested, description: claimInfo.description }));
                 Insurer.interact.log("backend: API.CommunityMember.createClaim ...");
 
                 //add the details to the map of current claim owners
-                claimOwners[who] = {
+                claimOwners[who] = Struct([["insrPackageId", UInt], ["amountDue", UInt], ["matureBalance", UInt]]).fromObject({
                     insrPackageId: claimInfo.insrPackageId,
                     amountDue: claimInfo.amountDue,
                     matureBalance: claimInfo.matureBalance
-                };
+                });
 
                 const fundLimitt = claimInfo.fundLimit;
 
                 const amt = claimInfo.amountRequested;
                 const claimAmount = amt >= fundLimitt ? amt : fundLimitt;
-                insuranceClaims[who] = {
+                insuranceClaims[who] = Struct([["amountRequested", UInt], ["amountSet", UInt], ["accepted", Bool], ["approvalsCount", UInt], ["sumOfSetAmounts", UInt]]).fromObject({
                     amountRequested: amt,
-                    amountSet: claimAmount, accepted: false, approvalsCount: 0,
+                    amountSet: claimAmount, 
+                    accepted: false, approvalsCount: 0,
                     sumOfSetAmounts: amt
-                };
+                })
                 sendResponse(true);
 
                 //change mode from "concensus step" to "step"
@@ -191,13 +190,13 @@ export const main = Reach.App(() => {
                     const amtRqsted = maybe(insuranceClaims[forWho], 0, readFromMap("amountRequested"));
                     const amtSet = maybe(insuranceClaims[forWho], amtRqsted, readFromMap("amountSet"));
                     const agreedClaimAmount = (approvalsCnt < 5) ? amtSet : sumOfSetAmts / approvalsCnt;
-                    insuranceClaims[forWho] = {
+                    insuranceClaims[forWho] = Struct([["amountRequested", UInt], ["amountSet", UInt], ["accepted", Bool], ["approvalsCount", UInt], ["sumOfSetAmounts", UInt]]).fromObject({
                         approvalsCount: approvalsCnt + 1,
                         amountSet: agreedClaimAmount,
                         accepted: true,
                         amountRequested: amtRqsted,
                         sumOfSetAmounts: sumOfSetAmts
-                    };
+                    });
 
                     if (approvalsCnt >= 5) {
                         //transfer(agreedClaimAmount).to(forWho);
