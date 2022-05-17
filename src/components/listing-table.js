@@ -6,7 +6,7 @@ const SUPABASE_URL = "https://byolfysahovehogqdena.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5b2xmeXNhaG92ZWhvZ3FkZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDg3NTcwMTYsImV4cCI6MTk2NDMzMzAxNn0.Q5h8nwP-qy1o5oDa0UCAgj1m7vTXOlhPyoZRC-0CNnk";
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-function ListingTable({ addr, dashboardRender, setDashboardRender }) {
+function ListingTable({ addr, dashboardRender, setDashboardRender, insurerContract: insurerContractHandle }) {
     const { confirm } = useConfirm();
     const [loading, setLoading] = useState(true);
     const [dataFromBackend, setDataFromBackend] = useState([]);
@@ -28,38 +28,38 @@ function ListingTable({ addr, dashboardRender, setDashboardRender }) {
         fetchClaimNotifications();
     }, [dashboardRender, addr]);
 
-    const respondToClaim = async ({ claimId, claimantFullName, defaultAmnt = 0, claimAmnt, claimCurrency = "UGX" }) => {
+    const respondToClaim = async ({ claimId, claimant, claimantFullName, defaultAmnt = 0, claimAmnt, claimCurrency = "UGX" }) => {
         const setAmount = prompt(`${claimantFullName} requested for ${claimCurrency} ${claimAmnt}. 
         In case you think this amount is too much or too little, 
         then enter the amount you suggest in the input box below. 
         If you don't even want to allow this person to be funded, just enter 0`, defaultAmnt);
         console.log("setAmount = ", setAmount);
 
-        const ok = await insurerContractHandle.apis.CommunityMember.respondToClaim({
+        insurerContractHandle.a.CommunityMember.respondToClaim({
             claimant, accepted: true, setAmount
+        }).then(async (ok) => {
+            if (ok) {
+                //update the approvalscount of this claim in the claims table
+                const { data: updatedClaim, error } = await supabaseClient.rpc('incrementapprovalsby', { claim_id: claimId, increment_by: 1 });
+                console.log("updatedClaim=", updatedClaim, "error =", error);
+
+                let selectedClaim = {};
+                if (!error) {
+                    const { data: selectedClaimArr, errr } = await supabaseClient.from("claims").select("*").match({ id: claimId });
+                    if ((!errr) && (selectedClaimArr.length > 0)) {
+                        selectedClaim = selectedClaimArr[0];
+                    }
+                }
+                if (selectedClaim.approvalscount && selectedClaim.approvalscount >= 5) {
+                    const { error } = await supabaseClient.from("claims").delete().match({ id: claimId });
+                    if (error) {
+                        console.log("Failed to delete the claim after funding claimant", error);
+                    }
+                }
+            } else {
+                console.log("Oops! The backend failed to process your response to the claim.");
+            }
         });
-
-        if (ok) {
-            //update the approvalscount of this claim in the claims table
-            const { data: updatedClaim, error } = await supabaseClient.rpc('incrementapprovalsby', { claim_id: claimId, increment_by: 1 });
-            console.log("updatedClaim=", updatedClaim, "error =", error);
-
-            let selectedClaim = {};
-            if (!error) {
-                const { data: selectedClaimArr, errr } = await supabaseClient.from("claims").select("*").match({ id: claimId });
-                if ((!errr) && (selectedClaimArr.length > 0)) {
-                    selectedClaim = selectedClaimArr[0];
-                }
-            }
-            if (selectedClaim.approvalscount && selectedClaim.approvalscount >= 5) {
-                const { error } = await supabaseClient.from("claims").delete().match({ id: claimId });
-                if (error) {
-                    console.log("Failed to delete the claim after funding claimant", error);
-                }
-            }
-        } else {
-            console.log("Oops! The backend failed to process your response to the claim.");
-        }
 
         //delete the link btn this member and the claim (ie, in the claimnotifications table), 
         //so that he will not see it again on the list of open claims
@@ -68,13 +68,16 @@ function ListingTable({ addr, dashboardRender, setDashboardRender }) {
             console.log("Failed to delete the notification link btn member and claim", error);
         }
         setDashboardRender(!dashboardRender);
+        console.log("Notification deleted");
     };
 
     const withdrawMyClaim = async ({ claimId }) => {
         const yes = await confirm(`Are you sure you want to withdraw your claim ?`);
+        console.log("yes...");
         if (yes) {
+            console.log("2yes...");
             const ok = await insurerContractHandle.apis.CommunityMember.withDrawClaim();
-
+            console.log("withdraw calaim - OK.");
             if (ok) {
                 //First delete all notifications that had been sent to all members about this claim
                 const { error } = await supabaseClient.from("claimnotifications").delete().match({ claimId: claimId });
@@ -92,6 +95,7 @@ function ListingTable({ addr, dashboardRender, setDashboardRender }) {
             }
             setDashboardRender(!dashboardRender);
         }
+        console.log("withdraw calaim...");
     };
 
     return (
@@ -143,7 +147,7 @@ function ListingTable({ addr, dashboardRender, setDashboardRender }) {
                                                         </button>
                                                         :
                                                         <button
-                                                            onClick={respondToClaim.bind(this, { claimId: notifcn.claim.id, claimantFullName: notifcn.claimant.fullName, defaultAmnt: notifcn.claim.amountRequested, claimAmnt: notifcn.claim.amountRequested })}
+                                                            onClick={respondToClaim.bind(this, { claimId: notifcn.claim.id, claimant: notifcn.claim.claimant, claimantFullName: notifcn.claimant.fullName, defaultAmnt: notifcn.claim.amountRequested, claimAmnt: notifcn.claim.amountRequested })}
                                                             className={`bg-green-500 py px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark`}>
                                                             Respond
                                                         </button>

@@ -40,7 +40,7 @@ function MonthlyPayments({ insurerContract: insurerContractHandle, addr, dashboa
         //prompt for confirmation first, then pay
         const yes = await confirm(`Do you want to pay ${monthlyFee} Algo${(monthlyFee !== 1) ? "s" : ""} from your account ?`);
         if (yes) {
-            console.log("yes=", yes);
+            console.log(`paying ${monthlyFee} ALGOs monthly fee`);
             const success = await insurerContractHandle.apis.CommunityMember.payMonthlyFee({ mfee: monthlyFee });
             console.log("backend succeeded =", success);
             if (success) {
@@ -70,7 +70,7 @@ function MonthlyPayments({ insurerContract: insurerContractHandle, addr, dashboa
                             {
                                 loading ?
                                     <span style={{ paddingTop: "1px" }}>
-                                        <img src={loadingGif} width="20px" />
+                                        <img src={loadingGif} width="20px" alt="" />
                                     </span>
                                     : errorFromBackend.current === "" ?
                                         <>{amountDue}</>

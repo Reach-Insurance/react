@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import loadingGif from "../images/ajax-loader.gif";
 import { createClient } from "@supabase/supabase-js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

@@ -4,11 +4,7 @@ import ClaimNotifications from "./components/claim-nitifications";
 import MonthlyPayments from "./components/monthly-payments";
 import ListingTable from "./components/listing-table";
 import Header from './components/header';
-import { createClient } from "@supabase/supabase-js";
 import loadingGif from "./images/ajax-loader.gif";
-const SUPABASE_URL = "https://byolfysahovehogqdena.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5b2xmeXNhaG92ZWhvZ3FkZW5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDg3NTcwMTYsImV4cCI6MTk2NDMzMzAxNn0.Q5h8nwP-qy1o5oDa0UCAgj1m7vTXOlhPyoZRC-0CNnk";
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function Dashboard({ algoAccount, addr, insurerContract, backend, contractInfo, currentUser, refreshDashbord }) {
     const [showNewClaimForm, setShowNewClaimForm] = useState(false);
@@ -26,7 +22,8 @@ function Dashboard({ algoAccount, addr, insurerContract, backend, contractInfo, 
         const insurerContractHandle = memberAccount.contract(backend, contractInfo.current);
 
         const ok = await insurerContractHandle.apis.CommunityMember.createClaim({
-            amountRequested, amountSet: amountRequested, accepted: false, approvalsCount: 0, sumOfSetAmounts: 0
+            amountRequested, amountSet: amountRequested, accepted: false,
+            approvalsCount: 0, sumOfSetAmounts: 0, description
         });
 
         if (!ok) {
@@ -99,7 +96,7 @@ function Dashboard({ algoAccount, addr, insurerContract, backend, contractInfo, 
                                 className={` bg-blue-500 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-greenn-dark`}
                             >
                                 Submit claim
-                            </button> <span>{isProcessing && <img src={loadingGif} width="30px" />}</span>
+                            </button> <span>{isProcessing && <img src={loadingGif} width="30px" alt="" />}</span>
                         </div>
                     </form>
                 </div>
