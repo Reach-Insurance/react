@@ -1,13 +1,13 @@
 'reach 0.1';
 
-//REF: REACH ARCHITECTURE: https://docs.reach.sh/rsh/#ref-programs
-
 export const main = Reach.App(() => {
+    
+    //NOTE: The reach program starts in a "step" mode
+    
     const Insurer = Participant('Insurer', {
         mandatoryEntryFee: UInt,
         communityGroupName: Bytes(60),
         contractIsRunning: Bool,
-        //approveNewMembership: Fun([Address], Null),
         createInvoices: Fun([], Null),
         moveMaturedPayments: Fun([], Null),
         saveNewMemberDetails: Fun([Struct([
@@ -27,9 +27,9 @@ export const main = Reach.App(() => {
         signout: Fun([], Null),
         notifyFundedMember: Fun([Address], Null),
         stopContract: Fun([], Null),
-        log: Fun(true, Null) //REF: https://docs.reach.sh/guide/logging/
+        log: Fun(true, Null)
     });
-
+    
     const CommunityMember = API('CommunityMember', {
         registerMembership: Fun([Struct([
             ["fullName", Bytes(60)], ["phone", Bytes(20)],
@@ -47,28 +47,30 @@ export const main = Reach.App(() => {
            ["claimant", Address], ["accepted", Bool], ["setAmount", UInt]
         ])], Bool),
         withDrawClaim: Fun([], Bool),
-        //changePackage: Fun([Bytes(60)], Bool),
         stopContract: Fun([], Bool)
     });
+    
+    //NOTE: we are still in "step" mode
     setOptions({ untrustworthyMaps: true });
+    
     init();
-
-
-    //REF: REACH ARCHITECTURE: https://docs.reach.sh/rsh/#ref-programs
+    
+    //NOTE: we switched to "consensus step" by calling init() function above
 
     Insurer.only(() => {
+        //NOTE: we switched to "local step" by calling .only() function. This is the body of .only()
         const mandatoryEntryFee = declassify(interact.mandatoryEntryFee);
         const contractIsRunning = declassify(interact.contractIsRunning);
         interact.seeFeedback();
     });
+    //NOTE: we switched to "concensus step" because this is the "continuation" of .only() function.
     Insurer.publish(mandatoryEntryFee, contractIsRunning);
     const invariantCondition = true;
-    Insurer.interact.log("backend: starting...");
     commit();
     Insurer.publish();
 
-    //keep a list of all members' Addresses,
-    //more info about the members is kept away (in the db).
+    //keep a list of all community members' Addresses,
+    //more info about the community members is kept away (in the db).
     const registeredMembers = new Set();
 
     //claim shape
@@ -78,28 +80,18 @@ export const main = Reach.App(() => {
     ]));
 
     //details of members with open claims are kept close, 
-    //other members are kept away from here (in the db)
+    //other members are kept away from here (off-chain)
     const claimOwners = new Map(Struct([
-        //["fullName", Bytes(60)],
-        //["physicalAddress", Bytes(100)],
-        //dateJoined, Bytes(30),
         ["insrPackageId", UInt],
         ["amountDue", UInt],
-      ["matureBalance", UInt]
+        ["matureBalance", UInt]
     ]));
-
 
     const [
         membersCount,
         claimsCount
     ] = parallelReduce([1, 1])
         .define(() => {
-            //the "readFromMap" function below can be passed to maybe(...) function to 
-            //get the value from a mayBe which is returned by a Map of objects
-            //Example:   maybe(myMapOfObjects[forWho], 0, readFromMap(objectKey) )
-            //will return the value of the specified object key if the map contains 
-            // an object at its "forWho" key. if the key doesnt exist in 
-            // the map, it will return 0 
             const readFromMap = (key) => {
                 return (objectInMapInstance) => {
                     return objectInMapInstance[key];
@@ -108,20 +100,12 @@ export const main = Reach.App(() => {
         })
         .invariant(invariantCondition)
         .while(contractIsRunning)
-        //.case(Insurer,                  //PART_EXPR
-        //    () => {const _ = true},     //PUBLISH_EXPR
-        //    (_) => 0,                   //PAY_EXPR
-        //    ()=>{
-        //                                //CONSENSUS_EXPR
-        //    })
         .api(CommunityMember.registerMembership,
             (_) => { const _ = true; },
             (_) => mandatoryEntryFee,
             ((newMemberDetails, sendResponse) => {
                 const who = this;
                 sendResponse(true);
-                Insurer.interact.log("backend: API.CommunityMember.registerMembership ...");
-                Insurer.interact.log("backend: Insurer.interact.saveNewMemberDetails invoked ...");
                 Insurer.interact.saveNewMemberDetails(newMemberDetails);
                 Insurer.interact.log("backend: done.");
                 transfer(mandatoryEntryFee).to(Insurer);
@@ -221,8 +205,7 @@ export const main = Reach.App(() => {
                 const who = this;
                 sendResponse(true);
 
-                //take the funds that the insurer had put on the table (paid), 
-                //back into the treasury
+                //take the funds that the insurer had put on the table (paid), //back into the treasury
                 const memberRequestedAmount = maybe(insuranceClaims[who], 0, readFromMap("amountRequested"));
                 //transfer(memberRequestedAmount).to(Insurer);
 
@@ -240,13 +223,10 @@ export const main = Reach.App(() => {
             ((sendResponse) => {
                 //this must be done by the deployer of the contract only.
                 const who = this;
-                //TODO: require(who == Insurer, "You are not allowed to take this action.");
+                //TODO: require(addressOf(who) == addressOf(Insurer), "You are not allowed to take this action.");
                 Insurer.interact.stopContract();
 
                 sendResponse(true);
-                //FUTURE IMPROVEMENT: ensure that the deployer/Insurer does not have authority 
-                //over the platform. Ensure that he first gets permission from members to stop the contract.
-                //ensure there are clearly agreed rules for non participation on this matter.
 
                 return [membersCount, claimsCount];
             })
